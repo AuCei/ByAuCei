@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$musicFolder = 'path/to/your/music/folder/';
+$musicFolder = 'music/';
 $files = array_diff(scandir($musicFolder), array('.', '..'));
 $musicFiles = array();
 

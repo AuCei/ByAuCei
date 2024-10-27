@@ -137,7 +137,7 @@
                 .then(musicFiles => {
                     const randomIndex = Math.floor(Math.random() * musicFiles.length);
                     const audioElement = document.getElementById('background-music');
-                    audioElement.src = 'music/' + musicFiles[randomIndex];
+                    audioElement.src = 'music' + musicFiles[randomIndex];
                     audioElement.play();
                 })
                 .catch(error => {

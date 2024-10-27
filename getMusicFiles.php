@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$musicFolder = 'music/';
+$musicFolder = 'music';
 $files = array_diff(scandir($musicFolder), array('.', '..'));
 $musicFiles = array();
 
@@ -14,4 +14,9 @@ foreach ($files as $file) {
 
 header('Content-Type: application/json');
 echo json_encode($musicFiles);
+
+// 调试输出
+echo '<pre>';
+print_r($musicFiles);
+echo '</pre>';
 ?>

@@ -132,17 +132,15 @@
         }
 
         function playRandomMusic() {
-            fetch('getMusicFiles.php')
-                .then(response => response.json())
-                .then(musicFiles => {
-                    const randomIndex = Math.floor(Math.random() * musicFiles.length);
-                    const audioElement = document.getElementById('background-music');
-                    audioElement.src = 'music' + musicFiles[randomIndex];
-                    audioElement.play();
-                })
-                .catch(error => {
-                    console.error('Error fetching music files:', error);
-                });
+            const musicFiles = [
+                'path/to/your/local/file1.mp3',
+                'path/to/your/local/file2.mp3',
+                'path/to/your/local/file3.mp3'
+            ];
+            const randomIndex = Math.floor(Math.random() * musicFiles.length);
+            const audioElement = document.getElementById('background-music');
+            audioElement.src = musicFiles[randomIndex];
+            audioElement.play();
         }
 
         setInterval(updateTime, 1000); 

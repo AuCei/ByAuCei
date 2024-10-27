@@ -10,7 +10,7 @@
             height: 100%;
             margin: 0;
             font-family: Arial, sans-serif;
-            background: url('https://example.com/raindrops-on-glass.jpg') no-repeat center center fixed; /* 替换为带有水滴效果的图片URL */
+            background: url('https://picsum.photos/1920/1080') no-repeat center center fixed; 
             background-size: cover;
             overflow: hidden;
         }
@@ -55,7 +55,7 @@
             background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
             -webkit-background-clip: text;
             color: transparent;
-            user-select: text; /* 允许选择文本 */
+            user-select: text; 
         }
 
         #ip-info img {
@@ -65,7 +65,7 @@
         }
 
         audio {
-            display: none; /* 隐藏音频控件 */
+            display: none; 
         }
 
         /* 媒体查询 */
@@ -100,7 +100,7 @@
         function updateTime() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = now.getMonth() + 1; // 月份从0开始，所以要加1
+            const month = now.getMonth() + 1;
             const day = now.getDate();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -131,11 +131,11 @@
                 });
         }
 
-        setInterval(updateTime, 1000); // 每秒更新一次时间
+        setInterval(updateTime, 1000); 
         window.onload = function() {
             updateTime();
             fetchIP();
-            document.getElementById('background-music').play(); // 页面加载时播放背景音乐
+            document.getElementById('background-music').play();
         };
     </script>
 </head>

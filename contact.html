@@ -29,20 +29,29 @@
         h1 {
             margin-bottom: 20px;
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px black;
         }
 
-        p {
-            font-size: 1.5em;
-            margin: 10px 0;
-            color: black;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.8);
-        }
-
-        a {
-            color: black;
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
             text-decoration: none;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: background-color 1s ease, background-position 1s ease;
+            background-image: linear-gradient(to right, #007BFF, #007BFF);
+            background-size: 200% 100%;
+            background-position: left bottom;
+        }
+
+        .button:hover {
+            background-position: right bottom;
+            background-image: linear-gradient(to right, #007BFF, #800080);
         }
 
         .modal {
@@ -77,6 +86,7 @@
             border-radius: 10px;
             transform: scale(0.7);
             transition: transform 0.5s ease;
+            color: black; /* 设置字体颜色为黑色 */
         }
 
         .modal-content.show {
@@ -101,8 +111,9 @@
             h1 {
                 font-size: 2em;
             }
-            p {
-                font-size: 1.2em;
+            .button {
+                font-size: 1em;
+                padding: 10px 20px;
             }
         }
 
@@ -110,8 +121,9 @@
             h1 {
                 font-size: 1.5em;
             }
-            p {
-                font-size: 1em;
+            .button {
+                font-size: 0.8em;
+                padding: 8px 15px;
             }
         }
     </style>
@@ -119,9 +131,9 @@
 <body>
     <div class="container">
         <h1>联系方式</h1>
-        <p><a href="#" id="weixinLink"> >>>添加微信<<< </a></p>
-        <p><a href="https://tenapi.cn/v2/qqcard?qq=3442695370"> >>>添加企鹅<<< </a></p>
-        <p><a href="mailto:My@AuCei.me"> >>>邮箱联系<<< </a></p>
+        <a href="#" id="weixinLink" class="button">添加微信</a>
+        <a href="https://tenapi.cn/v2/qqcard?qq=3442695370" id="qqLink" class="button">添加企鹅</a>
+        <a href="mailto:My@AuCei.me" id="emailLink" class="button">邮箱联系</a>
     </div>
 
     <div id="weixinModal" class="modal">
@@ -133,32 +145,72 @@
         </div>
     </div>
 
-    <script>
-        var modal = document.getElementById("weixinModal");
-        var btn = document.getElementById("weixinLink");
-        var span = document.getElementsByClassName("close")[0];
+    <div id="qqModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>我的企鹅</h2>
+            <img src="your-qq-qr-code.jpg" alt="企鹅二维码" style="width: 100%; max-width: 300px;">
+        </div>
+    </div>
 
-        btn.onclick = function() {
-            modal.style.display = "flex";
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>我的邮箱</h2>
+            <p>邮箱: My@AuCei.me</p>
+        </div>
+    </div>
+
+    <script>
+        var weixinModal = document.getElementById("weixinModal");
+        var qqModal = document.getElementById("qqModal");
+        var emailModal = document.getElementById("emailModal");
+        var weixinBtn = document.getElementById("weixinLink");
+        var qqBtn = document.getElementById("qqLink");
+        var emailBtn = document.getElementById("emailLink");
+        var closeBtns = document.getElementsByClassName("close");
+
+        weixinBtn.onclick = function() {
+            weixinModal.style.display = "flex";
             setTimeout(function() {
-                modal.classList.add("show");
-                document.querySelector(".modal-content").classList.add("show");
+                weixinModal.classList.add("show");
+                document.querySelector("#weixinModal .modal-content").classList.add("show");
             }, 10);
         }
 
-        span.onclick = function() {
-            document.querySelector(".modal-content").classList.remove("show");
+        qqBtn.onclick = function() {
+            qqModal.style.display = "flex";
             setTimeout(function() {
-                modal.classList.remove("show");
+                qqModal.classList.add("show");
+                document.querySelector("#qqModal .modal-content").classList.add("show");
+            }, 10);
+        }
+
+        emailBtn.onclick = function() {
+            emailModal.style.display = "flex";
+            setTimeout(function() {
+                emailModal.classList.add("show");
+                document.querySelector("#emailModal .modal-content").classList.add("show");
+            }, 10);
+        }
+
+        for (var i = 0; i < closeBtns.length; i++) {
+            closeBtns[i].onclick = function() {
+                var modal = this.closest(".modal");
+                modal.querySelector(".modal-content").classList.remove("show");
                 setTimeout(function() {
-                    modal.style.display = "none";
+                    modal.classList.remove("show");
+                    setTimeout(function() {
+                        modal.style.display = "none";
+                    }, 500);
                 }, 500);
-            }, 500);
+            }
         }
 
         window.onclick = function(event) {
-            if (event.target == modal) {
-                document.querySelector(".modal-content").classList.remove("show");
+            if (event.target.classList.contains("modal")) {
+                var modal = event.target;
+                modal.querySelector(".modal-content").classList.remove("show");
                 setTimeout(function() {
                     modal.classList.remove("show");
                     setTimeout(function() {

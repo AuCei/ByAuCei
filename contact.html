@@ -36,6 +36,13 @@
             font-size: 1.5em;
             margin: 10px 0;
             color: black; /* 设置字体颜色为黑色 */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        a {
+            color: black; /* 设置链接字体颜色为黑色 */
+            text-decoration: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.8);
         }
 
         @media (max-width: 768px) {
@@ -60,9 +67,9 @@
 <body>
     <div class="container">
         <h1>联系方式</h1>
-        <p>微信号：ByAuCei</p>
-        <p>QQ号：3442695370</p>
-        <p>邮箱：My@AuCei.me</p>
+        <p><a href="weixin://contacts/profile/ByAuCei">点击添加微信</a></p>
+        <p><a href="tencent://message/?uin=3442695370&Site=&Menu=yes">点击添加QQ</a></p>
+        <p><a href="mailto:My@AuCei.me">点击邮箱联系</a></p>
     </div>
 </body>
 </html>

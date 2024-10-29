@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image:url(../img/background.png);
+    background-image: url(../img/background.png);
     background-size: cover;
     overflow: hidden;
 }
@@ -22,6 +22,18 @@ body, html {
     align-items: center;
 }
 
+@keyframes textGlow {
+    0% { text-shadow: 0 0 10px white; }
+    50% { text-shadow: 0 0 20px white; }
+    100% { text-shadow: 0 0 10px white; }
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+    50% { box-shadow: 0 0 40px rgba(255, 255, 255, 1); }
+    100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+}
+
 #header {
     position: absolute;
     top: 20px;
@@ -34,10 +46,7 @@ body, html {
     padding: 10px;
     transition: all 0.3s ease;
     user-select: none; /* 禁用文本选择 */
-}
-
-#header:hover {
-    text-shadow: 0 0 10px white;
+    animation: textGlow 1s infinite;
 }
 
 #content {
@@ -56,7 +65,7 @@ body, html {
     height: 150px;
     border-radius: 50%;
     margin-bottom: 20px;
-    animation: spin 5s linear infinite;
+    animation: spin 5s linear infinite, glow 2s infinite;
     user-select: none; /* 禁用选中 */
     -webkit-user-drag: none; /* 禁用拖动 */
     box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
@@ -68,12 +77,6 @@ body, html {
     100% { transform: rotate(360deg); }
 }
 
-@keyframes glow {
-    0% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
-    50% { box-shadow: 0 0 40px rgba(255, 255, 255, 1); }
-    100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
-}
-
 #avatar::before {
     content: '';
     position: absolute;
@@ -83,11 +86,15 @@ body, html {
     height: 170px;
     border-radius: 50%;
     border: 2px solid rgba(255, 255, 255, 0.8);
-    animation: glow 2s infinite;
+    animation: glow 1s infinite;
 }
 
 #time {
     font-size: 4em;
+    color: transparent;
+    background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    -webkit-background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加阴影 */
 }
 
 .rainbow {
@@ -102,7 +109,8 @@ body, html {
     background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
     -webkit-background-clip: text;
     color: transparent;
-	user-select: text; /* 允许选中IP信息 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加阴影 */
+    user-select: text; /* 允许选中IP信息 */
 }
 
 #footer {
@@ -122,10 +130,7 @@ body, html {
     color: white;
     text-decoration: none;
     transition: all 0.3s ease;
-}
-
-#footer a:hover {
-    text-shadow: 0 0 10px white;
+    animation: textGlow 1s infinite;
 }
 
 #footer a:active {

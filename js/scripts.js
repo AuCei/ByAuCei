@@ -46,6 +46,7 @@ function playRandomMusic() {
         'music/璀璨冒险人.mp3',
         'music/玄鸟.mp3',
         'music/要不然我们就这样一万年.mp3',
+	'music/Raindrops.mp3',
     ];
     const randomIndex = Math.floor(Math.random() * musicFiles.length);
     const audioElement = document.getElementById('background-music');

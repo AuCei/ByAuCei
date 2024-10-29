@@ -11,7 +11,7 @@ function updateTime() {
 }
 
 function fetchIP() {
-    fetch('https://ipapi.co/json/')
+    fetch('https://qifu-api.baidubce.com/ip/local/geo/v1/district')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -19,12 +19,19 @@ function fetchIP() {
             return response.json();
         })
         .then(data => {
-            let ip = data.ip;
-            if (ip.startsWith("::ffff:")) {
-                ip = ip.split(":").pop();
+            if (data && data.data) {
+                let ip = data.ip;
+                if (ip.startsWith("::ffff:")) {
+                    ip = ip.split(":").pop();
+                }
+                document.getElementById('ip-info').innerHTML = 
+                     `<span>运营商: ${data.data.isp || '未知'}</span><br>
+					 <span>IP地址: ${ip}</span><br>
+                     <span>归属地: ${data.data.country || ''}${data.data.prov || ''}${data.data.city || ''}${data.data.district || ''}</span><br>
+                     `;
+            } else {
+                document.getElementById('ip-info').innerText = '无法获取IP信息';
             }
-            document.getElementById('ip-info').innerHTML = 
-                `<span>IP地址: ${ip}</span><br>服务商: ${data.org}<br>归属地: ${data.country_name}, ${data.region}, ${data.city}<br><img src="https://flagcdn.com/w320/${data.country_code.toLowerCase()}.png" alt="国旗">`;
         })
         .catch(error => {
             console.error('Error fetching IP address:', error);

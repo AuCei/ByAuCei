@@ -8,7 +8,7 @@
     <script>
         let countdown = 3;
         function updateCountdown() {
-            if (countdown > 0) {
+            if (countdown >= 0) {
                 document.getElementById('countdown').innerText = countdown;
                 countdown--;
                 setTimeout(updateCountdown, 1000);

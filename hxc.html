@@ -8,11 +8,11 @@
     <script>
         let countdown = 3;
         function updateCountdown() {
-            if (countdown >= 0) {
+            if (countdown > 0) {
                 document.getElementById('countdown').innerText = countdown;
                 countdown--;
                 setTimeout(updateCountdown, 1000);
-            } else {
+            } else(countdown = 0) {
                 window.location.href = 'https://aucei-my.sharepoint.com/:w:/g/personal/me_aucei_online/ET9jXKtPmBVGiA-jVP0nVDMBWImvx2ymz3dLlmv0FsZlaQ';
             }
         }
@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    <p>页面将在 <span id="countdown">0</span> 秒后跳转...</p>
+    <p>页面将在 <span id="countdown">3</span> 秒后跳转...</p>
     <p>如果没有自动跳转，请点击<a href="https://aucei-my.sharepoint.com/:w:/g/personal/me_aucei_online/ET9jXKtPmBVGiA-jVP0nVDMBWImvx2ymz3dLlmv0FsZlaQ">这里</a>。</p>
 </body>
 

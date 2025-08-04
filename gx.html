@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重定向页面</title>
+    <script>
+        let countdown = 3;
+        function updateCountdown() {
+            if (countdown > 0) {
+                document.getElementById('countdown').innerText = countdown;
+                countdown--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                window.location.href = 'https://aucei-my.sharepoint.com/:f:/g/personal/me_aucei_online/Er4Y7fB8fqRAuweO3FetvoIBdEFLNxOIj_AIX93FPFbWhQ?e=aNkkVh';
+            }
+        }
+        window.onload = updateCountdown;
+    </script>
+</head>
+
+<body>
+    <p>页面将在 <span id="countdown">0</span> 秒后跳转...</p>
+    <p>如果没有自动跳转，请点击<a href="https://aucei-my.sharepoint.com/:f:/g/personal/me_aucei_online/Er4Y7fB8fqRAuweO3FetvoIBdEFLNxOIj_AIX93FPFbWhQ?e=aNkkVh">这里</a>。</p>
+</body>
+
+</html>

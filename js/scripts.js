@@ -41,13 +41,8 @@ function fetchIP() {
 
 function playRandomMusic() {
     const musicFiles = [
-        'music/老人与海.mp3',
-        'music/画心.mp3',
-        'music/璀璨冒险人.mp3',
-        'music/玄鸟.mp3',
-        'music/要不然我们就这样一万年.mp3',
+        'music/花心是本性.flac',
 	'music/Raindrops.mp3',
-	'music/时间煮雨.mp3',
     ];
     const randomIndex = Math.floor(Math.random() * musicFiles.length);
     const audioElement = document.getElementById('background-music');
@@ -61,3 +56,4 @@ window.onload = function() {
     fetchIP();
     playRandomMusic();
 };
+

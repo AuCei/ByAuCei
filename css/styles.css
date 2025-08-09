@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url(../img/background.png);
+    background-image: url(https://www.dmoe.cc/random.php);
     background-size: cover;
     overflow: hidden;
 }
@@ -168,3 +168,4 @@ audio {
         font-size: 0.8em;
     }
 }
+

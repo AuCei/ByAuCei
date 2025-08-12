@@ -1,6 +1,6 @@
-body,
-html {
-    height: 100%;
+/* 禁止页面拖动和滚动 */
+html, body {
+    height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
     background: url(https://www.dmoe.cc/random.php) no-repeat center center fixed;
@@ -9,22 +9,45 @@ html {
     justify-content: center;
     align-items: center;
     color: white;
+    overflow: hidden; /* 禁止滚动 */
+    touch-action: none; /* 禁止触摸拖动行为 */
 }
 
+/* 通用盒模型设置 */
+* {
+    box-sizing: border-box;
+}
+
+/* 主容器 */
 .container {
     background: rgba(255, 255, 255, 0.4);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 90vw;
+    width: 100%;
 }
 
+/* 联系方式框居中 */
+.contact-box {
+    margin: 0 auto;
+    max-width: 400px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 15px;
+    border-radius: 8px;
+    color: black;
+}
+
+/* 标题样式 */
 h1 {
     margin-bottom: 20px;
     font-size: 2.5em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px black;
 }
 
+/* 按钮样式 */
 .button {
     display: inline-block;
     padding: 15px 25px;
@@ -47,6 +70,7 @@ h1 {
     background-image: linear-gradient(to right, #007BFF, #800080);
 }
 
+/* 模态框样式 */
 .modal {
     display: none;
     position: fixed;
@@ -80,13 +104,15 @@ h1 {
     transform: scale(0.7);
     transition: transform 0.5s ease;
     color: black;
-    /* 设置字体颜色为黑色 */
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .modal-content.show {
     transform: scale(1);
 }
 
+/* 关闭按钮 */
 .close {
     color: #aaa;
     float: right;
@@ -101,14 +127,16 @@ h1 {
     cursor: pointer;
 }
 
+/* 动画效果 */
 @keyframes textGlow {
     0% { text-shadow: 0 0 10px white; }
     50% { text-shadow: 0 0 20px white; }
     100% { text-shadow: 0 0 10px white; }
 }
 
+/* 页脚样式 */
 #footer {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     width: 100%;
     text-align: center;
@@ -117,7 +145,7 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     background: rgba(0, 0, 0, 0.5);
     padding: 10px;
-    user-select: none; /* 禁用文本选择 */
+    user-select: none;
 }
 
 #footer a {
@@ -131,7 +159,7 @@ h1 {
     transform: scale(0.95);
 }
 
-
+/* 响应式调整 */
 @media (max-width: 768px) {
     h1 {
         font-size: 2em;
@@ -153,4 +181,3 @@ h1 {
         padding: 8px 15px;
     }
 }
-

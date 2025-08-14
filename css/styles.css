@@ -1,30 +1,92 @@
-body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-image: url(https://www.dmoe.cc/random.php);
-    background-size: cover;
-    overflow: hidden;
-}
-
-.overlay {
+/* 加载界面样式 */
+#loading-screen {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px); /* 适用于 Safari */
+    background: linear-gradient(135deg, #ffe4e1, #ffb6c1);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 9999;
+    transition: opacity 1s ease, visibility 1s ease;
 }
 
-@keyframes textGlow {
-    0% { text-shadow: 0 0 10px white; }
-    50% { text-shadow: 0 0 20px white; }
-    100% { text-shadow: 0 0 10px white; }
+.loader {
+    font-size: 2em;
+    color: white;
+    animation: bounce 1s infinite;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    user-select: none;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* 页面布局修复 */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-image: url(https://www.dmoe.cc/random.php);
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    touch-action: pan-y;
+}
+
+/* 模糊遮罩层 */
+#background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 0;
+}
+
+/* 保证主要内容在模糊层之上 */
+#header, #content, #footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* 头像容器 */
+.avatar-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+}
+
+#avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    animation: spin 5s linear infinite, glow 2s infinite;
+    user-select: none;
+    -webkit-user-drag: none;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes glow {
@@ -33,59 +95,38 @@ body, html {
     100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
 }
 
+@keyframes textGlow {
+    0% { text-shadow: 0 0 10px white; }
+    50% { text-shadow: 0 0 20px white; }
+    100% { text-shadow: 0 0 10px white; }
+}
+
+/* 头部（居中修复） */
 #header {
-    position: absolute;
-    top: 20px;
-    width: 100%;
+    /*width: 100%;*/
+    display: flex;              /* 新增：Flex 布局 */
+    justify-content: center;    /* 新增：水平居中 */
+    align-items: center;        /* 新增：垂直居中 */
     text-align: center;
     font-size: 2em;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     background: rgba(0, 0, 0, 0.5);
     padding: 10px;
-    transition: all 0.3s ease;
-    user-select: none; /* 禁用文本选择 */
     animation: textGlow 1s infinite;
+    user-select: none;
 }
 
 #content {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    user-select: none; /* 禁用文本选择 */
     text-align: center;
     color: white;
-}
-
-#avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-    animation: spin 5s linear infinite, glow 2s infinite;
-    user-select: none; /* 禁用选中 */
-    -webkit-user-drag: none; /* 禁用拖动 */
-    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
-    position: relative;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-#avatar::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 170px;
-    height: 170px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    animation: glow 1s infinite;
+    user-select: none;
+    overflow: hidden;
 }
 
 #time {
@@ -93,7 +134,9 @@ body, html {
     color: transparent;
     background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
     -webkit-background-clip: text;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加阴影 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    word-break: break-word;
 }
 
 .rainbow {
@@ -108,28 +151,49 @@ body, html {
     background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加阴影 */
-    user-select: text; /* 允许选中IP信息 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    user-select: text;
+    max-width: 100%;
+    word-break: break-word;
 }
 
+#music-toggle {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+}
+
+#music-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 底部（居中修复） */
 #footer {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
+    /*width: 100%;*/
+    display: flex;              /* 新增：Flex 布局 */
+    justify-content: center;    /* 新增：水平居中 */
+    align-items: center;        /* 新增：垂直居中 */
     text-align: center;
     font-size: 1.1em;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     background: rgba(0, 0, 0, 0.5);
     padding: 10px;
-    user-select: none; /* 禁用文本选择 */
+    user-select: none;
 }
 
 #footer a {
     color: white;
     text-decoration: none;
-    transition: all 0.3s ease;
     animation: textGlow 1s infinite;
+    transition: all 0.3s ease;
 }
 
 #footer a:active {
@@ -137,33 +201,31 @@ body, html {
 }
 
 audio {
-    display: none; 
+    display: none;
 }
 
-/* 媒体查询 */
+/* 响应式设计 */
 @media (max-width: 1200px) {
-    #time {
-        font-size: 3em;
-    }
-    #ip-info {
-        font-size: 1.5em;
-    }
+    #time { font-size: 3em; }
+    #ip-info { font-size: 1.5em; }
 }
 
 @media (max-width: 768px) {
-    #time {
-        font-size: 2em;
-    }
-    #ip-info {
-        font-size: 1em;
-    }
+    #time { font-size: 2em; }
+    #ip-info { font-size: 1em; }
 }
 
 @media (max-width: 480px) {
-    #time {
-        font-size: 1.5em;
+    .avatar-wrapper {
+        width: 100px;
+        height: 100px;
     }
-    #ip-info {
-        font-size: 0.8em;
+
+    #avatar {
+        width: 100px;
+        height: 100px;
     }
+
+    #time { font-size: 1.5em; }
+    #ip-info { font-size: 0.8em; }
 }

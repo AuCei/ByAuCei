@@ -103,10 +103,9 @@ body, html {
 
 /* 头部（居中修复） */
 #header {
-    /*width: 100%;*/
-    display: flex;              /* 新增：Flex 布局 */
-    justify-content: center;    /* 新增：水平居中 */
-    align-items: center;        /* 新增：垂直居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: 2em;
     color: white;
@@ -174,12 +173,17 @@ body, html {
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* 底部（居中修复） */
+/* 底部（居中修复 + 适配移动端遮挡） */
 #footer {
-    /*width: 100%;*/
-    display: flex;              /* 新增：Flex 布局 */
-    justify-content: center;    /* 新增：水平居中 */
-    align-items: center;        /* 新增：垂直居中 */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: calc(50px + env(safe-area-inset-bottom)); /* 适配底部安全区域 */
+    padding-bottom: env(safe-area-inset-bottom);       /* 防止遮挡 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: 1.1em;
     color: white;
@@ -187,6 +191,7 @@ body, html {
     background: rgba(0, 0, 0, 0.5);
     padding: 10px;
     user-select: none;
+    box-sizing: border-box;
 }
 
 #footer a {

@@ -37,47 +37,45 @@ function closeModal(modal) {
     }, 300);
 }
 
-// 🌸 樱花 Canvas 动画
+// 🌸 樱花 Canvas 动画（优化 + 从顶部飘落 + 稳定速度）
 const canvas = document.getElementById("sakuraCanvas");
 const ctx = canvas.getContext("2d", { alpha: true });
 
 function resizeCanvas() {
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width = rect.width > 0 ? rect.width * dpr : window.innerWidth * dpr;
+    canvas.height = rect.height > 0 ? rect.height * dpr : window.innerHeight * dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-const sakuraCount = 80;
+const sakuraCount = 50;
 const width = () => canvas.getBoundingClientRect().width;
 const height = () => canvas.getBoundingClientRect().height;
 
 function makePetal() {
     const size = 6 + Math.random() * 10;
-    const depth = size / 16;
     return {
         baseX: Math.random() * width(),
         x: 0,
-        y: Math.random() * height(),
+        y: -20 - Math.random() * 100, // 🌸 从顶部开始飘落
         size,
-        speedY: 0.3 + depth + Math.random() * 0.4,
+        speedY: 0.3 + Math.random() * 0.2, // 🎯 稳定速度
         swayAmp: 10 + Math.random() * 20,
         swayFreq: 0.006 + Math.random() * 0.006,
         phase: Math.random() * Math.PI * 2,
         rot: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.02,
-        alpha: 0.7 + Math.random() * 0.3,
-        shadow: 2 + Math.random() * 8
+        alpha: 0.7 + Math.random() * 0.3
     };
 }
 const petals = Array.from({ length: sakuraCount }, makePetal);
 
 function drawPetal(p) {
-    const { x, y, size, rot, alpha, shadow } = p;
+    const { x, y, size, rot, alpha } = p;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(rot);
@@ -90,8 +88,6 @@ function drawPetal(p) {
 
     ctx.globalAlpha = alpha;
     ctx.fillStyle = grad;
-    ctx.shadowColor = "rgba(255, 170, 190, 0.6)";
-    ctx.shadowBlur = shadow;
 
     ctx.beginPath();
     ctx.moveTo(0, -4);
@@ -110,7 +106,7 @@ function drawPetal(p) {
 }
 
 function updatePetal(p) {
-    p.y += p.speedY * (0.85 + Math.sin(p.y / 50) * 0.15);
+    p.y += p.speedY; // 🎯 恒定速度飘落
     p.x = p.baseX + Math.sin(p.y * p.swayFreq + p.phase) * p.swayAmp;
     p.rot += p.rotSpeed;
 
@@ -121,14 +117,14 @@ function updatePetal(p) {
     }
 }
 
+let animationId;
 function draw() {
     ctx.clearRect(0, 0, width(), height());
-    petals.sort((a, b) => a.size - b.size);
     for (const p of petals) {
         updatePetal(p);
         drawPetal(p);
     }
-    requestAnimationFrame(draw);
+    animationId = requestAnimationFrame(draw);
 }
 
 // ✅ 加载完成后淡出 loader，再启动动画
@@ -138,6 +134,15 @@ window.addEventListener("load", () => {
 
     setTimeout(() => {
         loader.style.display = "none";
-        requestAnimationFrame(draw);
+        animationId = requestAnimationFrame(draw);
     }, 3000);
+});
+
+// 💤 页面不可见时暂停动画
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        cancelAnimationFrame(animationId);
+    } else {
+        animationId = requestAnimationFrame(draw);
+    }
 });

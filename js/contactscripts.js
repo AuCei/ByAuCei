@@ -63,7 +63,7 @@ function makePetal() {
         x: 0,
         y: -20 - Math.random() * 100, // 🌸 从顶部开始飘落
         size,
-        speedY: 0.3 + Math.random() * 0.2, // 🎯 稳定速度
+        speedY: 0.7 + Math.random() * 0.3, // 🎯 稳定速度
         swayAmp: 10 + Math.random() * 20,
         swayFreq: 0.006 + Math.random() * 0.006,
         phase: Math.random() * Math.PI * 2,
@@ -146,3 +146,4 @@ document.addEventListener("visibilitychange", () => {
         animationId = requestAnimationFrame(draw);
     }
 });
+

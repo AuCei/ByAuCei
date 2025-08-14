@@ -12,22 +12,41 @@ function updateTime() {
 
 async function fetchIP() {
     const ipInfoEl = document.getElementById('ip-info');
+
+    // 优先使用百度接口
     try {
         const res = await fetch('https://qifu-api.baidubce.com/ip/local/geo/v1/district');
-        if (!res.ok) throw new Error(`HTTP 错误：${res.status}`);
+        if (!res.ok) throw new Error(`百度接口错误：${res.status}`);
         const { ip, data } = await res.json();
-        if (!data) throw new Error('无有效数据返回');
+        if (!data || !data.prov || !data.city) throw new Error('百度接口返回数据不完整');
 
         let displayIP = ip.startsWith("::ffff:") ? ip.split(":").pop() : ip;
         const location = [data.country, data.prov, data.city, data.district].filter(Boolean).join('');
+        const isp = data.isp || '未知';
+
+        ipInfoEl.innerHTML = `
+            <span>运营商: ${isp}</span><br>
+            <span>IP地址: ${displayIP}</span><br>
+            <span>归属地: ${location}</span><br>
+        `;
+        return;
+    } catch (err) {
+        console.warn('百度接口失败，尝试备用接口:', err);
+    }
+
+    // 备用接口：ip-api.com
+    try {
+        const res = await fetch('http://ip-api.com/json/?lang=zh-CN');
+        if (!res.ok) throw new Error(`备用接口错误：${res.status}`);
+        const data = await res.json();
 
         ipInfoEl.innerHTML = `
             <span>运营商: ${data.isp || '未知'}</span><br>
-            <span>IP地址: ${displayIP}</span><br>
-            <span>归属地: ${location || '未知'}</span><br>
+            <span>IP地址: ${data.query}</span><br>
+            <span>归属地: ${data.country}${data.regionName}${data.city}</span><br>
         `;
     } catch (err) {
-        console.error('获取 IP 信息失败:', err);
+        console.error('备用接口也失败了:', err);
         ipInfoEl.innerText = '无法获取IP信息，请检查网络连接';
     }
 }
@@ -76,4 +95,3 @@ window.onload = function() {
     const loadingScreen = document.getElementById('loading-screen');
     loadingScreen.classList.add('hidden');
 };
-

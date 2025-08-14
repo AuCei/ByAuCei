@@ -1,3 +1,35 @@
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 240, 250, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    will-change: opacity, visibility;
+}
+
+.loader-content {
+    font-size: 2em;
+    animation: bounce 1s infinite;
+    color: #ff69b4;
+    text-shadow: 0 0 10px #ffb6c1;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#loader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -7,7 +39,6 @@ html, body {
     position: relative;
 }
 
-/* 背景图层 */
 #backgroundLayer {
     position: fixed;
     top: 0;
@@ -19,7 +50,6 @@ html, body {
     z-index: -2;
 }
 
-/* 樱花 canvas 层 */
 #sakuraCanvas {
     position: fixed;
     top: 0;
@@ -32,7 +62,6 @@ html, body {
     background: transparent;
 }
 
-/* 主内容 */
 .container {
     position: relative;
     z-index: 1;
@@ -48,7 +77,6 @@ html, body {
     transform: translateY(-50%);
 }
 
-/* 按钮样式 */
 .button {
     display: inline-block;
     padding: 15px 25px;
@@ -70,7 +98,6 @@ html, body {
     background-image: linear-gradient(to right, #007BFF, #800080);
 }
 
-/* 模态框 */
 .modal {
     display: none;
     position: fixed;
@@ -120,19 +147,21 @@ html, body {
     color: black;
 }
 
-/* 页脚 */
 #footer {
     position: fixed;
-    bottom: 20px;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    text-align: center;
-    font-size: 1.1em;
-    color: white;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    user-select: none;
-    z-index: 2;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 10;
 }
+
 #footer a {
     color: white;
     text-decoration: none;

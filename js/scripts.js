@@ -15,44 +15,27 @@ async function fetchIP() {
     const isMobileNetwork = navigator.connection?.type === 'cellular';
 
     const countryMap = {
-        'CN': '中国',
-        'HK': '中国香港',
-        'TW': '中国台湾',
-        'MO': '中国澳门'
+        'CN': '中国', 'HK': '中国香港', 'TW': '中国台湾', 'MO': '中国澳门',
+        'JP': '日本', 'KR': '韩国', 'US': '美国', 'CA': '加拿大',
+        'GB': '英国', 'FR': '法国', 'DE': '德国', 'IT': '意大利',
+        'ES': '西班牙', 'RU': '俄罗斯', 'IN': '印度', 'ID': '印度尼西亚',
+        'SG': '新加坡', 'TH': '泰国', 'VN': '越南', 'PH': '菲律宾',
+        'MY': '马来西亚', 'AU': '澳大利亚', 'NZ': '新西兰',
+        'BR': '巴西', 'MX': '墨西哥', 'AR': '阿根廷',
+        'ZA': '南非', 'SA': '沙特阿拉伯', 'AE': '阿联酋',
+        'TR': '土耳其', 'EG': '埃及'
     };
 
     const regionMap = {
-        'Shanghai': '上海',
-        'Beijing': '北京',
-        'Guangdong': '广东',
-        'Zhejiang': '浙江',
-        'Jiangsu': '江苏',
-        'Sichuan': '四川',
-        'Hunan': '湖南',
-        'Hubei': '湖北',
-        'Shandong': '山东',
-        'Fujian': '福建',
-        'Chongqing': '重庆',
-        'Tianjin': '天津',
-        'Hebei': '河北',
-        'Henan': '河南',
-        'Anhui': '安徽',
-        'Shanxi': '山西',
-        'Shaanxi': '陕西',
-        'Guangxi': '广西',
-        'Yunnan': '云南',
-        'Guizhou': '贵州',
-        'Jilin': '吉林',
-        'Heilongjiang': '黑龙江',
-        'Liaoning': '辽宁',
-        'Inner Mongolia': '内蒙古',
-        'Ningxia': '宁夏',
-        'Xinjiang': '新疆',
-        'Qinghai': '青海',
-        'Gansu': '甘肃',
-        'Hong Kong': '香港',
-        'Macau': '澳门',
-        'Taiwan': '台湾'
+        'Shanghai': '上海', 'Beijing': '北京', 'Guangdong': '广东', 'Zhejiang': '浙江',
+        'Jiangsu': '江苏', 'Sichuan': '四川', 'Hunan': '湖南', 'Hubei': '湖北',
+        'Shandong': '山东', 'Fujian': '福建', 'Chongqing': '重庆', 'Tianjin': '天津',
+        'Hebei': '河北', 'Henan': '河南', 'Anhui': '安徽', 'Shanxi': '山西',
+        'Shaanxi': '陕西', 'Guangxi': '广西', 'Yunnan': '云南', 'Guizhou': '贵州',
+        'Jilin': '吉林', 'Heilongjiang': '黑龙江', 'Liaoning': '辽宁',
+        'Inner Mongolia': '内蒙古', 'Ningxia': '宁夏', 'Xinjiang': '新疆',
+        'Qinghai': '青海', 'Gansu': '甘肃', 'Hong Kong': '香港',
+        'Macau': '澳门', 'Taiwan': '台湾'
     };
 
     try {
@@ -69,22 +52,23 @@ async function fetchIP() {
         const region = regionMap[data.region] || data.region;
         const city = regionMap[data.city] || data.city;
 
-        // 自动去除重复项
-        const locationParts = [country, region, city];
-        const uniqueLocation = locationParts.filter((item, index, arr) => arr.indexOf(item) === index);
-
-        // 美化归属地格式
         let location = '';
-        if (country === '中国香港') location = '中国香港特别行政区';
-        else if (country === '中国澳门') location = '中国澳门特别行政区';
-        else if (['北京', '上海', '天津', '重庆'].includes(region)) {
-            location = `${country}${region}市`;
-        } else if (region && city && region !== city) {
-            location = `${country}${region}省 ${city}市`;
-        } else if (region) {
-            location = `${country}${region}省`;
+        if (country === '中国香港') {
+            location = '中国香港特别行政区';
+        } else if (country === '中国澳门') {
+            location = '中国澳门特别行政区';
+        } else if (country === '中国') {
+            if (['北京', '上海', '天津', '重庆'].includes(region)) {
+                location = `${country}${region}市`;
+            } else if (region && city && region !== city) {
+                location = `${country}${region}省 ${city}市`;
+            } else if (region) {
+                location = `${country}${region}省`;
+            } else {
+                location = country;
+            }
         } else {
-            location = country;
+            location = `${country} ${region}`;
         }
 
         ipInfoEl.innerHTML = `
@@ -120,16 +104,17 @@ function playRandomMusic() {
     });
 }
 
+
 function setupMusicToggle() {
     const button = document.getElementById('music-toggle');
-    const audioElement = document.getElementById('background-music');
+    const audio = document.getElementById('background-music');
 
     button.addEventListener('click', () => {
-        if (audioElement.paused) {
+        if (audio.paused) {
             playRandomMusic();
             button.textContent = '⏸️ 暂停背景音乐';
         } else {
-            audioElement.pause();
+            audio.pause();
             button.textContent = '🎵 播放背景音乐';
         }
     });
@@ -137,11 +122,9 @@ function setupMusicToggle() {
 
 setInterval(updateTime, 1000);
 
-window.onload = function() {
+window.onload = () => {
     updateTime();
     fetchIP();
     setupMusicToggle();
-
-    const loadingScreen = document.getElementById('loading-screen');
-    loadingScreen.classList.add('hidden');
+    document.getElementById('loading-screen').classList.add('hidden');
 };

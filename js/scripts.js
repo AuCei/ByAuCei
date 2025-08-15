@@ -12,69 +12,95 @@ function updateTime() {
 
 async function fetchIP() {
     const ipInfoEl = document.getElementById('ip-info');
+    const isMobileNetwork = navigator.connection?.type === 'cellular';
+
+    const countryMap = {
+        'CN': '中国',
+        'HK': '中国香港',
+        'TW': '中国台湾',
+        'MO': '中国澳门'
+    };
+
+    const regionMap = {
+        'Shanghai': '上海',
+        'Beijing': '北京',
+        'Guangdong': '广东',
+        'Zhejiang': '浙江',
+        'Jiangsu': '江苏',
+        'Sichuan': '四川',
+        'Hunan': '湖南',
+        'Hubei': '湖北',
+        'Shandong': '山东',
+        'Fujian': '福建',
+        'Chongqing': '重庆',
+        'Tianjin': '天津',
+        'Hebei': '河北',
+        'Henan': '河南',
+        'Anhui': '安徽',
+        'Shanxi': '山西',
+        'Shaanxi': '陕西',
+        'Guangxi': '广西',
+        'Yunnan': '云南',
+        'Guizhou': '贵州',
+        'Jilin': '吉林',
+        'Heilongjiang': '黑龙江',
+        'Liaoning': '辽宁',
+        'Inner Mongolia': '内蒙古',
+        'Ningxia': '宁夏',
+        'Xinjiang': '新疆',
+        'Qinghai': '青海',
+        'Gansu': '甘肃',
+        'Hong Kong': '香港',
+        'Macau': '澳门',
+        'Taiwan': '台湾'
+    };
 
     try {
-        const res = await fetch('https://api.vvhan.com/api/ipInfo');
+        const res = await fetch('https://ipinfo.io/json?token=44ccaae437eafb');
         const data = await res.json();
-        const info = data.info || {};
 
-        // 判断是否为国外 IP 或信息缺失
-        const isForeign = info.country !== '中国' || !info.prov;
+        const ip = data.ip || '未知 IP';
+        let isp = data.org || '未知运营商';
+        if (isp.includes('Mobile')) isp = '中国移动';
+        else if (isp.includes('Unicom') || isp.includes('CNC')) isp = '中国联通';
+        else if (isp.includes('Telecom') || isp.includes('Chinanet')) isp = '中国电信';
 
-        if (isForeign) {
-            throw new Error('国内接口无法识别该 IP，尝试国际接口');
+        const country = countryMap[data.country] || data.country;
+        const region = regionMap[data.region] || data.region;
+        const city = regionMap[data.city] || data.city;
+
+        // 自动去除重复项
+        const locationParts = [country, region, city];
+        const uniqueLocation = locationParts.filter((item, index, arr) => arr.indexOf(item) === index);
+
+        // 美化归属地格式
+        let location = '';
+        if (country === '中国香港') location = '中国香港特别行政区';
+        else if (country === '中国澳门') location = '中国澳门特别行政区';
+        else if (['北京', '上海', '天津', '重庆'].includes(region)) {
+            location = `${country}${region}市`;
+        } else if (region && city && region !== city) {
+            location = `${country}${region}省 ${city}市`;
+        } else if (region) {
+            location = `${country}${region}省`;
+        } else {
+            location = country;
         }
-
-        const ispMap = {
-            '移动': '中国移动',
-            '联通': '中国联通',
-            '电信': '中国电信',
-            '教育网': '中国教育网',
-            '广电': '中国广电',
-            '长城宽带': '长城宽带',
-            '鹏博士': '鹏博士电信',
-            '铁通': '中国铁通',
-        };
-
-        const rawIsp = info.isp || '未知';
-        const isp = ispMap[rawIsp] || rawIsp;
-
-        const locationParts = [info.country, info.prov, info.city, info.district];
-        const location = locationParts.filter(Boolean).join(' ');
 
         ipInfoEl.innerHTML = `
-      <span>运营商: ${isp}</span><br>
-      <span>IP地址: ${data.ip}</span><br>
-      <span>归属地: ${location}</span><br>
-    `;
-    } catch (err) {
-        console.warn('切换到国际接口:', err);
+            <span>运营商：${isp}</span><br>
+            <span>IP地址：${ip}</span><br>
+            <span>归属地：${location}</span><br>
+        `;
 
-        try {
-            const res = await fetch('https://ipapi.co/json');
-            const data = await res.json();
-
-            const locationParts = [data.country_name, data.region, data.city];
-            const location = locationParts.filter(Boolean).join(' ');
-            const isp = data.org || '未知';
-
-            ipInfoEl.innerHTML = `
-        <span>运营商: ${isp}</span><br>
-        <span>IP地址: ${data.ip}</span><br>
-        <span>归属地: ${location}</span><br>
-      `;
-        } catch (err2) {
-            console.error('国际接口也失败了:', err2);
-            ipInfoEl.innerHTML = `<span style="color:red;">⚠️ 无法获取 IP 信息，请检查网络连接或稍后再试。</span>`;
+        if (isMobileNetwork) {
+            ipInfoEl.innerHTML += `<span style="color:orange;">⚠️ 当前使用移动网络，IP信息可能不准确</span>`;
         }
+    } catch (err) {
+        console.error('IP获取失败:', err);
+        ipInfoEl.innerHTML = `<span style="color:red;">⚠️ 无法获取 IP 信息，请检查网络连接或稍后再试。</span>`;
     }
 }
-
-
-
-
-
-
 
 function playRandomMusic() {
     const musicFiles = [
@@ -116,7 +142,6 @@ window.onload = function() {
     fetchIP();
     setupMusicToggle();
 
-    // 隐藏加载界面
     const loadingScreen = document.getElementById('loading-screen');
     loadingScreen.classList.add('hidden');
 };

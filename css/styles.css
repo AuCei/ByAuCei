@@ -145,7 +145,7 @@ html, body {
 
 /* 内容居中修复 */
 #content {
-    font-size: 1.2em;
+    font-size: 1.1em;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -289,4 +289,5 @@ audio {
         padding: 16px;
     }
 }
+
 

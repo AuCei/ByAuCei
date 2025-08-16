@@ -104,13 +104,65 @@ html, body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    animation: spin 5s linear infinite, glow 2s infinite;
     user-select: none;
     -webkit-user-drag: none;
-    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2), 0 0 50px rgba(255, 255, 255, 0.8);
     position: relative;
     z-index: 1;
+    transition: box-shadow 0.3s ease;
+    animation: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
+
+#avatar:hover {
+    box-shadow: 0 0 60px rgba(255, 255, 255, 1);
+    cursor: pointer;
+    transform: scale(1.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#avatar:active {
+    transform: scale(0.95);
+}
+
+#avatar.rotating {
+    animation: spin 5s linear infinite, strongGlow 2s infinite;
+    transform: translateY(-4px) scale(1.05);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+#avatar.rotating::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160px;
+    height: 160px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    animation: ripple 1.8s infinite ease-out;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.6;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.4);
+        opacity: 0.2;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.6);
+        opacity: 0;
+    }
+}
+
+
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -123,9 +175,14 @@ html, body {
     100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
 }
 
-@keyframes textGlow {
-    0% { text-shadow: 0 0 5px white; }
-    100% { text-shadow: 0 0 20px white; }
+@keyframes strongGlow {
+    0%   { box-shadow: 0 0 30px rgba(255, 255, 255, 0.9); }
+    50%  { box-shadow: 0 0 60px rgba(255, 255, 255, 1); }
+    100% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.9); }
+}
+
+#avatar.rotating {
+    animation: spin 5s linear infinite, strongGlow 2s infinite;
 }
 
 /* 头部 */
@@ -141,6 +198,11 @@ html, body {
     padding: 10px;
     animation: textGlow 1.5s infinite alternate;
     user-select: none;
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 5px white; }
+    100% { text-shadow: 0 0 20px white; }
 }
 
 /* 内容居中修复 */
@@ -179,6 +241,7 @@ html, body {
     word-break: break-word;
     animation: floatUp 1.2s ease-out;
 }
+
 #time:hover,
 #ip-info:hover {
     transform: translateY(-6px) scale(1.03);
@@ -188,7 +251,6 @@ html, body {
     border-color: rgba(255, 255, 255, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
-
 
 /* 🌙 深色模式适配 */
 @media (prefers-color-scheme: dark) {
@@ -207,56 +269,6 @@ html, body {
 @keyframes floatUp {
     0% { transform: translateY(20px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
-}
-
-
-/* 音乐按钮 iOS 风格 */
-#music-toggle {
-    padding: 16px 28px;
-    font-size: 1.1em;
-    color: #f0f0f0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    border-radius: 24px;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    box-shadow:
-            0 8px 24px rgba(0, 0, 0, 0.2),
-            inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-    user-select: none;
-    transition: all 0.3s ease;
-    animation: floatUp 1.2s ease-out;
-    max-width: 90%;
-    word-break: break-word;
-    text-align: center;
-}
-
-#music-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow:
-            0 0 12px rgba(255, 255,        255, 0.4),
-            inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-}
-
-#music-toggle:active {
-    transform: scale(0.97);
-    box-shadow:
-            0 0 6px rgba(255, 255, 255, 0.2),
-            inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-}
-
-@media (prefers-color-scheme: dark) {
-    #music-toggle {
-        border: 2px solid rgba(255, 255, 255, 0.12);
-        background: linear-gradient(135deg, rgba(30, 30, 30, 0.4), rgba(30, 30, 30, 0.2));
-        box-shadow:
-                0 8px 24px rgba(0, 0, 0, 0.6),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-        color: #e0e0e0;
-        text-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-    }
 }
 
 /* 底部 */
@@ -327,11 +339,6 @@ audio {
     #header {
         font-size: 1.5em;
         padding: 8px;
-    }
-
-    #music-toggle {
-        font-size: 1em;
-        padding: 12px 20px;
     }
 
     #footer {

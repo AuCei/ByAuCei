@@ -54,27 +54,30 @@ function playRandomMusic() {
     });
 }
 
-function setupMusicToggle() {
-    const toggle = document.getElementById('music-toggle');
+function setupMusicToggleOnAvatar() {
+    const avatar = document.getElementById('avatar');
     const audio = document.getElementById('background-music');
 
     function toggleMusic() {
         if (audio.paused) {
             playRandomMusic();
-            toggle.textContent = '⏸️ 暂停背景音乐';
+            avatar.classList.add('rotating');
         } else {
             audio.pause();
-            toggle.textContent = '🎵 播放背景音乐';
+            avatar.classList.remove('rotating');
         }
     }
 
-    toggle.addEventListener('click', toggleMusic);
-    toggle.addEventListener('keydown', (e) => {
+    avatar.addEventListener('click', toggleMusic);
+    avatar.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             toggleMusic();
         }
     });
+
+    avatar.setAttribute('tabindex', '0');
+    avatar.setAttribute('role', 'button');
 }
 
 setInterval(updateTime, 1000);
@@ -82,7 +85,7 @@ setInterval(updateTime, 1000);
 window.onload = () => {
     updateTime();
     fetchIP();
-    setupMusicToggle();
+    setupMusicToggleOnAvatar();
 
     setTimeout(() => {
         document.getElementById('loading-screen').classList.add('hidden');

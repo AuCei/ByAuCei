@@ -112,33 +112,33 @@
     user-select: none;
 }
 #footer {
-    position: relative;
-    margin-top:auto;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: calc(50px + env(safe-area-inset-bottom));
-    padding-bottom: env(safe-area-inset-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1.1em;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     background: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    font-size: 1em;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
     box-sizing: border-box;
-    user-select: none;
+    z-index: 100;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
 }
+
 #footer a {
     color: white;
     text-decoration: none;
     animation: textGlow 1s infinite;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
 }
+
 #footer a:active {
     transform: scale(0.95);
 }
+
 
 /* === 内容卡片（时间 / IP） === */
 #time,
@@ -181,7 +181,6 @@
 #header,
 #content,
 #footer {
-    position: relative;
     z-index: 1;
 }
 

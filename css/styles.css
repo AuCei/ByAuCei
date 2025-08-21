@@ -112,7 +112,8 @@
     user-select: none;
 }
 #footer {
-    position: fixed;
+    position: relative;
+    margin-top:auto;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -126,7 +127,6 @@
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     background: rgba(0, 0, 0, 0.5);
-    padding: 10px;
     box-sizing: border-box;
     user-select: none;
 }

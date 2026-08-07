@@ -95,24 +95,42 @@ function updateClock() {
   clock.dateTime = now.toISOString();
 }
 
-updateClock();
-window.setInterval(updateClock, 1000);
+let clockTimer = 0;
+function startClock() {
+  window.clearInterval(clockTimer);
+  updateClock();
+  if (!document.hidden) clockTimer = window.setInterval(updateClock, 1000);
+}
+startClock();
+document.addEventListener("visibilitychange", startClock);
 
-if (card && window.matchMedia("(pointer: fine)").matches) {
-  card.addEventListener("mousemove", (event) => {
-    const rect = card.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 2.5;
-    const rotateX = -((y - rect.height / 2) / (rect.height / 2)) * 2.5;
-    card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  });
+if (card && window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let tiltFrame = 0;
+  let pointerX = 0;
+  let pointerY = 0;
 
-  card.addEventListener("mouseleave", () => {
+  card.addEventListener("pointermove", (event) => {
+    pointerX = event.clientX;
+    pointerY = event.clientY;
+    if (tiltFrame) return;
+
+    tiltFrame = window.requestAnimationFrame(() => {
+      tiltFrame = 0;
+      const rect = card.getBoundingClientRect();
+      const x = pointerX - rect.left;
+      const y = pointerY - rect.top;
+      const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 2;
+      const rotateX = -((y - rect.height / 2) / (rect.height / 2)) * 2;
+      card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+  }, { passive: true });
+
+  card.addEventListener("pointerleave", () => {
+    window.cancelAnimationFrame(tiltFrame);
+    tiltFrame = 0;
     card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
   });
 }
-
 const currentYear = document.getElementById("currentYear");
 
 if (currentYear) {
@@ -182,3 +200,53 @@ moreContentBtn?.addEventListener("click", () => {
   showToast("更多内容正在准备中，敬请期待");
 });
 
+
+
+// 音乐播放器开关。旧版播放器只能在页面初始化阶段可靠挂载和卸载。
+// 开启或关闭时刷新页面，可以同时销毁音频对象、播放器 DOM、事件监听器和相关计时器。
+const musicToggle = document.getElementById("musicToggle");
+const musicEnabled = new URLSearchParams(window.location.search).get("music") === "1";
+
+function reloadWithMusic(enabled) {
+  const url = new URL(window.location.href);
+  if (enabled) {
+    url.searchParams.set("music", "1");
+  } else {
+    url.searchParams.delete("music");
+  }
+  window.location.replace(url.toString());
+}
+
+if (musicToggle) {
+  if (musicEnabled) {
+    musicToggle.textContent = "关闭音乐";
+    musicToggle.setAttribute("aria-label", "关闭音乐播放器并释放资源");
+    musicToggle.setAttribute("aria-pressed", "true");
+    musicToggle.addEventListener("click", () => {
+      musicToggle.textContent = "正在关闭…";
+      musicToggle.disabled = true;
+
+      // 先停止当前音频，随后刷新页面彻底卸载第三方播放器。
+      document.querySelectorAll("audio").forEach((audio) => {
+        try {
+          audio.pause();
+          audio.removeAttribute("src");
+          audio.load();
+        } catch (error) {
+          // 即使第三方音频对象不可访问，页面刷新仍会完成资源释放。
+        }
+      });
+
+      reloadWithMusic(false);
+    });
+  } else {
+    musicToggle.textContent = "启用音乐";
+    musicToggle.setAttribute("aria-label", "加载并显示音乐播放器");
+    musicToggle.setAttribute("aria-pressed", "false");
+    musicToggle.addEventListener("click", () => {
+      musicToggle.textContent = "正在启动…";
+      musicToggle.disabled = true;
+      reloadWithMusic(true);
+    });
+  }
+}

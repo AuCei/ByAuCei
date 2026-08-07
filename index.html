@@ -30,6 +30,7 @@
           <div class="actions">
             <a class="btn btn-primary" href="mailto:Me@AuCei.cn">联系我</a>
             <button class="btn btn-secondary" id="copyBtn" type="button" data-copy="Me@AuCei.cn">复制邮箱</button>
+            <button class="btn btn-secondary music-enable-btn" id="musicToggle" type="button" aria-label="加载并显示音乐播放器" aria-pressed="false">启用音乐</button>
           </div>
         </div>
       </section>
@@ -94,6 +95,7 @@
   </div>
 
   <div id="xf-MusicPlayer"
+       data-cdnName="https://player.xfyun.club/js"
        data-songChart="热歌榜"
        data-themeColor="xf-dark"
        data-memory="true"
@@ -170,7 +172,12 @@
       });
     })();
   </script>
-  <script src="https://player.xfyun.club/js/xf-MusicPlayer/js/xf-MusicPlayer.min.js"></script>
+  <script>
+    // 按需启用旧版播放器，并确保脚本在 DOMContentLoaded 之前执行。
+    if (new URLSearchParams(window.location.search).get("music") === "1") {
+      document.write('<script src="https://player.xfyun.club/js/xf-MusicPlayer/js/xf-MusicPlayer.min.js"><\/script>');
+    }
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

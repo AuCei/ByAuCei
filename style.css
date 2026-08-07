@@ -802,3 +802,74 @@ body.modal-open .wrap {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* 2026 性能优化：避免大面积模糊层和复合动画持续触发 GPU 合成。 */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orb,
+.orb2 {
+  filter: blur(42px);
+  animation: none;
+  opacity: 0.2;
+  contain: strict;
+}
+
+.card {
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+}
+
+.avatar-ring {
+  will-change: auto;
+  animation: avatar-ring-spin 10s linear infinite;
+}
+
+.toast {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (max-width: 720px), (hover: none), (pointer: coarse) {
+  .orb,
+  .orb2 {
+    display: none;
+  }
+
+  .card,
+  .wechat-dialog {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(13, 20, 40, 0.96);
+  }
+
+  body.light .card,
+  body.light .wechat-dialog {
+    background: rgba(255, 255, 255, 0.97);
+  }
+
+  .avatar-ring {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-ring,
+  .orb,
+  .orb2 {
+    animation: none !important;
+  }
+}
+
+/* 音乐入口固定放在首屏操作区，避免小屏幕顶部空间不足时不可见。 */
+.music-enable-btn {
+  border-color: rgba(34, 211, 238, 0.35);
+}
+.music-enable-btn[aria-pressed="true"] {
+  color: #fff;
+  background: linear-gradient(115deg, #256fa2, #6a4cd7);
+}

@@ -191,7 +191,7 @@ document.addEventListener("keydown", (event) => {
 
 const moreContentBtn = document.getElementById("moreContentBtn");
 moreContentBtn?.addEventListener("click", () => {
-  showToast("更多内容正在准备中，敬请期待");
+  showToast("正在准备中敬请期待");
 });
 
 const musicToggle = document.getElementById("musicToggle");

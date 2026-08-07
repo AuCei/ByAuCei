@@ -1,9 +1,8 @@
-
 :root {
   color-scheme: dark;
   --bg: #070b17;
   --bg-secondary: #0d1326;
-  --card: rgba(13, 20, 40, 0.78);
+  --card: rgba(13, 20, 40, 0.92);
   --panel: rgba(255, 255, 255, 0.055);
   --panel-hover: rgba(255, 255, 255, 0.085);
   --text: #f4f7ff;
@@ -32,8 +31,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   line-height: 1.65;
   background:
     radial-gradient(circle at 12% 10%, rgba(124, 92, 255, 0.22), transparent 32%),
@@ -46,7 +44,7 @@ body.light {
   color-scheme: light;
   --bg: #edf2ff;
   --bg-secondary: #f9fbff;
-  --card: rgba(255, 255, 255, 0.8);
+  --card: rgba(255, 255, 255, 0.97);
   --panel: rgba(75, 92, 140, 0.06);
   --panel-hover: rgba(75, 92, 140, 0.1);
   --text: #172039;
@@ -90,9 +88,9 @@ button {
   height: 360px;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(80px);
-  opacity: 0.32;
-  animation: float 12s ease-in-out infinite alternate;
+  filter: blur(42px);
+  opacity: 0.2;
+  contain: strict;
 }
 
 .orb {
@@ -105,7 +103,6 @@ button {
   bottom: -160px;
   left: -90px;
   background: var(--primary-2);
-  animation-delay: -5s;
 }
 
 .wrap {
@@ -114,6 +111,7 @@ button {
   width: 100%;
   min-height: 100vh;
   padding: 48px 20px;
+  transition: opacity 300ms ease;
 }
 
 .card {
@@ -125,14 +123,10 @@ button {
   border-radius: var(--radius-lg);
   background: var(--card);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
   transform-style: preserve-3d;
-  transition:
-    transform 120ms ease-out,
-    background var(--transition),
-    border-color var(--transition),
-    box-shadow var(--transition);
+  transition: transform 120ms ease-out, background var(--transition), border-color var(--transition), box-shadow var(--transition);
 }
 
 .card::before {
@@ -140,7 +134,7 @@ button {
   position: absolute;
   inset: 0 0 auto;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
 }
 
 .topbar,
@@ -170,10 +164,16 @@ button {
   box-shadow: 0 0 0 5px rgba(69, 230, 154, 0.12), 0 0 18px #45e69a;
 }
 
+.theme-btn,
+.btn,
+.contact-item,
+.wechat-close {
+  cursor: pointer;
+}
+
 .theme-btn {
   padding: 9px 14px;
   color: var(--text);
-  cursor: pointer;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--panel);
@@ -182,12 +182,14 @@ button {
 
 .theme-btn:hover {
   transform: translateY(-2px);
-  background: var(--panel-hover);
   border-color: rgba(124, 92, 255, 0.4);
+  background: var(--panel-hover);
 }
 
 .theme-btn:focus-visible,
 .btn:focus-visible,
+.contact-item:focus-visible,
+.wechat-close:focus-visible,
 a:focus-visible {
   outline: 3px solid rgba(34, 211, 238, 0.55);
   outline-offset: 3px;
@@ -211,15 +213,16 @@ a:focus-visible {
 .avatar-ring {
   position: absolute;
   inset: -8px;
+  z-index: 0;
   border-radius: 50%;
-  background: conic-gradient(from 90deg, var(--primary), var(--primary-2), var(--accent), var(--primary));
-  animation: spin 7s linear infinite;
+  background: conic-gradient(from 0deg, #22d3ee 0deg, #5b8cff 75deg, #9b6cff 145deg, #ff5fc8 220deg, #7c5cff 290deg, #22d3ee 360deg);
+  animation: avatar-ring-spin 10s linear infinite;
 }
 
 .avatar-ring::after {
   content: "";
   position: absolute;
-  inset: 4px;
+  inset: 5px;
   border-radius: inherit;
   background: var(--bg-secondary);
 }
@@ -245,9 +248,9 @@ a:focus-visible {
 
 .name span {
   color: transparent;
-  background: linear-gradient(100deg, #ffffff 5%, #9ae8ff 48%, #aa91ff 85%);
-  -webkit-background-clip: text;
+  background: linear-gradient(100deg, #fff 5%, #9ae8ff 48%, #aa91ff 85%);
   background-clip: text;
+  -webkit-background-clip: text;
 }
 
 body.light .name span {
@@ -274,7 +277,6 @@ body.light .name span {
   justify-content: center;
   min-height: 44px;
   padding: 10px 20px;
-  cursor: pointer;
   border: 1px solid transparent;
   border-radius: 12px;
   font-weight: 700;
@@ -305,8 +307,13 @@ body.light .name span {
   background: var(--panel-hover);
 }
 
-.section + .section {
-  margin-top: 18px;
+.music-enable-btn {
+  border-color: rgba(34, 211, 238, 0.35);
+}
+
+.music-enable-btn[aria-pressed="true"] {
+  color: #fff;
+  background: linear-gradient(115deg, #256fa2, #6a4cd7);
 }
 
 .panel {
@@ -314,12 +321,12 @@ body.light .name span {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--panel);
-  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .panel:hover {
-  background: var(--panel-hover);
   border-color: rgba(124, 92, 255, 0.28);
+  background: var(--panel-hover);
 }
 
 .panel h2 {
@@ -349,6 +356,16 @@ body.light .name span {
   background: rgba(255, 255, 255, 0.045);
 }
 
+.contact-item {
+  width: 100%;
+  padding: 16px 18px;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
 .label {
   margin-bottom: 5px;
   color: var(--muted);
@@ -365,32 +382,30 @@ body.light .name span {
   font-weight: 650;
 }
 
-.value a {
-  transition: color var(--transition);
-}
-
-.value a:hover {
-  color: var(--primary-2);
-}
-
-#xf-MusicPlayer {
-  width: 100%;
-  min-height: 80px;
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: 14px;
-}
-
 .footer {
-  padding: 26px 4px 0;
+  margin-top: 22px;
+  padding: 0 4px;
   color: var(--muted);
   font-size: 12px;
 }
 
 #clock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 86px;
+  padding: 5px 10px;
   color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.08em;
+}
+
+#music-player-root {
+  display: contents;
 }
 
 .toast {
@@ -408,7 +423,6 @@ body.light .name span {
   opacity: 0;
   transform: translate(-50%, 16px) scale(0.96);
   transition: opacity 180ms ease, transform 180ms ease;
-  backdrop-filter: blur(14px);
 }
 
 .toast.show {
@@ -416,182 +430,6 @@ body.light .name span {
   transform: translate(-50%, 0) scale(1);
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes float {
-  from { transform: translate3d(-18px, -12px, 0) scale(0.96); }
-  to { transform: translate3d(22px, 24px, 0) scale(1.08); }
-}
-
-@media (max-width: 720px) {
-  .wrap {
-    padding: 18px 12px;
-  }
-
-  .card {
-    padding: 22px 16px;
-    border-radius: 22px;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 42px 4px 36px;
-    text-align: center;
-  }
-
-  .avatar-wrap {
-    width: 136px;
-    height: 136px;
-  }
-
-  .subtitle {
-    margin-inline: auto;
-  }
-
-  .actions {
-    justify-content: center;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 420px) {
-  .topbar {
-    align-items: flex-start;
-  }
-
-  .badge {
-    font-size: 11px;
-  }
-
-  .theme-btn {
-    padding: 7px 11px;
-    font-size: 13px;
-  }
-
-  .name {
-    font-size: 43px;
-  }
-
-  .panel {
-    padding: 18px 14px;
-  }
-
-  .actions .btn {
-    flex: 1 1 130px;
-  }
-
-  .footer {
-    flex-direction: column;
-    gap: 5px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  .card {
-    transform: none !important;
-  }
-}
-
-
-/* Footer clock */
-.footer {
-  margin-top: 22px;
-  padding: 0 4px;
-}
-
-#clock {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 86px;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--panel);
-  color: var(--text);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
-}
-
-
-body > #xf-MusicPlayer {
-  position: fixed;
-  width: 0;
-  height: 0;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: visible;
-}
-
-
-.avatar-ring {
-  z-index: 0;
-  background: conic-gradient(from 0deg, #22d3ee 0deg, #5b8cff 75deg, #9b6cff 145deg, #ff5fc8 220deg, #7c5cff 290deg, #22d3ee 360deg);
-  will-change: transform, filter;
-  animation: avatar-ring-spin 3.2s linear infinite, avatar-ring-glow 1.8s ease-in-out infinite alternate;
-}
-.avatar-ring::after { inset: 5px; }
-@keyframes avatar-ring-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-@keyframes avatar-ring-glow {
-  from {
-    filter: brightness(.95) saturate(1);
-    box-shadow: 0 0 10px rgba(34,211,238,.25), 0 0 20px rgba(155,108,255,.18);
-  }
-  to {
-    filter: brightness(1.25) saturate(1.35);
-    box-shadow: 0 0 18px rgba(34,211,238,.5), 0 0 34px rgba(255,95,200,.3);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .avatar-ring { animation: avatar-ring-spin 6s linear infinite !important; }
-}
-
-/* 联系方式卡片统一交互 */
-.contact-item {
-  width: 100%;
-  padding: 16px 18px;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.contact-item .value {
-  display: block;
-}
-
-
-
-
-.contact-item:focus-visible,
-.wechat-close:focus-visible {
-  outline: 3px solid rgba(34, 211, 238, 0.55);
-  outline-offset: 3px;
-}
-
-/* 微信二维码弹窗 */
 .wechat-modal {
   position: fixed;
   inset: 0;
@@ -602,9 +440,7 @@ body > #xf-MusicPlayer {
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  transition:
-    opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 360ms;
+  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 360ms;
 }
 
 .wechat-modal.show {
@@ -638,13 +474,11 @@ body > #xf-MusicPlayer {
   border-radius: 24px;
   background: var(--card);
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55), 0 0 50px rgba(124, 92, 255, 0.15);
-  backdrop-filter: blur(28px) saturate(150%);
-  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
   opacity: 0;
   transform: translateY(18px) scale(0.965);
-  transition:
-    opacity 280ms ease,
-    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 280ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .wechat-modal.show .wechat-dialog {
@@ -676,14 +510,16 @@ body > #xf-MusicPlayer {
   width: 38px;
   height: 38px;
   padding: 0;
-  cursor: pointer;
   border: 1px solid var(--border);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.07);
-  transition:
-    background var(--transition),
-    border-color var(--transition),
-    transform var(--transition);
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.wechat-close:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.14);
+  transform: scale(1.06);
 }
 
 .wechat-close-icon {
@@ -712,12 +548,6 @@ body > #xf-MusicPlayer {
 
 .wechat-close-icon::after {
   transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-.wechat-close:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.14);
-  transform: scale(1.06);
 }
 
 .wechat-dialog h2 {
@@ -762,79 +592,52 @@ body > #xf-MusicPlayer {
   font-size: 12px;
 }
 
-/* 弹窗打开时锁定页面滚动 */
 body.modal-open {
   overflow: hidden;
-}
-
-/*
-  性能优化：不再对整页执行实时 filter 模糊。
-  仅让主体轻微降低亮度，配合遮罩渐变实现聚焦效果。
-*/
-.wrap {
-  transition: opacity 300ms ease;
 }
 
 body.modal-open .wrap {
   opacity: 0.82;
 }
 
-@media (max-width: 420px) {
-  .wechat-modal { padding: 14px; }
-  .wechat-dialog {
-    width: 100%;
-    padding: 24px 16px 20px;
+@keyframes avatar-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 720px) {
+  .wrap {
+    padding: 18px 12px;
+  }
+
+  .card {
+    padding: 22px 16px;
     border-radius: 22px;
   }
-  .wechat-qr-wrap {
-    width: min(280px, 100%);
-    padding: 6px;
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 42px 4px 36px;
+    text-align: center;
   }
-  .wechat-description { margin-bottom: 14px; }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .wechat-modal,
-  .wechat-dialog,
-  .wechat-close,
-  .wechat-backdrop,
-  .wrap {
-    transition-duration: 0.01ms !important;
+  .avatar-wrap {
+    width: 136px;
+    height: 136px;
   }
-}
 
+  .subtitle {
+    margin-inline: auto;
+  }
 
-/* 2026 性能优化：避免大面积模糊层和复合动画持续触发 GPU 合成。 */
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .actions {
+    justify-content: center;
+  }
 
-.orb,
-.orb2 {
-  filter: blur(42px);
-  animation: none;
-  opacity: 0.2;
-  contain: strict;
-}
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
 
-.card {
-  backdrop-filter: blur(10px) saturate(115%);
-  -webkit-backdrop-filter: blur(10px) saturate(115%);
-}
-
-.avatar-ring {
-  will-change: auto;
-  animation: avatar-ring-spin 10s linear infinite;
-}
-
-.toast {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-@media (max-width: 720px), (hover: none), (pointer: coarse) {
   .orb,
   .orb2 {
     display: none;
@@ -842,14 +645,9 @@ body.modal-open .wrap {
 
   .card,
   .wechat-dialog {
+    background: var(--card);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: rgba(13, 20, 40, 0.96);
-  }
-
-  body.light .card,
-  body.light .wechat-dialog {
-    background: rgba(255, 255, 255, 0.97);
   }
 
   .avatar-ring {
@@ -857,19 +655,74 @@ body.modal-open .wrap {
   }
 }
 
+@media (max-width: 420px) {
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .badge {
+    font-size: 11px;
+  }
+
+  .theme-btn {
+    padding: 7px 11px;
+    font-size: 13px;
+  }
+
+  .name {
+    font-size: 43px;
+  }
+
+  .panel {
+    padding: 18px 14px;
+  }
+
+  .actions .btn {
+    flex: 1 1 130px;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .wechat-modal {
+    padding: 14px;
+  }
+
+  .wechat-dialog {
+    width: 100%;
+    padding: 24px 16px 20px;
+    border-radius: 22px;
+  }
+
+  .wechat-qr-wrap {
+    width: min(280px, 100%);
+    padding: 6px;
+  }
+
+  .wechat-description {
+    margin-bottom: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .card {
+    transform: none !important;
+  }
+
   .avatar-ring,
   .orb,
   .orb2 {
     animation: none !important;
   }
-}
-
-/* 音乐入口固定放在首屏操作区，避免小屏幕顶部空间不足时不可见。 */
-.music-enable-btn {
-  border-color: rgba(34, 211, 238, 0.35);
-}
-.music-enable-btn[aria-pressed="true"] {
-  color: #fff;
-  background: linear-gradient(115deg, #256fa2, #6a4cd7);
 }

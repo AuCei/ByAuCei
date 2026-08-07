@@ -41,7 +41,6 @@ if (themeToggle) {
     try {
       localStorage.setItem("card-theme", nextTheme);
     } catch (error) {
-      // 隐私浏览或本地文件环境不允许存储时，主题切换仍然正常工作。
     }
   });
 }
@@ -137,7 +136,6 @@ if (currentYear) {
   currentYear.textContent = String(new Date().getFullYear());
 }
 
-// 微信二维码弹窗
 const wechatBtn = document.getElementById("wechatBtn");
 const wechatModal = document.getElementById("wechatModal");
 const wechatClose = document.getElementById("wechatClose");
@@ -152,7 +150,6 @@ function openWechatModal() {
   lastFocusedElement = document.activeElement;
   wechatModal.setAttribute("aria-hidden", "false");
 
-  // 下一帧启动轻量的遮罩淡入和弹窗动画。
   window.cancelAnimationFrame(modalAnimationFrame);
   modalAnimationFrame = window.requestAnimationFrame(() => {
     wechatModal.classList.add("show");
@@ -166,7 +163,6 @@ function closeWechatModal() {
 
   window.cancelAnimationFrame(modalAnimationFrame);
 
-  // 先把焦点移回触发按钮，避免焦点仍在弹窗内部时设置 aria-hidden。
   if (lastFocusedElement instanceof HTMLElement) {
     lastFocusedElement.focus({ preventScroll: true });
   } else {
@@ -176,7 +172,6 @@ function closeWechatModal() {
   wechatModal.classList.remove("show");
   document.body.classList.remove("modal-open");
 
-  // 等关闭动画播放完成后，再对辅助技术隐藏弹窗。
   window.setTimeout(() => {
     if (!wechatModal.classList.contains("show")) {
       wechatModal.setAttribute("aria-hidden", "true");
@@ -194,59 +189,139 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-// “更多内容”卡片暂未开放，点击后使用现有 Toast 提示。
 const moreContentBtn = document.getElementById("moreContentBtn");
 moreContentBtn?.addEventListener("click", () => {
   showToast("更多内容正在准备中，敬请期待");
 });
 
-
-
-// 音乐播放器开关。旧版播放器只能在页面初始化阶段可靠挂载和卸载。
-// 开启或关闭时刷新页面，可以同时销毁音频对象、播放器 DOM、事件监听器和相关计时器。
 const musicToggle = document.getElementById("musicToggle");
-const musicEnabled = new URLSearchParams(window.location.search).get("music") === "1";
+const musicPlayerRoot = document.getElementById("music-player-root");
+const musicPlayerCdn = "https://player.xfyun.club/js/music-player/music-player.min.js";
+let musicPlayerInstance = null;
+let musicPlayerLoading = null;
+let musicPlayerBusy = false;
 
-function reloadWithMusic(enabled) {
-  const url = new URL(window.location.href);
-  if (enabled) {
-    url.searchParams.set("music", "1");
-  } else {
-    url.searchParams.delete("music");
-  }
-  window.location.replace(url.toString());
+function timeoutPromise(milliseconds, message) {
+  return new Promise((resolve, reject) => {
+    window.setTimeout(() => reject(new Error(message)), milliseconds);
+  });
 }
 
-if (musicToggle) {
-  if (musicEnabled) {
-    musicToggle.textContent = "关闭音乐";
-    musicToggle.setAttribute("aria-label", "关闭音乐播放器并释放资源");
-    musicToggle.setAttribute("aria-pressed", "true");
-    musicToggle.addEventListener("click", () => {
-      musicToggle.textContent = "正在关闭…";
-      musicToggle.disabled = true;
+function loadMusicPlayerLibrary() {
+  if (window.XfMusicPlayer?.MusicPlayer) return Promise.resolve();
+  if (musicPlayerLoading) return musicPlayerLoading;
+  musicPlayerLoading = new Promise((resolve, reject) => {
+    const ready = () => {
+      if (window.XfMusicPlayer?.MusicPlayer) resolve();
+      else reject(new Error("播放器组件未正确注册"));
+    };
+    const existing = document.querySelector(`script[src="${musicPlayerCdn}"]`);
+    if (existing) {
+      if (window.XfMusicPlayer?.MusicPlayer) resolve();
+      else {
+        existing.addEventListener("load", ready, { once: true });
+        existing.addEventListener("error", () => reject(new Error("播放器脚本加载失败")), { once: true });
+      }
+      return;
+    }
+    const loader = document.createElement("script");
+    const originalLog = console.log.bind(console);
+    console.log = (...args) => {
+      const text = args.map((item) => String(item)).join(" ");
+      if (!(text.includes("自豪采用") && text.includes("小枫音乐播放器"))) originalLog(...args);
+    };
+    const restoreConsole = () => {
+      console.log = originalLog;
+    };
+    loader.src = musicPlayerCdn;
+    loader.async = true;
+    loader.addEventListener("load", () => {
+      restoreConsole();
+      ready();
+    }, { once: true });
+    loader.addEventListener("error", () => {
+      restoreConsole();
+      reject(new Error("播放器脚本加载失败"));
+    }, { once: true });
+    document.head.appendChild(loader);
+  });
+  return musicPlayerLoading;
+}
 
-      // 先停止当前音频，随后刷新页面彻底卸载第三方播放器。
-      document.querySelectorAll("audio").forEach((audio) => {
-        try {
-          audio.pause();
-          audio.removeAttribute("src");
-          audio.load();
-        } catch (error) {
-          // 即使第三方音频对象不可访问，页面刷新仍会完成资源释放。
-        }
-      });
+function setMusicButton(enabled, loading = false) {
+  if (!musicToggle) return;
+  musicToggle.disabled = false;
+  musicToggle.setAttribute("aria-busy", String(loading));
+  musicToggle.textContent = loading ? "正在启动…" : enabled ? "关闭音乐" : "启用音乐";
+  musicToggle.setAttribute("aria-pressed", String(enabled));
+  musicToggle.setAttribute("aria-label", enabled ? "关闭音乐播放器" : "加载并显示音乐播放器");
+}
 
-      reloadWithMusic(false);
+async function enableMusicPlayer() {
+  if (!musicPlayerRoot || musicPlayerInstance || musicPlayerBusy) return;
+  musicPlayerBusy = true;
+  setMusicButton(false, true);
+  try {
+    await Promise.race([
+      loadMusicPlayerLibrary(),
+      timeoutPromise(10000, "播放器加载超时")
+    ]);
+    const MusicPlayer = window.XfMusicPlayer?.MusicPlayer;
+    if (!MusicPlayer) throw new Error("播放器初始化接口不可用");
+    musicPlayerInstance = new MusicPlayer({
+      tagName: "xf-aucei-player",
+      mountElement: musicPlayerRoot,
+      language: "zh",
+      isMonitoring: false,
+      attributes: {
+        theme: "auto-theme",
+        mode: "cloud",
+        apiUrl: "https://music.api.xfyun.club/api/v1/music/top?platform=netease&topId=3778678",
+        environment: "production",
+        rememberPlayback: true,
+        memoryKey: "aucei-music-player",
+        playMode: "random",
+        volume: 0.8,
+        isAutoPopup: false,
+        isAutoPlaylist: false
+      }
     });
-  } else {
-    musicToggle.textContent = "启用音乐";
-    musicToggle.setAttribute("aria-label", "加载并显示音乐播放器");
-    musicToggle.setAttribute("aria-pressed", "false");
-    musicToggle.addEventListener("click", () => {
-      musicToggle.textContent = "正在启动…";
-      musicToggle.disabled = true;
-      reloadWithMusic(true);
-    });
+    setMusicButton(true);
+  } catch (error) {
+    musicPlayerLoading = null;
+    musicPlayerInstance = null;
+    musicPlayerRoot.replaceChildren();
+    setMusicButton(false);
+    showToast(error?.message || "音乐播放器加载失败，请稍后重试");
+  } finally {
+    musicPlayerBusy = false;
+    musicToggle?.setAttribute("aria-busy", "false");
   }
 }
+
+async function disableMusicPlayer() {
+  if (musicPlayerBusy) return;
+  musicPlayerBusy = true;
+  setMusicButton(true, true);
+  try {
+    if (musicPlayerInstance?.destroy) await musicPlayerInstance.destroy();
+  } catch (error) {
+  }
+  document.querySelectorAll("audio").forEach((audio) => {
+    try {
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+    } catch (error) {
+    }
+  });
+  musicPlayerRoot?.replaceChildren();
+  musicPlayerInstance = null;
+  musicPlayerBusy = false;
+  setMusicButton(false);
+}
+
+musicToggle?.addEventListener("click", () => {
+  if (musicPlayerInstance) disableMusicPlayer();
+  else enableMusicPlayer();
+});

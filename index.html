@@ -1,108 +1,85 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark light">
-  <title>阿张的小破站</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<title>阿张的小破站</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="grid" aria-hidden="true"></div>
-  <div class="orb" aria-hidden="true"></div>
-  <div class="orb2" aria-hidden="true"></div>
-
-  <div class="wrap">
-    <main class="card">
-      <div class="topbar">
-        <div class="badge"><span class="dot"></span>Personal Card</div>
-        <button class="theme-btn" id="themeToggle" type="button" aria-label="切换明暗主题">切换主题</button>
-      </div>
-
-      <section class="hero">
-        <div class="avatar-wrap">
-          <div class="avatar-ring" aria-hidden="true"></div>
-          <img class="avatar" src="https://q1.qlogo.cn/g?b=qq&nk=3442695370&s=640" alt="头像">
-        </div>
-        <div>
-          <h1 class="name"><span>CNAuCei</span></h1>
-          <p class="subtitle">在游戏中学会专注、判断与取舍，也把这种思维带到现实生活里。不断尝试、不断调整，在每一次对局和每一次选择中优化自己。比起结果，更看重长期的成长曲线。</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="mailto:Me@AuCei.cn">联系我</a>
-            <button class="btn btn-secondary" id="copyBtn" type="button" data-copy="Me@AuCei.cn">复制邮箱</button>
-            <button class="btn btn-secondary music-enable-btn" id="musicToggle" type="button" aria-label="加载并显示音乐播放器" aria-pressed="false">启用音乐</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="section social-section">
-        <div class="panel">
-          <h2>联系方式与社交链接</h2>
-          <div class="info-grid">
-            <a class="item contact-item" href="mailto:Me@AuCei.cn" aria-label="发送邮件给 CNAuCei">
-              <div class="label">邮箱 email</div>
-              <div class="value">
-                点击发送邮件
-              </div>
-            </a>
-
-            <button
+<div class="grid" aria-hidden="true"></div>
+<div class="orb" aria-hidden="true"></div>
+<div class="orb2" aria-hidden="true"></div>
+<div class="wrap">
+<main class="card">
+<div class="topbar">
+<div class="badge"><span class="dot"></span>Personal Card</div>
+<button class="theme-btn" id="themeToggle" type="button" aria-label="切换明暗主题">切换主题</button>
+</div>
+<section class="hero">
+<div class="avatar-wrap">
+<div class="avatar-ring" aria-hidden="true"></div>
+<img class="avatar" src="https://q1.qlogo.cn/g?b=qq&nk=3442695370&s=640" alt="头像">
+</div>
+<div>
+<h1 class="name"><span>CNAuCei</span></h1>
+<p class="subtitle">在游戏中学会专注、判断与取舍，也把这种思维带到现实生活里。不断尝试、不断调整，在每一次对局和每一次选择中优化自己。比起结果，更看重长期的成长曲线。</p>
+<div class="actions">
+<a class="btn btn-primary" href="mailto:Me@AuCei.cn">联系我</a>
+<button class="btn btn-secondary" id="copyBtn" type="button" data-copy="Me@AuCei.cn">复制邮箱</button>
+<button class="btn btn-secondary music-enable-btn" id="musicToggle" type="button" aria-label="加载并显示音乐播放器" aria-pressed="false">启用音乐</button>
+</div>
+</div>
+</section>
+<section class="section social-section">
+<div class="panel">
+<h2>联系方式与社交链接</h2>
+<div class="info-grid">
+<a class="item contact-item" href="mailto:Me@AuCei.cn" aria-label="发送邮件给 CNAuCei">
+<div class="label">邮箱 email</div>
+<div class="value">点击发送邮件</div>
+</a>
+<button
               class="item contact-item wechat-item"
               id="wechatBtn"
               type="button"
               aria-haspopup="dialog"
               aria-controls="wechatModal"
             >
-              <div class="label">微信 wechat</div>
-              <div class="value">
-                扫码添加好友
-              </div>
-            </button>
-
-            <a
+<div class="label">微信 wechat</div>
+<div class="value">扫码添加好友</div>
+</button>
+<a
               class="item contact-item"
               href="https://v.douyin.com/vyspksoAxyg"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="进入 CNAuCei 的抖音主页，新窗口打开"
             >
-              <div class="label">抖音 douyin</div>
-              <div class="value">
-                进入抖音主页
-              </div>
-            </a>
-
-            <button
+<div class="label">抖音 douyin</div>
+<div class="value">进入抖音主页</div>
+</a>
+<button
               class="item contact-item"
               id="moreContentBtn"
               type="button"
               aria-label="查看更多内容"
             >
-              <div class="label">更多内容</div>
-              <div class="value">
-                敬请期待
-              </div>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <footer class="footer">
-        <span>© 2024–<span id="currentYear"></span> ByAuCei</span>
-        <time id="clock" aria-label="当前时间">--:--:--</time>
-      </footer>
-    </main>
-  </div>
-
-  <div id="xf-MusicPlayer"
-       data-cdnName="https://player.xfyun.club/js"
-       data-songChart="热歌榜"
-       data-themeColor="xf-dark"
-       data-memory="true"
-       data-random></div>
-
-
-  <div
+<div class="label">更多内容</div>
+<div class="value">敬请期待</div>
+</button>
+</div>
+</div>
+</section>
+<footer class="footer">
+<span>© 2024–<span id="currentYear"></span> ByAuCei</span>
+<time id="clock" aria-label="当前时间">--:--:--</time>
+</footer>
+</main>
+</div>
+<div id="music-player-root"></div>
+<div
     class="wechat-modal"
     id="wechatModal"
     role="dialog"
@@ -110,74 +87,29 @@
     aria-labelledby="wechatModalTitle"
     aria-hidden="true"
   >
-    <div class="wechat-backdrop" data-wechat-close></div>
-
-    <div class="wechat-dialog" role="document">
-      <button
+<div class="wechat-backdrop" data-wechat-close></div>
+<div class="wechat-dialog" role="document">
+<button
         class="wechat-close"
         id="wechatClose"
         type="button"
         aria-label="关闭微信二维码"
       ><span class="wechat-close-icon" aria-hidden="true"></span></button>
-
-      <h2 id="wechatModalTitle">添加我的微信</h2>
-      <p class="wechat-description">打开微信扫一扫，扫描二维码即可添加好友</p>
-
-      <div class="wechat-qr-wrap">
-        <img
+<h2 id="wechatModalTitle">添加我的微信</h2>
+<p class="wechat-description">打开微信扫一扫，扫描二维码即可添加好友</p>
+<div class="wechat-qr-wrap">
+<img
           class="wechat-qr"
           src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRRHp0bWxMb0c1Q1RMMnhlSk5aaE53NkFVOS1EYXZFRVRzdktHVzNBQ2l2clBVP2U9aDM1bUtv.jpg"
           alt="CNAuCei 的微信好友二维码"
           width="888"
           height="1131"
         >
-      </div>
-
-      <p class="wechat-tip">手机访客可以长按保存图片，然后在微信中识别</p>
-    </div>
-  </div>
-
-  <div class="toast" id="toast" role="status" aria-live="polite">已复制</div>
-  <script>
-    // 仅过滤第三方音乐播放器输出的宣传和旧版升级提示，保留其他控制台信息。
-    (function () {
-      const originalLog = console.log.bind(console);
-      const originalWarn = console.warn.bind(console);
-      const blockedPlayerMessages = [
-        "自豪采用",
-        "小枫音乐播放器",
-        "旧版播放器提示",
-        "musicplayer.xfyun.club"
-      ];
-
-      function isPlayerNotice(args) {
-        const text = args.map((item) => String(item)).join(" ");
-        return blockedPlayerMessages.some((keyword) => text.includes(keyword));
-      }
-
-      console.log = function (...args) {
-        if (!isPlayerNotice(args)) originalLog(...args);
-      };
-
-      console.warn = function (...args) {
-        if (!isPlayerNotice(args)) originalWarn(...args);
-      };
-
-      // 播放器初始化完成后恢复原始控制台方法，不影响后续调试。
-      window.addEventListener("load", function () {
-        window.setTimeout(function () {
-          console.log = originalLog;
-          console.warn = originalWarn;
-        }, 1500);
-      });
-    })();
-  </script>
-  <script>
-    // 按需启用旧版播放器，并确保脚本在 DOMContentLoaded 之前执行。
-    if (new URLSearchParams(window.location.search).get("music") === "1") {
-      document.write('<script src="https://player.xfyun.club/js/xf-MusicPlayer/js/xf-MusicPlayer.min.js"><\/script>');
-    }
-  </script>
-  <script src="script.js"></script>
+</div>
+<p class="wechat-tip">手机访客可以长按保存图片，然后在微信中识别</p>
+</div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite">已复制</div>
+<script src="script.js?v=20260807-3"></script>
 </body>
 </html>

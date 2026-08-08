@@ -108,11 +108,21 @@ if (card && window.matchMedia("(pointer: fine)").matches && !window.matchMedia("
   let pointerX = 0;
   let pointerY = 0;
 
+  const resetCardTilt = () => {
+    window.cancelAnimationFrame(tiltFrame);
+    tiltFrame = 0;
+    card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+  };
+
   card.addEventListener("pointermove", (event) => {
+    // 播放期间停用整卡 3D 合成，避免与播放器的高频更新叠加。
+    if (body.classList.contains("music-playing")) {
+      resetCardTilt();
+      return;
+    }
     pointerX = event.clientX;
     pointerY = event.clientY;
     if (tiltFrame) return;
-
     tiltFrame = window.requestAnimationFrame(() => {
       tiltFrame = 0;
       const rect = card.getBoundingClientRect();
@@ -123,11 +133,9 @@ if (card && window.matchMedia("(pointer: fine)").matches && !window.matchMedia("
       card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
   }, { passive: true });
-
-  card.addEventListener("pointerleave", () => {
-    window.cancelAnimationFrame(tiltFrame);
-    tiltFrame = 0;
-    card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
+  card.addEventListener("pointerleave", resetCardTilt);
+  document.addEventListener("musicperformancechange", (event) => {
+    if (event.detail?.playing) resetCardTilt();
   });
 }
 const currentYear = document.getElementById("currentYear");
@@ -191,7 +199,7 @@ document.addEventListener("keydown", (event) => {
 
 const moreContentBtn = document.getElementById("moreContentBtn");
 moreContentBtn?.addEventListener("click", () => {
-  showToast("正在准备中敬请期待");
+  showToast("准备中敬请期待");
 });
 
 const musicToggle = document.getElementById("musicToggle");
@@ -200,6 +208,30 @@ const musicPlayerCdn = "https://player.xfyun.club/js/music-player/music-player.m
 let musicPlayerInstance = null;
 let musicPlayerLoading = null;
 let musicPlayerBusy = false;
+
+// 只在真正播放音频时开启页面级性能模式，不改变第三方播放器本身的外观和功能。
+function setMusicPerformanceMode(playing) {
+  const shouldOptimize = Boolean(playing) && !document.hidden;
+  if (body.classList.contains("music-playing") === shouldOptimize) return;
+  body.classList.toggle("music-playing", shouldOptimize);
+  document.dispatchEvent(new CustomEvent("musicperformancechange", {
+    detail: { playing: shouldOptimize }
+  }));
+}
+
+function syncMusicPerformanceMode() {
+  const activeAudio = Array.from(document.querySelectorAll("audio"))
+    .some((audio) => !audio.paused && !audio.ended && audio.readyState > 1);
+  setMusicPerformanceMode(activeAudio);
+}
+
+// 媒体事件不冒泡，使用捕获阶段监听第三方组件创建的 audio。
+document.addEventListener("play", syncMusicPerformanceMode, true);
+document.addEventListener("playing", syncMusicPerformanceMode, true);
+document.addEventListener("pause", syncMusicPerformanceMode, true);
+document.addEventListener("ended", syncMusicPerformanceMode, true);
+document.addEventListener("emptied", syncMusicPerformanceMode, true);
+document.addEventListener("visibilitychange", syncMusicPerformanceMode);
 
 function timeoutPromise(milliseconds, message) {
   return new Promise((resolve, reject) => {
@@ -276,17 +308,21 @@ async function enableMusicPlayer() {
       attributes: {
         theme: "auto-theme",
         mode: "cloud",
-        apiUrl: "https://music.api.xfyun.club/api/v1/music/top?platform=netease&topId=3778678",
+        apiUrl: "https://music.api.xfyun.club/api/v1/music/top?platform=netease&topId=18234945688",
         environment: "production",
         rememberPlayback: true,
-        memoryKey: "aucei-music-player",
+        memoryKey: "aucei-music-player-18234945688",
         playMode: "random",
         volume: 0.8,
         isAutoPopup: false,
-        isAutoPlaylist: false
+        isAutoPlaylist: false,
+        colorfulLyric: false,
+        audioVisualizer: false
       }
     });
+    body.classList.add("music-player-enabled");
     setMusicButton(true);
+    window.setTimeout(syncMusicPerformanceMode, 0);
   } catch (error) {
     musicPlayerLoading = null;
     musicPlayerInstance = null;
@@ -317,6 +353,7 @@ async function disableMusicPlayer() {
   });
   musicPlayerRoot?.replaceChildren();
   musicPlayerInstance = null;
+  body.classList.remove("music-player-enabled", "music-playing");
   musicPlayerBusy = false;
   setMusicButton(false);
 }

@@ -25,8 +25,14 @@ const emailContactBtn = document.getElementById("emailContactBtn");
 const douyinContactBtn = document.getElementById("douyinContactBtn");
 const wechatModal = document.getElementById("wechatModal");
 const wechatClose = document.getElementById("wechatClose");
+const copyWechatBtn = document.getElementById("copyWechatBtn");
 const wechatBackdrop = document.querySelector("[data-wechat-close]");
-const moreContentBtn = document.getElementById("moreContentBtn");
+const qqBtn = document.getElementById("qqBtn");
+const qqModal = document.getElementById("qqModal");
+const qqClose = document.getElementById("qqClose");
+const qqBackdrop = document.querySelector("[data-qq-close]");
+const copyQqBtn = document.getElementById("copyQqBtn");
+const qqOpenBtn = document.getElementById("qqOpenBtn");
 const musicToggle = document.getElementById("musicToggle");
 const musicPlayerRoot = document.getElementById("music-player-root");
 
@@ -108,6 +114,47 @@ function initClipboard() {
     } catch (error) {
       showToast(`邮箱：${email}`);
     }
+  });
+  copyWechatBtn?.addEventListener("click", async () => {
+    const wechatId = copyWechatBtn.dataset.wechatId || "ByAuCei";
+    const originalText = "复制微信号";
+    window.clearTimeout(copyWechatBtn._resetTimer);
+    try {
+      const copied = await copyText(wechatId);
+      if (!copied) throw new Error("复制失败");
+      copyWechatBtn.textContent = "已复制 ✓";
+      copyWechatBtn.classList.add("is-copied");
+      copyWechatBtn.setAttribute("aria-label", "微信号 ByAuCei 已复制");
+    } catch (error) {
+      copyWechatBtn.textContent = "复制失败";
+      copyWechatBtn.classList.add("is-error");
+      copyWechatBtn.setAttribute("aria-label", `复制失败，微信号为 ${wechatId}`);
+    }
+    copyWechatBtn._resetTimer = window.setTimeout(() => {
+      copyWechatBtn.textContent = originalText;
+      copyWechatBtn.classList.remove("is-copied", "is-error");
+      copyWechatBtn.setAttribute("aria-label", `复制微信号 ${wechatId}`);
+    }, 1600);
+  });
+  copyQqBtn?.addEventListener("click", async () => {
+    const qqId = copyQqBtn.dataset.qqId || "3442695370";
+    window.clearTimeout(copyQqBtn._resetTimer);
+    try {
+      const copied = await copyText(qqId);
+      if (!copied) throw new Error("复制失败");
+      copyQqBtn.textContent = "已复制 ✓";
+      copyQqBtn.classList.add("is-copied");
+      copyQqBtn.setAttribute("aria-label", `QQ号 ${qqId} 已复制`);
+    } catch (error) {
+      copyQqBtn.textContent = "复制失败";
+      copyQqBtn.classList.add("is-error");
+      copyQqBtn.setAttribute("aria-label", `复制失败，QQ号为 ${qqId}`);
+    }
+    copyQqBtn._resetTimer = window.setTimeout(() => {
+      copyQqBtn.textContent = "复制QQ号";
+      copyQqBtn.classList.remove("is-copied", "is-error");
+      copyQqBtn.setAttribute("aria-label", `复制QQ号 ${qqId}`);
+    }, 1600);
   });
 }
 function initShare() {
@@ -300,6 +347,70 @@ function initWechatModal() {
 }
 
 
+function initQqModal() {
+  if (!qqModal) return;
+  let lastFocusedElement = null;
+  let closeTimer = 0;
+
+  const focusableElements = () => Array.from(qqModal.querySelectorAll(SELECTORS.focusable))
+    .filter((element) => element instanceof HTMLElement && !element.hasAttribute("hidden"));
+
+  const openQqModal = () => {
+    if (qqModal.classList.contains("show")) return;
+    lastFocusedElement = document.activeElement;
+    window.clearTimeout(closeTimer);
+    qqModal.setAttribute("aria-hidden", "false");
+    pageContent?.setAttribute("inert", "");
+    window.requestAnimationFrame(() => {
+      qqModal.classList.add("show");
+      body.classList.add("modal-open");
+      window.setTimeout(() => qqClose?.focus(), 80);
+    });
+  };
+
+  const closeQqModal = () => {
+    if (!qqModal.classList.contains("show")) return;
+    qqModal.classList.remove("show");
+    body.classList.remove("modal-open");
+    pageContent?.removeAttribute("inert");
+    lastFocusedElement?.focus?.({ preventScroll: true });
+    window.clearTimeout(closeTimer);
+    closeTimer = window.setTimeout(() => {
+      if (!qqModal.classList.contains("show")) qqModal.setAttribute("aria-hidden", "true");
+    }, 540);
+  };
+
+  qqBtn?.addEventListener("click", openQqModal);
+  qqClose?.addEventListener("click", closeQqModal);
+  qqBackdrop?.addEventListener("click", closeQqModal);
+  document.addEventListener("keydown", (event) => {
+    if (!qqModal.classList.contains("show")) return;
+    if (event.key === "Escape") {
+      closeQqModal();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = focusableElements();
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+}
+
+function initQqOpenButton() {
+  if (!qqOpenBtn) return;
+  qqOpenBtn.setAttribute("draggable", "false");
+  qqOpenBtn.addEventListener("dragstart", (event) => event.preventDefault());
+  qqOpenBtn.addEventListener("contextmenu", (event) => event.preventDefault());
+}
+
 function initContactNavigation() {
   emailContactBtn?.addEventListener("click", () => {
     window.location.href = "mailto:Me@AuCei.cn";
@@ -310,9 +421,6 @@ function initContactNavigation() {
   });
 }
 
-function initMoreContent() {
-  moreContentBtn?.addEventListener("click", () => showToast("准备中敬请期待"));
-}
 
 function initContactTouchFeedback() {
   const contactItems = document.querySelectorAll(".contact-item");
@@ -530,8 +638,9 @@ function initPage() {
   initClock();
   initCardTilt();
   initWechatModal();
+  initQqModal();
+  initQqOpenButton();
   initContactNavigation();
-  initMoreContent();
   initContactTouchFeedback();
   initActionTouchFeedback();
   initMusicPlayer();

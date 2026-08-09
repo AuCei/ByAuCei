@@ -1769,3 +1769,26 @@ html.light .name span {
   user-select: none;
   -webkit-user-select: none;
 }
+
+
+/* Light theme: high-contrast WeChat modal close button. */
+html.light .wechat-close {
+  color: #26324d;
+  border-color: rgba(38, 50, 77, 0.28);
+  background: rgba(231, 235, 244, 0.96);
+  box-shadow: 0 3px 10px rgba(38, 50, 77, 0.12);
+}
+
+html.light .wechat-close-icon::before,
+html.light .wechat-close-icon::after {
+  background: #26324d;
+}
+
+html.light .wechat-close:hover {
+  border-color: rgba(38, 50, 77, 0.45);
+  background: #dfe5f0;
+}
+
+html.light .wechat-close:active {
+  background: #d3dae8;
+}

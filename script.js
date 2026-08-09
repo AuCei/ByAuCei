@@ -454,6 +454,7 @@ async function enableMusicPlayer() {
 
     body.classList.add("music-player-enabled");
     setMusicButton(true);
+    showToast("音乐播放器已开启");
     window.setTimeout(syncMusicPerformanceMode, 0);
   } catch (error) {
     musicPlayerInstance = null;
@@ -492,6 +493,7 @@ async function disableMusicPlayer() {
   body.classList.remove("music-player-enabled", "music-playing");
   musicPlayerBusy = false;
   setMusicButton(false);
+  showToast("音乐播放器已关闭");
 }
 
 function initActionTouchFeedback() {

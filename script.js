@@ -18,11 +18,9 @@ const copyBtn = document.getElementById("copyBtn");
 const shareBtn = document.getElementById("shareBtn");
 const toast = document.getElementById("toast");
 const clock = document.getElementById("clock");
-const card = document.querySelector(".card");
+const card = document.querySelector(".profile-card");
 const currentYear = document.getElementById("currentYear");
 const wechatBtn = document.getElementById("wechatBtn");
-const emailContactBtn = document.getElementById("emailContactBtn");
-const douyinContactBtn = document.getElementById("douyinContactBtn");
 const wechatModal = document.getElementById("wechatModal");
 const wechatClose = document.getElementById("wechatClose");
 const copyWechatBtn = document.getElementById("copyWechatBtn");
@@ -41,9 +39,9 @@ let toastTimer = 0;
 function showToast(message) {
   if (!toast) return;
   toast.textContent = message;
-  toast.classList.add("show");
+  toast.classList.add("is-open");
   window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+  toastTimer = window.setTimeout(() => toast.classList.remove("is-open"), 1800);
 }
 
 function initTheme() {
@@ -280,7 +278,7 @@ function initWechatModal() {
   ).filter((element) => element instanceof HTMLElement && !element.hasAttribute("hidden"));
 
   const openWechatModal = () => {
-    if (wechatModal.classList.contains("show")) return;
+    if (wechatModal.classList.contains("is-open")) return;
     lastFocusedElement = document.activeElement;
     window.clearTimeout(closeTimer);
     wechatModal.setAttribute("aria-hidden", "false");
@@ -288,16 +286,16 @@ function initWechatModal() {
 
     window.cancelAnimationFrame(modalAnimationFrame);
     modalAnimationFrame = window.requestAnimationFrame(() => {
-      wechatModal.classList.add("show");
+      wechatModal.classList.add("is-open");
       body.classList.add("modal-open");
       window.setTimeout(() => wechatClose?.focus(), 80);
     });
   };
 
   const closeWechatModal = () => {
-    if (!wechatModal.classList.contains("show")) return;
+    if (!wechatModal.classList.contains("is-open")) return;
     window.cancelAnimationFrame(modalAnimationFrame);
-    wechatModal.classList.remove("show");
+    wechatModal.classList.remove("is-open");
     body.classList.remove("modal-open");
     pageContent?.removeAttribute("inert");
 
@@ -307,14 +305,14 @@ function initWechatModal() {
 
     window.clearTimeout(closeTimer);
     closeTimer = window.setTimeout(() => {
-      if (!wechatModal.classList.contains("show")) {
+      if (!wechatModal.classList.contains("is-open")) {
         wechatModal.setAttribute("aria-hidden", "true");
       }
     }, 540);
   };
 
   const trapFocus = (event) => {
-    if (event.key !== "Tab" || !wechatModal.classList.contains("show")) return;
+    if (event.key !== "Tab" || !wechatModal.classList.contains("is-open")) return;
     const focusable = getFocusableElements();
     if (!focusable.length) {
       event.preventDefault();
@@ -338,7 +336,7 @@ function initWechatModal() {
   wechatBackdrop?.addEventListener("click", closeWechatModal);
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && wechatModal.classList.contains("show")) {
+    if (event.key === "Escape" && wechatModal.classList.contains("is-open")) {
       closeWechatModal();
       return;
     }
@@ -356,27 +354,27 @@ function initQqModal() {
     .filter((element) => element instanceof HTMLElement && !element.hasAttribute("hidden"));
 
   const openQqModal = () => {
-    if (qqModal.classList.contains("show")) return;
+    if (qqModal.classList.contains("is-open")) return;
     lastFocusedElement = document.activeElement;
     window.clearTimeout(closeTimer);
     qqModal.setAttribute("aria-hidden", "false");
     pageContent?.setAttribute("inert", "");
     window.requestAnimationFrame(() => {
-      qqModal.classList.add("show");
+      qqModal.classList.add("is-open");
       body.classList.add("modal-open");
       window.setTimeout(() => qqClose?.focus(), 80);
     });
   };
 
   const closeQqModal = () => {
-    if (!qqModal.classList.contains("show")) return;
-    qqModal.classList.remove("show");
+    if (!qqModal.classList.contains("is-open")) return;
+    qqModal.classList.remove("is-open");
     body.classList.remove("modal-open");
     pageContent?.removeAttribute("inert");
     lastFocusedElement?.focus?.({ preventScroll: true });
     window.clearTimeout(closeTimer);
     closeTimer = window.setTimeout(() => {
-      if (!qqModal.classList.contains("show")) qqModal.setAttribute("aria-hidden", "true");
+      if (!qqModal.classList.contains("is-open")) qqModal.setAttribute("aria-hidden", "true");
     }, 540);
   };
 
@@ -384,7 +382,7 @@ function initQqModal() {
   qqClose?.addEventListener("click", closeQqModal);
   qqBackdrop?.addEventListener("click", closeQqModal);
   document.addEventListener("keydown", (event) => {
-    if (!qqModal.classList.contains("show")) return;
+    if (!qqModal.classList.contains("is-open")) return;
     if (event.key === "Escape") {
       closeQqModal();
       return;
@@ -411,19 +409,8 @@ function initQqOpenButton() {
   qqOpenBtn.addEventListener("contextmenu", (event) => event.preventDefault());
 }
 
-function initContactNavigation() {
-  emailContactBtn?.addEventListener("click", () => {
-    window.location.href = "mailto:Me@AuCei.cn";
-  });
-
-  douyinContactBtn?.addEventListener("click", () => {
-    window.open("https://v.douyin.com/vyspksoAxyg", "_blank", "noopener,noreferrer");
-  });
-}
-
-
 function initContactTouchFeedback() {
-  const contactItems = document.querySelectorAll(".contact-item");
+  const contactItems = document.querySelectorAll(".contact-card");
   if (!contactItems.length) return;
 
   const clearPressed = (item, delay = 0) => {
@@ -437,7 +424,7 @@ function initContactTouchFeedback() {
 
       const rect = item.getBoundingClientRect();
       const ripple = document.createElement("span");
-      ripple.className = "contact-ripple";
+      ripple.className = "contact-card__ripple";
       ripple.style.left = `${event.clientX - rect.left}px`;
       ripple.style.top = `${event.clientY - rect.top}px`;
       ripple.setAttribute("aria-hidden", "true");
@@ -520,7 +507,7 @@ function loadMusicPlayerLibrary(timeoutMs = 10000) {
 
 function setMusicButton(enabled, loading = false) {
   if (!musicToggle) return;
-  const label = musicToggle.querySelector(".action-label");
+  const label = musicToggle.querySelector(".action-button__label");
   musicToggle.setAttribute("aria-busy", String(loading));
   if (label) label.textContent = loading ? "加载中" : enabled ? "关闭音乐" : "音乐";
   musicToggle.setAttribute("aria-pressed", String(enabled));
@@ -605,15 +592,15 @@ async function disableMusicPlayer() {
 }
 
 function initActionTouchFeedback() {
-  document.querySelectorAll(".action-btn").forEach((button) => {
-    const release = () => window.setTimeout(() => button.classList.remove("is-touching"), 90);
+  document.querySelectorAll(".action-button").forEach((button) => {
+    const release = () => window.setTimeout(() => button.classList.remove("is-pressed"), 90);
     button.addEventListener("pointerdown", (event) => {
       if (event.pointerType === "mouse") return;
-      button.classList.add("is-touching");
+      button.classList.add("is-pressed");
     });
     button.addEventListener("pointerup", release);
-    button.addEventListener("pointercancel", () => button.classList.remove("is-touching"));
-    button.addEventListener("pointerleave", () => button.classList.remove("is-touching"));
+    button.addEventListener("pointercancel", () => button.classList.remove("is-pressed"));
+    button.addEventListener("pointerleave", () => button.classList.remove("is-pressed"));
   });
 }
 
@@ -640,7 +627,6 @@ function initPage() {
   initWechatModal();
   initQqModal();
   initQqOpenButton();
-  initContactNavigation();
   initContactTouchFeedback();
   initActionTouchFeedback();
   initMusicPlayer();

@@ -1,137 +1,120 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark light">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="dark light" name="color-scheme"/>
 <title>阿张的小破站</title>
-<link rel="icon" type="image/png" href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png">
-<link rel="shortcut icon" type="image/png" href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png">
-<link rel="apple-touch-icon" href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png">
-<link rel="stylesheet" href="style.css">
+<link href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png" rel="icon" type="image/png"/>
+<link href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png" rel="shortcut icon" type="image/png"/>
+<link href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png" rel="apple-touch-icon"/>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-<div class="grid" aria-hidden="true"></div>
-<div class="orb" aria-hidden="true"></div>
-<div class="orb2" aria-hidden="true"></div>
-<div class="wrap">
-<main class="card">
-<div class="topbar">
-<div class="badge"><span class="dot" aria-hidden="true"></span>Personal Card</div>
-<button class="theme-btn" id="themeToggle" type="button" aria-label="切换明暗主题">切换主题</button>
+<div aria-hidden="true" class="page-background__grid"></div>
+<div aria-hidden="true" class="ambient-orb ambient-orb--top"></div>
+<div aria-hidden="true" class="ambient-orb ambient-orb--bottom"></div>
+<div class="page-shell" id="pageContent">
+<main class="profile-card">
+<div class="profile-card__header">
+<div class="site-badge"><span aria-hidden="true" class="site-badge__dot"></span>Personal Card</div>
+<button aria-label="切换明暗主题" class="theme-toggle" id="themeToggle" type="button">切换主题</button>
 </div>
-<section class="hero">
-<div class="avatar-wrap">
-<div class="avatar-ring" aria-hidden="true"></div>
-<img class="avatar" src="https://q1.qlogo.cn/g?b=qq&nk=3442695370&s=640" alt="头像">
-<span class="avatar-status" aria-label="在线"></span>
+<section class="profile-hero">
+<div class="profile-avatar">
+<div aria-hidden="true" class="profile-avatar__ring"></div>
+<img alt="头像" class="profile-avatar__image" src="https://q1.qlogo.cn/g?b=qq&amp;nk=3442695370&amp;s=640"/>
+<span aria-label="在线" class="profile-avatar__status"></span>
 </div>
 <div>
-<h1 class="name"><span>CNAuCei</span></h1>
-<p class="subtitle">在游戏中学会专注、判断与取舍，也把这种思维带到现实生活里。不断尝试、不断调整，在每一次对局和每一次选择中优化自己。比起结果，更看重长期的成长曲线。</p>
-<div class="actions" aria-label="快捷操作">
-<button class="btn action-btn action-share" id="shareBtn" type="button" aria-label="分享个人主页">
-<span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"/></svg></span>
-<span class="action-label">分享主页</span>
+<h1 class="profile-name"><span>CNAuCei</span></h1>
+<p class="profile-bio">在游戏中学会专注、判断与取舍，也把这种思维带到现实生活里。不断尝试、不断调整，在每一次对局和每一次选择中优化自己。比起结果，更看重长期的成长曲线。</p>
+<div aria-label="快捷操作" class="hero-actions">
+<button aria-label="分享个人主页" class="action-button action-button--share" id="shareBtn" type="button">
+<span aria-hidden="true" class="action-button__icon"><svg viewbox="0 0 24 24"><circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"></path></svg></span>
+<span class="action-button__label">分享主页</span>
 </button>
-<button class="btn action-btn" id="copyBtn" type="button" data-copy="Me@AuCei.cn" aria-label="复制邮箱地址">
-<span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span>
-<span class="action-label">复制邮箱</span>
+<button aria-label="复制邮箱地址" class="action-button" data-copy="Me@AuCei.cn" id="copyBtn" type="button">
+<span aria-hidden="true" class="action-button__icon"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg></span>
+<span class="action-button__label">复制邮箱</span>
 </button>
-<button class="btn action-btn music-enable-btn" id="musicToggle" type="button" aria-label="加载并显示音乐播放器" aria-pressed="false">
-<span class="action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></span>
-<span class="action-label">音乐</span>
-<span class="music-status" aria-hidden="true"></span>
+<button aria-label="加载并显示音乐播放器" aria-pressed="false" class="action-button action-button--music" id="musicToggle" type="button">
+<span aria-hidden="true" class="action-button__icon"><svg viewbox="0 0 24 24"><path d="M9 18V6l10-2v12"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></svg></span>
+<span class="action-button__label">音乐</span>
+<span aria-hidden="true" class="action-button__status"></span>
 </button>
 </div>
 </div>
 </section>
-<section class="section social-section">
-<div class="panel">
+<section class="contact-section">
+<div class="contact-panel">
 <h2>联系方式与社交链接</h2>
-<div class="info-grid">
-<a class="item contact-item" href="mailto:Me@AuCei.cn" aria-label="发送邮件给 CNAuCei">
-<span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span>
-<span class="contact-copy"><span class="label">邮箱 <b>EMAIL</b></span><span class="value">点击发送邮件</span></span>
-<span class="contact-arrow" aria-hidden="true">→</span>
+<div class="contact-grid">
+<a aria-label="发送邮件给 CNAuCei" class="contact-card" href="mailto:Me@AuCei.cn">
+<span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg></span>
+<span class="contact-card__content"><span class="contact-card__label">邮箱 <b>EMAIL</b></span><span class="contact-card__value">点击发送邮件</span></span>
+<span aria-hidden="true" class="contact-card__arrow">→</span>
 </a>
-<button class="item contact-item wechat-item" id="wechatBtn" type="button" aria-haspopup="dialog" aria-controls="wechatModal">
-<span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.5 5C4.9 5 2 7.4 2 10.3c0 1.7 1 3.2 2.5 4.2L4 17l2.8-1.4c.6.1 1.1.2 1.7.2 3.6 0 6.5-2.4 6.5-5.4S12.1 5 8.5 5Z"/><path d="M15.5 9c3.6 0 6.5 2.3 6.5 5.2 0 1.7-1 3.1-2.5 4.1L20 21l-2.8-1.4c-.6.1-1.1.2-1.7.2-2.6 0-4.8-1.2-5.9-3"/></svg></span>
-<span class="contact-copy"><span class="label">微信 <b>WECHAT</b></span><span class="value">添加微信好友</span></span>
-<span class="contact-arrow" aria-hidden="true">→</span>
+<button aria-controls="wechatModal" aria-haspopup="dialog" class="contact-card" id="wechatBtn" type="button">
+<span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M8.5 5C4.9 5 2 7.4 2 10.3c0 1.7 1 3.2 2.5 4.2L4 17l2.8-1.4c.6.1 1.1.2 1.7.2 3.6 0 6.5-2.4 6.5-5.4S12.1 5 8.5 5Z"></path><path d="M15.5 9c3.6 0 6.5 2.3 6.5 5.2 0 1.7-1 3.1-2.5 4.1L20 21l-2.8-1.4c-.6.1-1.1.2-1.7.2-2.6 0-4.8-1.2-5.9-3"></path></svg></span>
+<span class="contact-card__content"><span class="contact-card__label">微信 <b>WECHAT</b></span><span class="contact-card__value">添加微信好友</span></span>
+<span aria-hidden="true" class="contact-card__arrow">→</span>
 </button>
-<a class="item contact-item" href="https://v.douyin.com/vyspksoAxyg" target="_blank" rel="noopener noreferrer" aria-label="进入 CNAuCei 的抖音主页，新窗口打开">
-<span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 4v10.2a4.2 4.2 0 1 1-3.1-4.1"/><path d="M14 4c.8 2.7 2.6 4.2 5 4.5"/></svg></span>
-<span class="contact-copy"><span class="label">抖音 <b>DOUYIN</b></span><span class="value">进入抖音主页</span></span>
-<span class="contact-arrow" aria-hidden="true">→</span>
+<a aria-label="进入 CNAuCei 的抖音主页，新窗口打开" class="contact-card" href="https://v.douyin.com/vyspksoAxyg" rel="noopener noreferrer" target="_blank">
+<span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M14 4v10.2a4.2 4.2 0 1 1-3.1-4.1"></path><path d="M14 4c.8 2.7 2.6 4.2 5 4.5"></path></svg></span>
+<span class="contact-card__content"><span class="contact-card__label">抖音 <b>DOUYIN</b></span><span class="contact-card__value">进入抖音主页</span></span>
+<span aria-hidden="true" class="contact-card__arrow">→</span>
 </a>
-<button class="item contact-item qq-item" id="qqBtn" type="button" aria-haspopup="dialog" aria-controls="qqModal">
-<span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.2 17.1c-1.1.8-2.3 1.2-3.4 1.2.4-1.1.8-2.2 1.4-3.1C5.8 13.8 6 12.4 6 11c0-4 2.4-7 6-7s6 3 6 7c0 1.4.2 2.8.8 4.2.6.9 1 2 1.4 3.1-1.1 0-2.3-.4-3.4-1.2-.9 1.7-2.6 2.9-4.8 2.9s-3.9-1.2-4.8-2.9Z"/><path d="M9.5 10.2h.01M14.5 10.2h.01"/></svg></span>
-<span class="contact-copy"><span class="label">企鹅 <b>QQ</b></span><span class="value">添加企鹅好友</span></span>
-<span class="contact-arrow" aria-hidden="true">→</span>
+<button aria-controls="qqModal" aria-haspopup="dialog" class="contact-card" id="qqBtn" type="button">
+<span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M8.2 17.1c-1.1.8-2.3 1.2-3.4 1.2.4-1.1.8-2.2 1.4-3.1C5.8 13.8 6 12.4 6 11c0-4 2.4-7 6-7s6 3 6 7c0 1.4.2 2.8.8 4.2.6.9 1 2 1.4 3.1-1.1 0-2.3-.4-3.4-1.2-.9 1.7-2.6 2.9-4.8 2.9s-3.9-1.2-4.8-2.9Z"></path><path d="M9.5 10.2h.01M14.5 10.2h.01"></path></svg></span>
+<span class="contact-card__content"><span class="contact-card__label">企鹅 <b>QQ</b></span><span class="contact-card__value">添加企鹅好友</span></span>
+<span aria-hidden="true" class="contact-card__arrow">→</span>
 </button>
 </div>
 </div>
 </section>
-<footer class="footer">
+<footer class="site-footer">
 <span>© 2024-<span id="currentYear"></span> ByAuCei</span>
-<time id="clock" aria-label="当前时间">--:--:--</time>
+<time aria-label="当前时间" id="clock">--:--:--</time>
 </footer>
 </main>
 </div>
 <div id="music-player-root"></div>
-<div
-    class="wechat-modal"
-    id="wechatModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="wechatModalTitle"
-    aria-hidden="true"
-  >
-<div class="wechat-backdrop" data-wechat-close></div>
-<div class="wechat-dialog" role="document">
-<button
-        class="wechat-close"
-        id="wechatClose"
-        type="button"
-        aria-label="关闭微信二维码"
-      ><span class="wechat-close-icon" aria-hidden="true"></span></button>
+<div aria-hidden="true" aria-labelledby="wechatModalTitle" aria-modal="true" class="modal" id="wechatModal" role="dialog">
+<div class="modal__backdrop" data-wechat-close=""></div>
+<div class="modal__dialog" role="document">
+<button aria-label="关闭微信二维码" class="modal__close" id="wechatClose" type="button"><span aria-hidden="true" class="modal__close-icon"></span></button>
 <h2 id="wechatModalTitle">添加我的微信</h2>
-<p class="wechat-description">打开微信扫一扫，扫描二维码即可添加好友</p>
-<div class="wechat-qr-wrap">
-<img
-          class="wechat-qr"
-          src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRRHp0bWxMb0c1Q1RMMnhlSk5aaE53NkFVOS1EYXZFRVRzdktHVzNBQ2l2clBVP2U9aDM1bUtv.jpg"
-          alt="CNAuCei 的微信好友二维码"
-          width="888"
-          height="1131"
-        >
+<p class="modal__description">打开微信扫一扫，扫描二维码即可添加好友</p>
+<div class="modal__qr-frame">
+<img alt="CNAuCei 的微信好友二维码" class="modal__qr-image" height="1131" src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRRHp0bWxMb0c1Q1RMMnhlSk5aaE53NkFVOS1EYXZFRVRzdktHVzNBQ2l2clBVP2U9aDM1bUtv.jpg" width="888"/>
 </div>
-<div class="wechat-copy-row">
-  <span class="wechat-id">微信号：<strong>ByAuCei</strong></span>
-  <button class="wechat-copy-btn" id="copyWechatBtn" type="button" data-wechat-id="ByAuCei" aria-label="复制微信号 ByAuCei">复制微信号</button>
+<div class="modal__copy-row">
+<span class="modal__account">微信号：<strong>ByAuCei</strong></span>
+<button aria-label="复制微信号 ByAuCei" class="modal__copy-button" data-wechat-id="ByAuCei" id="copyWechatBtn" type="button">复制微信号</button>
 </div>
-<p class="wechat-tip">微信内可长按二维码并选择“识别图中二维码”</p>
+<p class="modal__tip">微信内可长按二维码并选择“识别图中二维码”</p>
 </div>
 </div>
-<div class="wechat-modal qq-modal" id="qqModal" role="dialog" aria-modal="true" aria-labelledby="qqModalTitle" aria-hidden="true">
-<div class="wechat-backdrop" data-qq-close></div>
-<div class="wechat-dialog qq-dialog" role="document">
-<button class="wechat-close" id="qqClose" type="button" aria-label="关闭QQ二维码"><span class="wechat-close-icon" aria-hidden="true"></span></button>
+<div aria-hidden="true" aria-labelledby="qqModalTitle" aria-modal="true" class="modal modal--qq" id="qqModal" role="dialog">
+<div class="modal__backdrop" data-qq-close=""></div>
+<div class="modal__dialog modal__dialog--qq" role="document">
+<button aria-label="关闭QQ二维码" class="modal__close" id="qqClose" type="button"><span aria-hidden="true" class="modal__close-icon"></span></button>
 <h2 id="qqModalTitle">添加我的QQ</h2>
-<p class="wechat-description">打开手机QQ扫一扫，扫描二维码即可添加好友</p>
-<div class="wechat-qr-wrap qq-qr-wrap">
-<img class="wechat-qr" src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQW04UXFlWkpCN1JabGhTY0xGaEswWUFUVzhWUGNRVEJjc2RTSG9DRFItd000P2U9YWpvNkM2.jpg" alt="CNAuCei 的QQ好友二维码">
+<p class="modal__description">打开手机QQ扫一扫，扫描二维码即可添加好友</p>
+<div class="modal__qr-frame modal__qr-frame--qq">
+<img alt="CNAuCei 的QQ好友二维码" class="modal__qr-image" src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQW04UXFlWkpCN1JabGhTY0xGaEswWUFUVzhWUGNRVEJjc2RTSG9DRFItd000P2U9YWpvNkM2.jpg"/>
 </div>
-<div class="wechat-copy-row qq-copy-row">
-  <span class="wechat-id">QQ号：<strong>3442695370</strong></span>
-  <button class="wechat-copy-btn qq-copy-btn" id="copyQqBtn" type="button" data-qq-id="3442695370" aria-label="复制QQ号 3442695370">复制QQ号</button>
+<div class="modal__copy-row modal__copy-row--qq">
+<span class="modal__account">QQ号：<strong>3442695370</strong></span>
+<button aria-label="复制QQ号 3442695370" class="modal__copy-button modal__copy-button--qq" data-qq-id="3442695370" id="copyQqBtn" type="button">复制QQ号</button>
 </div>
-<a class="qq-open-btn" id="qqOpenBtn" href="mqqapi://card/show_pslcard?src_type=internal&amp;source=sharecard&amp;version=1&amp;uin=3442695370" draggable="false" aria-label="打开QQ添加好友">打开QQ添加好友</a>
-<p class="wechat-tip">手机访客可直接打开QQ，或长按保存二维码后识别</p>
+<a aria-label="打开QQ添加好友" class="modal__open-app" draggable="false" href="mqqapi://card/show_pslcard?src_type=internal&amp;source=sharecard&amp;version=1&amp;uin=3442695370" id="qqOpenBtn">打开QQ添加好友</a>
+<p class="modal__tip">手机访客可直接打开QQ，或长按保存二维码后识别</p>
 </div>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite">已复制</div>
-<script src="script.js?v=20260809-arrow-unified"></script>
+<div aria-live="polite" class="toast" id="toast" role="status">已复制</div>
+<script src="script.js?v=20260810-refactor"></script>
 </body>
 </html>

@@ -45,59 +45,80 @@ function showToast(message) {
 }
 
 function initTheme() {
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let activeTransition = null;
+  let cleanupTimer = 0;
+  let isSwitching = false;
+
   const applyTheme = (theme) => {
     const useLight = theme === "light";
-    document.documentElement.classList.toggle("light", useLight);
+    root.classList.toggle("light", useLight);
     if (!themeToggle) return;
     themeToggle.setAttribute("aria-pressed", String(useLight));
     themeToggle.setAttribute("aria-label", useLight ? "切换到深色主题" : "切换到浅色主题");
     themeToggle.title = useLight ? "切换到深色主题" : "切换到浅色主题";
   };
+  const saveTheme = (theme) => {
+    try { localStorage.setItem("card-theme", theme); } catch (error) {}
+  };
+  const cleanupTransition = () => {
+    window.clearTimeout(cleanupTimer);
+    cleanupTimer = 0;
+    root.classList.remove("theme-transition-active", "theme-ripple-fallback");
+    root.style.removeProperty("--theme-x");
+    root.style.removeProperty("--theme-y");
+    root.style.removeProperty("--theme-radius");
+    activeTransition = null;
+    isSwitching = false;
+  };
 
   let savedTheme = null;
-  try {
-    savedTheme = localStorage.getItem("card-theme");
-  } catch (error) {
-    savedTheme = null;
-  }
-
+  try { savedTheme = localStorage.getItem("card-theme"); } catch (error) {}
   const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
   const initialTheme = savedTheme === "light" || savedTheme === "dark"
-    ? savedTheme
-    : prefersLight ? "light" : "dark";
+    ? savedTheme : prefersLight ? "light" : "dark";
   applyTheme(initialTheme);
 
   themeToggle?.addEventListener("click", (event) => {
-    const nextTheme = document.documentElement.classList.contains("light") ? "dark" : "light";
+    if (isSwitching) return;
+    isSwitching = true;
+    const nextTheme = root.classList.contains("light") ? "dark" : "light";
+    const commitTheme = () => { applyTheme(nextTheme); saveTheme(nextTheme); };
+
+    if (!document.startViewTransition || reduceMotion.matches) {
+      root.classList.add("theme-ripple-fallback");
+      commitTheme();
+      cleanupTimer = window.setTimeout(cleanupTransition, reduceMotion.matches ? 30 : 240);
+      return;
+    }
+
     const rect = themeToggle.getBoundingClientRect();
     const x = event.clientX || rect.left + rect.width / 2;
     const y = event.clientY || rect.top + rect.height / 2;
     const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    const root = document.documentElement;
     root.style.setProperty("--theme-x", `${x}px`);
     root.style.setProperty("--theme-y", `${y}px`);
-    root.style.setProperty("--theme-radius", `${radius}px`);
-    root.dataset.themeDirection = nextTheme;
+    root.style.setProperty("--theme-radius", `${Math.ceil(radius)}px`);
+    root.classList.add("theme-transition-active");
 
-    const commitTheme = () => {
-      applyTheme(nextTheme);
-      try {
-        localStorage.setItem("card-theme", nextTheme);
-      } catch (error) {
-        // 存储不可用时仍允许本次切换生效。
-      }
-    };
-
-    if (!document.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      root.classList.add("theme-ripple-fallback");
+    try {
+      activeTransition = document.startViewTransition(commitTheme);
+      activeTransition.finished.catch(() => {}).finally(cleanupTransition);
+      cleanupTimer = window.setTimeout(() => {
+        activeTransition?.skipTransition?.();
+        cleanupTransition();
+      }, 900);
+    } catch (error) {
       commitTheme();
-      window.setTimeout(() => root.classList.remove("theme-ripple-fallback"), 1150);
-      return;
+      cleanupTransition();
     }
-
-    const transition = document.startViewTransition(commitTheme);
-    transition.finished.finally(() => delete root.dataset.themeDirection);
   });
+
+  window.addEventListener("pagehide", () => {
+    activeTransition?.skipTransition?.();
+    cleanupTransition();
+  }, { once: true });
 }
 
 async function copyText(text) {
@@ -181,7 +202,6 @@ function initShare() {
   shareBtn?.addEventListener("click", async () => {
     const isWebPage = window.location.protocol === "http:" || window.location.protocol === "https:";
 
-    // file:// 是本地文件地址，Windows 分享面板无法可靠处理，避免触发浏览器错误页。
     if (!isWebPage) {
       showToast("当前是本地预览，发布网站后即可分享");
       return;
@@ -365,7 +385,6 @@ function initWechatModal() {
     trapFocus(event);
   });
 }
-
 
 function initQqModal() {
   if (!qqModal) return;

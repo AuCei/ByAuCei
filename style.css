@@ -15,7 +15,6 @@
   --radius-medium: 18px;
   --duration: 220ms;
 }
-
 html.light {
   color-scheme: light;
   --color-bg: #edf2ff;
@@ -28,11 +27,9 @@ html.light {
   --color-border: rgba(38, 50, 88, 0.12);
   --shadow-card: 0 28px 70px rgba(58, 72, 112, 0.2);
 }
-
 *,
 *::before,
 *::after { box-sizing: border-box; }
-
 html { min-height: 100%; scroll-behavior: smooth; }
 body {
   min-height: 100vh;
@@ -50,7 +47,6 @@ body {
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
-
 .page-background__grid {
   position: fixed;
   inset: 0;
@@ -74,7 +70,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .ambient-orb--top { top: -120px; right: -80px; background: var(--color-primary); }
 .ambient-orb--bottom { bottom: -160px; left: -90px; background: var(--color-cyan); }
-
 .page-shell { display: grid; place-items: center; width: 100%; min-height: 100vh; padding: 48px 20px; transition: opacity 300ms ease; }
 .profile-card {
   position: relative;
@@ -95,7 +90,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .profile-card__header, .site-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .site-badge { display: inline-flex; align-items: center; gap: 9px; color: var(--color-muted); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .site-badge__dot { display: block; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: #7f8cff; box-shadow: 0 0 0 5px rgba(127,140,255,.12), 0 0 14px rgba(127,140,255,.38); }
-
 .theme-toggle, .action-button, .contact-card, .modal__close, .modal__copy-button { cursor: pointer; }
 .theme-toggle { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; overflow: hidden; color: var(--color-text); border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-panel); box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 8px 20px rgba(0,0,0,.12); transition: transform var(--duration), background var(--duration), border-color var(--duration), box-shadow var(--duration); }
 .theme-toggle:hover { transform: translateY(-2px) rotate(8deg); border-color: rgba(124,92,255,.52); background: var(--color-panel-hover); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 10px 24px rgba(0,0,0,.18), 0 0 0 5px rgba(124,92,255,.08); }
@@ -106,16 +100,22 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .theme-toggle__icon--moon { opacity: 0; transform: rotate(-75deg) scale(.45); }
 html.light .theme-toggle__icon--sun { opacity: 0; transform: rotate(90deg) scale(.45); }
 html.light .theme-toggle__icon--moon { opacity: 1; transform: rotate(0deg) scale(1); }
-
-/* 新主题以按钮为圆心向整页蔓延。View Transition 不支持时仍保留柔和淡入。 */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 ::view-transition-old(root) { z-index: 1; }
-::view-transition-new(root) { z-index: 9999; clip-path: circle(0 at var(--theme-x) var(--theme-y)); animation: theme-spread 1100ms cubic-bezier(.22,1,.36,1) both; }
+::view-transition-new(root) {
+  z-index: 9999;
+  clip-path: circle(0 at var(--theme-x) var(--theme-y));
+  animation: theme-spread 560ms cubic-bezier(.22,1,.36,1) both;
+}
 @keyframes theme-spread { to { clip-path: circle(var(--theme-radius) at var(--theme-x) var(--theme-y)); } }
-html.theme-ripple-fallback body { animation: theme-fallback 1050ms ease both; }
-@keyframes theme-fallback { 0% { opacity: .72; } 100% { opacity: 1; } }
+html.theme-transition-active body,
+html.theme-transition-active .profile-card,
+html.theme-transition-active .contact-panel,
+html.theme-transition-active .theme-toggle,
+html.theme-transition-active .theme-toggle__icon { transition: none !important; }
+html.theme-ripple-fallback body { animation: theme-fallback 200ms ease-out both; }
+@keyframes theme-fallback { 0% { opacity: .86; } 100% { opacity: 1; } }
 :where(.theme-toggle, .action-button, .contact-card, .modal__close, .modal__copy-button, .modal__open-app):focus-visible { outline: 3px solid rgba(34,211,238,.55); outline-offset: 3px; }
-
 .profile-hero { display: grid; grid-template-columns: 180px minmax(0,1fr); align-items: center; gap: 38px; padding: 58px 12px 48px; }
 .profile-avatar { position: relative; width: 164px; height: 164px; justify-self: center; }
 .profile-avatar__ring { position: absolute; inset: -8px; border-radius: 50%; background: conic-gradient(from 0deg,#22d3ee,#5b8cff 78deg,#8b6cff 145deg,#ef66c5 220deg,#8f67e8 292deg,#22d3ee); box-shadow: 0 10px 30px rgba(66,86,180,.2); animation: avatar-ring-spin 10s linear infinite; }
@@ -126,7 +126,6 @@ html.theme-ripple-fallback body { animation: theme-fallback 1050ms ease both; }
 .profile-name span { color: transparent; background: linear-gradient(105deg,#f6f8ff 0%,#dce7ff 52%,#9b8cff 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 html.light .profile-name span { color: #17213d; background: none; -webkit-text-fill-color: currentColor; }
 .profile-bio { max-width: 650px; margin: 0; color: var(--color-muted); font-size: 15px; }
-
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 26px; }
 .action-button { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 42px; padding: 0 14px; overflow: hidden; color: var(--color-muted); border: 1px solid rgba(255,255,255,.11); border-radius: 11px; background: rgba(255,255,255,.035); box-shadow: inset 0 1px 0 rgba(255,255,255,.045); font-size: 13px; font-weight: 650; transition: color 160ms, background-color 160ms, border-color 160ms, transform 160ms, box-shadow 160ms; }
 .action-button:hover { color: var(--color-text); border-color: rgba(255,255,255,.2); background: rgba(255,255,255,.07); box-shadow: inset 0 1px 0 rgba(255,255,255,.07),0 8px 20px rgba(0,0,0,.13); transform: translateY(-2px); }
@@ -142,7 +141,6 @@ html.light .action-button { color: #58627a; border-color: rgba(38,50,88,.12); ba
 html.light .action-button:hover { color: #172039; border-color: rgba(38,50,88,.22); background: #fff; }
 html.light .action-button--share { color: #354191; border-color: rgba(80,91,190,.24); background: rgba(80,91,190,.09); }
 html.light .action-button--music[aria-pressed="true"] { color: #126b48; border-color: rgba(28,158,101,.42); background: rgba(28,158,101,.12); }
-
 .contact-panel { padding: 24px; border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-panel); transition: background var(--duration), border-color var(--duration); }
 .contact-panel:hover { border-color: rgba(124,92,255,.28); background: var(--color-panel-hover); }
 .contact-panel h2 { margin: 0 0 18px; font-size: 17px; }
@@ -161,11 +159,9 @@ html.light .action-button--music[aria-pressed="true"] { color: #126b48; border-c
 .contact-card:hover .contact-card__arrow { color: #fff; background: rgba(127,140,255,.22); transform: translateX(2px); }
 .contact-card__ripple { position: absolute; z-index: 0; width: 18px; height: 18px; pointer-events: none; border-radius: 50%; background: rgba(160,170,255,.22); transform: translate(-50%,-50%) scale(0); animation: contact-ripple 460ms ease-out forwards; }
 html.light .contact-card { border-color: rgba(48,61,101,.14); background: rgba(255,255,255,.76); }
-
 .site-footer { margin-top: 22px; padding: 0 4px; color: var(--color-muted); font-size: 12px; }
 #clock { display: inline-flex; align-items: center; justify-content: center; min-width: 86px; padding: 5px 10px; color: var(--color-text); border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-panel); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
 #music-player-root { display: contents; }
-
 .toast { position: fixed; z-index: 10000; left: 50%; bottom: 34px; padding: 11px 18px; color: #fff; pointer-events: none; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(15,20,38,.9); box-shadow: 0 12px 35px rgba(0,0,0,.3); opacity: 0; transform: translate(-50%,16px) scale(.96); transition: opacity 180ms, transform 180ms; }
 .toast.is-open { opacity: 1; transform: translate(-50%,0) scale(1); }
 .modal { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 20px; pointer-events: none; visibility: hidden; opacity: 0; transition: opacity 360ms cubic-bezier(.22,1,.36,1), visibility 0s linear 360ms; }
@@ -196,16 +192,13 @@ html.light .contact-card { border-color: rgba(48,61,101,.14); background: rgba(2
 .modal__tip { margin: 16px 0 0; color: var(--color-muted); font-size: 12px; }
 body.modal-open { overflow: hidden; }
 body.modal-open .page-shell { opacity: .82; }
-
 body.music-playing .page-background__grid { opacity: .16; mask-image: none; }
 body.music-playing .ambient-orb { display: none; }
 body.music-playing .profile-card { backdrop-filter: none; -webkit-backdrop-filter: none; transform: none !important; transform-style: flat; box-shadow: 0 14px 38px rgba(0,0,0,.3); }
 body.music-playing .profile-avatar__ring { animation-play-state: paused; }
-
 @keyframes avatar-ring-spin { to { transform: rotate(360deg); } }
 @keyframes action-pulse { to { opacity: .35; transform: scale(.9); } }
 @keyframes contact-ripple { to { opacity: 0; transform: translate(-50%,-50%) scale(18); } }
-
 @media (max-width: 720px) {
   .page-shell { padding: 18px 12px; }
   .profile-card { padding: 22px 16px; border-radius: 22px; backdrop-filter: none; }

@@ -92,7 +92,6 @@ function initTheme() {
       cleanupTimer = window.setTimeout(cleanupTransition, reduceMotion.matches ? 30 : 240);
       return;
     }
-
     const rect = themeToggle.getBoundingClientRect();
     const x = event.clientX || rect.left + rect.width / 2;
     const y = event.clientY || rect.top + rect.height / 2;

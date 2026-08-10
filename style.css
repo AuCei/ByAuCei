@@ -106,6 +106,11 @@ html.light .theme-toggle__icon--moon { opacity: 1; transform: rotate(0deg) scale
   z-index: 9999;
   clip-path: circle(0 at var(--theme-x) var(--theme-y));
   animation: theme-spread 560ms cubic-bezier(.22,1,.36,1) both;
+  will-change: clip-path;
+}
+::view-transition-group(root),
+::view-transition-image-pair(root) {
+  isolation: isolate;
 }
 @keyframes theme-spread { to { clip-path: circle(var(--theme-radius) at var(--theme-x) var(--theme-y)); } }
 html.theme-transition-active body,
@@ -113,6 +118,8 @@ html.theme-transition-active .profile-card,
 html.theme-transition-active .contact-panel,
 html.theme-transition-active .theme-toggle,
 html.theme-transition-active .theme-toggle__icon { transition: none !important; }
+html.theme-transition-active .profile-avatar__ring { animation-play-state: paused !important; }
+html.theme-transition-active .ambient-orb { filter: none; opacity: .12; }
 html.theme-ripple-fallback body { animation: theme-fallback 200ms ease-out both; }
 @keyframes theme-fallback { 0% { opacity: .86; } 100% { opacity: 1; } }
 :where(.theme-toggle, .action-button, .contact-card, .modal__close, .modal__copy-button, .modal__open-app):focus-visible { outline: 3px solid rgba(34,211,238,.55); outline-offset: 3px; }
@@ -227,6 +234,12 @@ body.music-playing .profile-avatar__ring { animation-play-state: paused; }
   .toast { bottom: calc(18px + env(safe-area-inset-bottom)); max-width: calc(100vw - 28px); white-space: nowrap; }
 }
 @media (hover: none), (pointer: coarse) {
+  .profile-card { transform-style: flat; }
+  html.theme-transition-active .profile-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html.theme-transition-active .page-background__grid { display: none; }
   .contact-card:hover, .action-button:hover { transform: none; }
   .contact-card.is-pressed { transform: scale(.975); border-color: rgba(127,140,255,.46); background: rgba(127,140,255,.1); }
   .action-button.is-pressed { transform: scale(.94); border-color: rgba(127,140,255,.52); background: rgba(127,140,255,.16); }

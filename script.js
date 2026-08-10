@@ -60,7 +60,7 @@ function initTheme() {
     themeToggle.title = useLight ? "切换到深色主题" : "切换到浅色主题";
   };
   const saveTheme = (theme) => {
-    try { localStorage.setItem("card-theme", theme); } catch (error) {}
+    try { localStorage.setItem("card-theme", theme); } catch {}
   };
   const cleanupTransition = () => {
     window.clearTimeout(cleanupTimer);
@@ -74,7 +74,7 @@ function initTheme() {
   };
 
   let savedTheme = null;
-  try { savedTheme = localStorage.getItem("card-theme"); } catch (error) {}
+  try { savedTheme = localStorage.getItem("card-theme"); } catch {}
   const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
   const initialTheme = savedTheme === "light" || savedTheme === "dark"
     ? savedTheme : prefersLight ? "light" : "dark";
@@ -224,7 +224,7 @@ function initShare() {
       try {
         const copied = await copyText(shareData.url);
         showToast(copied ? "主页链接已复制" : "暂时无法分享主页");
-      } catch (copyError) {
+      } catch {
         showToast("暂时无法分享主页");
       }
     }

@@ -19,7 +19,10 @@
 <main class="profile-card">
 <div class="profile-card__header">
 <div class="site-badge"><span aria-hidden="true" class="site-badge__dot"></span>Personal Card</div>
-<button aria-label="切换明暗主题" class="theme-toggle" id="themeToggle" type="button">切换主题</button>
+<button aria-label="切换到浅色主题" aria-pressed="false" class="theme-toggle" id="themeToggle" type="button">
+<span aria-hidden="true" class="theme-toggle__icon theme-toggle__icon--sun"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M2 12h2.2M19.8 12H22M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56"></path></svg></span>
+<span aria-hidden="true" class="theme-toggle__icon theme-toggle__icon--moon"><svg viewBox="0 0 24 24"><path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path></svg></span>
+</button>
 </div>
 <section class="profile-hero">
 <div class="profile-avatar">

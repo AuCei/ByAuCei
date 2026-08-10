@@ -49,9 +49,9 @@ function initTheme() {
     const useLight = theme === "light";
     document.documentElement.classList.toggle("light", useLight);
     if (!themeToggle) return;
-    themeToggle.textContent = useLight ? "切换深色" : "切换浅色";
     themeToggle.setAttribute("aria-pressed", String(useLight));
     themeToggle.setAttribute("aria-label", useLight ? "切换到深色主题" : "切换到浅色主题");
+    themeToggle.title = useLight ? "切换到深色主题" : "切换到浅色主题";
   };
 
   let savedTheme = null;
@@ -67,14 +67,36 @@ function initTheme() {
     : prefersLight ? "light" : "dark";
   applyTheme(initialTheme);
 
-  themeToggle?.addEventListener("click", () => {
+  themeToggle?.addEventListener("click", (event) => {
     const nextTheme = document.documentElement.classList.contains("light") ? "dark" : "light";
-    applyTheme(nextTheme);
-    try {
-      localStorage.setItem("card-theme", nextTheme);
-    } catch (error) {
-      // 存储不可用时仍允许本次切换生效。
+    const rect = themeToggle.getBoundingClientRect();
+    const x = event.clientX || rect.left + rect.width / 2;
+    const y = event.clientY || rect.top + rect.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    const root = document.documentElement;
+    root.style.setProperty("--theme-x", `${x}px`);
+    root.style.setProperty("--theme-y", `${y}px`);
+    root.style.setProperty("--theme-radius", `${radius}px`);
+    root.dataset.themeDirection = nextTheme;
+
+    const commitTheme = () => {
+      applyTheme(nextTheme);
+      try {
+        localStorage.setItem("card-theme", nextTheme);
+      } catch (error) {
+        // 存储不可用时仍允许本次切换生效。
+      }
+    };
+
+    if (!document.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      root.classList.add("theme-ripple-fallback");
+      commitTheme();
+      window.setTimeout(() => root.classList.remove("theme-ripple-fallback"), 1150);
+      return;
     }
+
+    const transition = document.startViewTransition(commitTheme);
+    transition.finished.finally(() => delete root.dataset.themeDirection);
   });
 }
 

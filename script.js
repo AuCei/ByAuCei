@@ -480,6 +480,36 @@ function initContactTouchFeedback() {
 }
 
 const musicPlayerCdn = "https://player.xfyun.club/js/music-player/music-player.min.js";
+
+// 仅过滤第三方音乐播放器输出的品牌提示，不影响其他控制台日志或报错。
+function installMusicPlayerConsoleFilter() {
+  const filterMark = Symbol.for("aucei.musicPlayerConsoleFilter");
+  if (console[filterMark]) return;
+
+  const methods = ["log", "info", "debug"];
+  const blockedPhrases = ["自豪采用", "小枫音乐播放器"];
+
+  methods.forEach((method) => {
+    const original = console[method];
+    if (typeof original !== "function") return;
+
+    console[method] = function (...args) {
+      const message = args
+        .filter((value) => typeof value === "string")
+        .join(" ");
+
+      if (blockedPhrases.some((phrase) => message.includes(phrase))) return;
+      return original.apply(console, args);
+    };
+  });
+
+  Object.defineProperty(console, filterMark, {
+    value: true,
+    configurable: false,
+    enumerable: false
+  });
+}
+
 let musicPlayerInstance = null;
 let musicPlayerLoading = null;
 let musicPlayerBusy = false;
@@ -500,6 +530,7 @@ function syncMusicPerformanceMode() {
 }
 
 function loadMusicPlayerLibrary(timeoutMs = 10000) {
+  installMusicPlayerConsoleFilter();
   if (window.XfMusicPlayer?.MusicPlayer) return Promise.resolve();
   if (musicPlayerLoading) return musicPlayerLoading;
 

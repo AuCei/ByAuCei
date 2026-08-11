@@ -1,0 +1,37 @@
+"use strict";
+const API_BASE = "https://s.aucei.cn";
+const API_URL = `${API_BASE}/api/links`;
+const HEALTH_URL = `${API_BASE}/api/health`;
+const root = document.documentElement;
+const form = document.getElementById("shortForm");
+const longUrl = document.getElementById("longUrl");
+const customCode = document.getElementById("customCode");
+const adminToken = document.getElementById("adminToken");
+const rememberToken = document.getElementById("rememberToken");
+const revealToken = document.getElementById("revealToken");
+const submitButton = document.getElementById("submitButton");
+const formMessage = document.getElementById("formMessage");
+const resultPanel = document.getElementById("resultPanel");
+const shortLink = document.getElementById("shortLink");
+const originalLink = document.getElementById("originalLink");
+const copyLink = document.getElementById("copyLink");
+const serviceStatus = document.getElementById("serviceStatus");
+const themeToggle = document.getElementById("themeToggle");
+const toast = document.getElementById("toast");
+let currentShortUrl = "";
+let toastTimer = 0;
+
+function showToast(message){toast.textContent=message;toast.classList.add("is-open");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("is-open"),1800)}
+function setMessage(message,type="error"){formMessage.textContent=message;formMessage.className=`message is-${type}`}
+function clearMessage(){formMessage.textContent="";formMessage.className="message"}
+function validUrl(value){try{const url=new URL(value);return url.protocol==="http:"||url.protocol==="https:"}catch{return false}}
+async function copyText(value){if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()}
+function applyTheme(theme){const light=theme==="light";root.classList.toggle("light",light);themeToggle.setAttribute("aria-pressed",String(light));themeToggle.setAttribute("aria-label",light?"切换到深色主题":"切换到浅色主题")}
+function initTheme(){let saved=null;try{saved=localStorage.getItem("card-theme")}catch{}const initial=saved==="dark"||saved==="light"?saved:matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";applyTheme(initial);themeToggle.addEventListener("click",()=>{const next=root.classList.contains("light")?"dark":"light";applyTheme(next);try{localStorage.setItem("card-theme",next)}catch{}})}
+function restoreToken(){try{const token=sessionStorage.getItem("aucei-short-token");if(token){adminToken.value=token;rememberToken.checked=true}}catch{}}
+function saveToken(){try{if(rememberToken.checked)sessionStorage.setItem("aucei-short-token",adminToken.value);else sessionStorage.removeItem("aucei-short-token")}catch{}}
+async function checkHealth(){try{const response=await fetch(HEALTH_URL,{headers:{Accept:"application/json"}});const data=await response.json();if(response.ok&&data.success){serviceStatus.classList.add("is-online");serviceStatus.querySelector("span").textContent="服务正常";return}throw new Error()}catch{serviceStatus.classList.add("is-offline");serviceStatus.querySelector("span").textContent="服务异常"}}
+revealToken.addEventListener("click",()=>{const showing=adminToken.type==="text";adminToken.type=showing?"password":"text";revealToken.setAttribute("aria-label",showing?"显示管理密钥":"隐藏管理密钥")});
+copyLink.addEventListener("click",async()=>{if(!currentShortUrl)return;try{await copyText(currentShortUrl);copyLink.querySelector("span").textContent="已复制";showToast("短链接已复制");setTimeout(()=>copyLink.querySelector("span").textContent="复制",1500)}catch{showToast("复制失败，请手动复制")}});
+form.addEventListener("submit",async(event)=>{event.preventDefault();clearMessage();resultPanel.hidden=true;const urlValue=longUrl.value.trim();const codeValue=customCode.value.trim();const tokenValue=adminToken.value.trim();if(!validUrl(urlValue)){setMessage("请输入以 http:// 或 https:// 开头的有效链接");longUrl.focus();return}if(codeValue&&!/^[A-Za-z0-9_-]{3,32}$/.test(codeValue)){setMessage("自定义短码需为 3 至 32 位，只能包含字母、数字、下划线或连字符");customCode.focus();return}if(!tokenValue){setMessage("请输入管理密钥");adminToken.focus();return}saveToken();submitButton.disabled=true;submitButton.querySelector("span").textContent="正在生成...";setMessage("正在连接短链服务，请稍候","info");try{const payload={url:urlValue};if(codeValue)payload.code=codeValue;const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${tokenValue}`},body:JSON.stringify(payload)});let data;try{data=await response.json()}catch{throw new Error("服务器返回了无法识别的内容")}if(!response.ok||!data.success)throw new Error(data.message||`生成失败，状态码 ${response.status}`);currentShortUrl=data.shortUrl;shortLink.href=data.shortUrl;shortLink.textContent=data.shortUrl;originalLink.textContent=data.originalUrl;resultPanel.hidden=false;clearMessage();resultPanel.scrollIntoView({behavior:"smooth",block:"nearest"})}catch(error){setMessage(error.message==="Failed to fetch"?"无法连接短链服务，请检查网络或 Cloudflare CORS 设置":error.message)}finally{submitButton.disabled=false;submitButton.querySelector("span").textContent="生成短链接"}});
+initTheme();restoreToken();checkHealth();document.getElementById("year").textContent=new Date().getFullYear();

@@ -39,9 +39,18 @@ let toastTimer = 0;
 function showToast(message) {
   if (!toast) return;
   toast.textContent = message;
-  toast.classList.add("is-open");
   window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => toast.classList.remove("is-open"), 1800);
+
+  // 重新触发弹性展开，让连续操作时提示也有清晰反馈。
+  toast.classList.remove("is-open", "is-closing");
+  void toast.offsetWidth;
+  toast.classList.add("is-open");
+
+  toastTimer = window.setTimeout(() => {
+    toast.classList.add("is-closing");
+    toast.classList.remove("is-open");
+    window.setTimeout(() => toast.classList.remove("is-closing"), 420);
+  }, 1900);
 }
 
 function initTheme() {
@@ -93,8 +102,12 @@ function initTheme() {
       return;
     }
     const rect = themeToggle.getBoundingClientRect();
-    const x = event.clientX || rect.left + rect.width / 2;
-    const y = event.clientY || rect.top + rect.height / 2;
+    const x = Number.isFinite(event.clientX) && event.clientX > 0
+      ? event.clientX
+      : rect.left + rect.width / 2;
+    const y = Number.isFinite(event.clientY) && event.clientY > 0
+      ? event.clientY
+      : rect.top + rect.height / 2;
     const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     root.style.setProperty("--theme-x", `${x}px`);
     root.style.setProperty("--theme-y", `${y}px`);
@@ -256,56 +269,6 @@ function initClock() {
 
   startClock();
   document.addEventListener("visibilitychange", startClock);
-}
-
-function initCardTilt() {
-  if (!card || !window.matchMedia("(pointer: fine)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  let tiltFrame = 0;
-  let pointerX = 0;
-  let pointerY = 0;
-  let cardRect = null;
-  const maxTilt = 1.2;
-
-  const cacheCardRect = () => {
-    cardRect = card.getBoundingClientRect();
-  };
-
-  const resetCardTilt = () => {
-    window.cancelAnimationFrame(tiltFrame);
-    tiltFrame = 0;
-    cardRect = null;
-    card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
-  };
-
-  card.addEventListener("pointerenter", cacheCardRect, { passive: true });
-  card.addEventListener("pointermove", (event) => {
-    if (body.classList.contains("music-playing")) {
-      resetCardTilt();
-      return;
-    }
-
-    if (!cardRect) cacheCardRect();
-    pointerX = event.clientX;
-    pointerY = event.clientY;
-    if (tiltFrame) return;
-
-    tiltFrame = window.requestAnimationFrame(() => {
-      tiltFrame = 0;
-      if (!cardRect) return;
-      const x = pointerX - cardRect.left;
-      const y = pointerY - cardRect.top;
-      const rotateY = ((x - cardRect.width / 2) / (cardRect.width / 2)) * maxTilt;
-      const rotateX = -((y - cardRect.height / 2) / (cardRect.height / 2)) * maxTilt;
-      card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-  }, { passive: true });
-
-  card.addEventListener("pointerleave", resetCardTilt);
-  window.addEventListener("resize", () => { cardRect = null; }, { passive: true });
-  document.addEventListener("musicperformancechange", (event) => {
-    if (event.detail?.playing) resetCardTilt();
-  });
 }
 
 function initWechatModal() {
@@ -694,7 +657,6 @@ function initPage() {
   initClipboard();
   initShare();
   initClock();
-  initCardTilt();
   initWechatModal();
   initQqModal();
   initQqOpenButton();

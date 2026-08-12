@@ -28,61 +28,67 @@ function setMessage(message,type="error"){formMessage.textContent=message;formMe
 function clearMessage(){formMessage.textContent="";formMessage.className="message"}
 function validUrl(value){try{const url=new URL(value);return url.protocol==="http:"||url.protocol==="https:"}catch{return false}}
 async function copyText(value){if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()}
-function applyTheme(theme){const light=theme==="light";root.classList.toggle("light",light);themeToggle.setAttribute("aria-pressed",String(light));themeToggle.setAttribute("aria-label",light?"切换到深色主题":"切换到浅色主题")}
+function applyTheme(theme){
+  const light=theme==="light";
+  root.classList.toggle("light",light);
+  root.dataset.theme=theme;
+  const actionLabel=light?"切换到深色主题":"切换到浅色主题";
+  themeToggle.setAttribute("aria-label",actionLabel);
+  themeToggle.title=actionLabel;
+}
 function initTheme(){
+  const colorScheme=window.matchMedia("(prefers-color-scheme: light)");
   const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
   let activeTransition=null;
   let cleanupTimer=0;
   let isSwitching=false;
+  let hasSavedTheme=false;
 
-  const saveTheme=(theme)=>{
-    try{localStorage.setItem("card-theme",theme)}catch{}
+  const readSavedTheme=()=>{
+    try{
+      const saved=localStorage.getItem("card-theme");
+      hasSavedTheme=saved==="dark"||saved==="light";
+      return hasSavedTheme?saved:null;
+    }catch{
+      hasSavedTheme=false;
+      return null;
+    }
   };
-
+  const saveTheme=(theme)=>{
+    try{localStorage.setItem("card-theme",theme);hasSavedTheme=true}catch{}
+  };
   const cleanupTransition=()=>{
+    if(!isSwitching)return;
     window.clearTimeout(cleanupTimer);
     cleanupTimer=0;
-    root.classList.remove("theme-transition-active","theme-ripple-fallback");
+    root.classList.remove("theme-transition-active");
     root.style.removeProperty("--theme-x");
     root.style.removeProperty("--theme-y");
     root.style.removeProperty("--theme-radius");
     activeTransition=null;
     isSwitching=false;
-    themeToggle.disabled=false;
+    themeToggle.classList.remove("is-switching");
   };
 
-  let saved=null;
-  try{saved=localStorage.getItem("card-theme")}catch{}
-  const initial=saved==="dark"||saved==="light"
-    ? saved
-    : window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";
-  applyTheme(initial);
+  applyTheme(readSavedTheme()||(colorScheme.matches?"light":"dark"));
 
-  themeToggle.addEventListener("click",(event)=>{
+  const switchTheme=(event)=>{
     if(isSwitching)return;
     isSwitching=true;
-    themeToggle.disabled=true;
+    themeToggle.classList.add("is-switching");
     const next=root.classList.contains("light")?"dark":"light";
-    const commitTheme=()=>{
-      applyTheme(next);
-      saveTheme(next);
-    };
+    const commitTheme=()=>{applyTheme(next);saveTheme(next)};
 
     if(!document.startViewTransition||reduceMotion.matches){
-      root.classList.add("theme-ripple-fallback");
       commitTheme();
-      cleanupTimer=window.setTimeout(cleanupTransition,reduceMotion.matches?30:240);
+      window.setTimeout(cleanupTransition,reduceMotion.matches?0:460);
       return;
     }
 
     const rect=themeToggle.getBoundingClientRect();
-    const x=event.clientX||rect.left+rect.width/2;
-    const y=event.clientY||rect.top+rect.height/2;
-    const radius=Math.hypot(
-      Math.max(x,window.innerWidth-x),
-      Math.max(y,window.innerHeight-y)
-    );
-
+    const x=Number.isFinite(event.clientX)&&event.clientX>0?event.clientX:rect.left+rect.width/2;
+    const y=Number.isFinite(event.clientY)&&event.clientY>0?event.clientY:rect.top+rect.height/2;
+    const radius=Math.hypot(Math.max(x,window.innerWidth-x),Math.max(y,window.innerHeight-y));
     root.style.setProperty("--theme-x",`${x}px`);
     root.style.setProperty("--theme-y",`${y}px`);
     root.style.setProperty("--theme-radius",`${Math.ceil(radius)}px`);
@@ -94,13 +100,18 @@ function initTheme(){
       cleanupTimer=window.setTimeout(()=>{
         activeTransition?.skipTransition?.();
         cleanupTransition();
-      },900);
+      },700);
     }catch{
       commitTheme();
       cleanupTransition();
     }
-  });
+  };
 
+  themeToggle.addEventListener("click",switchTheme);
+  const syncSystemTheme=(event)=>{
+    if(!hasSavedTheme&&!isSwitching)applyTheme(event.matches?"light":"dark");
+  };
+  colorScheme.addEventListener?.("change",syncSystemTheme);
   window.addEventListener("pagehide",()=>{
     activeTransition?.skipTransition?.();
     cleanupTransition();

@@ -206,12 +206,13 @@ async function checkHealth() {
   }
 }
 revealToken.addEventListener("click", () => {
-  const showing = adminToken.type === "text";
-  adminToken.type = showing ? "password" : "text";
-  revealToken.setAttribute(
-    "aria-label",
-    showing ? "显示管理密钥" : "隐藏管理密钥",
-  );
+  const willShow = adminToken.type === "password";
+  adminToken.type = willShow ? "text" : "password";
+  revealToken.classList.toggle("is-visible", willShow);
+  revealToken.setAttribute("aria-pressed", String(willShow));
+  revealToken.setAttribute("aria-label", willShow ? "隐藏管理密钥" : "显示管理密钥");
+  revealToken.title = willShow ? "隐藏管理密钥" : "显示管理密钥";
+  showToast(willShow ? "管理密钥已显示" : "管理密钥已隐藏");
 });
 copyLink.addEventListener("click", async () => {
   if (!currentShortUrl) return;
@@ -298,3 +299,42 @@ initTheme();
 restoreToken();
 checkHealth();
 document.getElementById("year").textContent = new Date().getFullYear();
+
+
+const ADMIN_API_URL = `${API_BASE}/api/admin/links`;
+const adminLoad = document.getElementById("adminLoad");
+const adminSearch = document.getElementById("adminSearch");
+const adminSearchButton = document.getElementById("adminSearchButton");
+const adminRefresh = document.getElementById("adminRefresh");
+const adminMessage = document.getElementById("adminMessage");
+const adminList = document.getElementById("adminList");
+const adminPagination = document.getElementById("adminPagination");
+const adminPrevious = document.getElementById("adminPrevious");
+const adminNext = document.getElementById("adminNext");
+const adminPageInfo = document.getElementById("adminPageInfo");
+let adminPage=1;
+let adminTotalPages=1;
+let adminLoaded=false;
+
+function localizedAdminError(error){
+  const message=String(error?.message||error||"");
+  if(message==="Failed to fetch"||message.includes("NetworkError")||message.includes("Load failed"))return "无法连接短链服务，请检查网络后重试";
+  if(message.includes("HTTP 401")||message.includes("Unauthorized"))return "管理密钥错误";
+  return message||"操作失败，请稍后重试";
+}
+function adminTokenValue(){return adminToken.value.trim()}
+function setAdminMessage(message,type=""){adminMessage.textContent=message;adminMessage.className=`admin-message${type?` is-${type}`:""}`}
+function adminHeaders(jsonBody=false){const headers={Authorization:`Bearer ${adminTokenValue()}`};if(jsonBody)headers["Content-Type"]="application/json";return headers}
+function formatAdminDate(value){if(!value)return "未设置";const date=new Date(value);return Number.isNaN(date.getTime())?value:new Intl.DateTimeFormat("zh-CN",{dateStyle:"medium",timeStyle:"short"}).format(date)}
+function statusLabel(status){return {active:"启用中",disabled:"已停用",expired:"已过期","missing-expiry":"未设置有效期"}[status]||status}
+function escapeHtml(value){return String(value).replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]))}
+function renderAdminLinks(links){adminList.replaceChildren();if(!links.length){adminList.hidden=false;adminList.innerHTML='<div class="link-item"><div class="link-main">没有找到短链。</div></div>';return}for(const link of links){const item=document.createElement("article");item.className="link-item";item.dataset.code=link.code;item.innerHTML=`<div class="link-main"><div class="link-top"><span class="link-code">${escapeHtml(link.code)}</span><span class="link-status ${escapeHtml(link.status)}">${statusLabel(link.status)}</span></div><a class="link-url" href="${escapeHtml(link.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.shortUrl)}</a><div class="link-meta"><span>访问 ${Number(link.clickCount)||0} 次</span><span>创建 ${formatAdminDate(link.createdAt)}</span><span>到期 ${formatAdminDate(link.expiresAt)}</span></div></div><div class="link-actions"><button class="link-action" data-action="copy" type="button">复制</button><button class="link-action" data-action="toggle" type="button">${link.isActive?"停用":"启用"}</button><button class="link-action" data-action="extend" data-days="7" type="button">设为 7 天</button><button class="link-action" data-action="extend" data-days="30" type="button">设为 30 天</button><button class="link-action" data-action="extend" data-days="365" type="button">设为 1 年</button><button class="link-action danger" data-action="delete" type="button">删除</button></div>`;adminList.appendChild(item)}adminList.hidden=false}
+async function loadAdminLinks(page=1){const token=adminTokenValue();if(!token){setAdminMessage("请先输入上方的管理密钥。","error");adminToken.focus();return}saveToken();adminLoad.disabled=true;adminLoad.classList.add("is-loading");adminLoad.querySelector("span:nth-of-type(2)").textContent="正在加载";setAdminMessage("正在加载短链列表...");try{const params=new URLSearchParams({page:String(page),limit:"20"});const search=adminSearch.value.trim();if(search)params.set("search",search);const response=await fetch(`${ADMIN_API_URL}?${params}`,{headers:adminHeaders(),cache:"no-store"});const data=await response.json();if(!response.ok||!data.success)throw new Error(data.message||"短链列表加载失败");adminLoaded=true;adminPage=data.page;adminTotalPages=data.totalPages;renderAdminLinks(data.links);adminPageInfo.textContent=`第 ${data.page} / ${data.totalPages} 页，共 ${data.total} 条`;adminPrevious.disabled=data.page<=1;adminNext.disabled=data.page>=data.totalPages;adminPagination.hidden=data.totalPages<=1;setAdminMessage(`已加载 ${data.links.length} 条短链。`,"success")}catch(error){setAdminMessage(localizedAdminError(error),"error")}finally{adminLoad.disabled=false;adminLoad.classList.remove("is-loading");adminLoad.querySelector("span:nth-of-type(2)").textContent="加载短链"}}
+async function adminMutation(code,method,body){const response=await fetch(`${ADMIN_API_URL}/${encodeURIComponent(code)}`,{method,headers:adminHeaders(Boolean(body)),body:body?JSON.stringify(body):undefined});let data;try{data=await response.json()}catch{throw new Error("服务器返回了无法识别的内容")}if(!response.ok||!data.success)throw new Error(data.message||"操作失败");return data}
+adminList.addEventListener("click",async event=>{const button=event.target.closest("button[data-action]");if(!button)return;const item=button.closest(".link-item");const code=item?.dataset.code;if(!code)return;const action=button.dataset.action;if(action==="copy"){await copyText(`${API_BASE||window.location.origin}/${code}`);showToast("短链接已复制");return}if(action==="delete"&&!window.confirm(`确定永久删除短链 ${code} 吗？此操作无法撤销。`))return;button.disabled=true;try{if(action==="delete")await adminMutation(code,"DELETE");else if(action==="toggle")await adminMutation(code,"PATCH",{action:"setActive",isActive:button.textContent.trim()==="启用"});else if(action==="extend")await adminMutation(code,"PATCH",{action:"setExpiry",days:Number(button.dataset.days)});showToast(action==="delete"?"短链已删除":"短链已更新");await loadAdminLinks(adminPage)}catch(error){setAdminMessage(localizedAdminError(error),"error")}finally{button.disabled=false}});
+adminLoad.addEventListener("click",()=>loadAdminLinks(1));
+adminSearchButton.addEventListener("click",()=>loadAdminLinks(1));
+adminRefresh.addEventListener("click",()=>loadAdminLinks(adminPage));
+adminSearch.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();loadAdminLinks(1)}});
+adminPrevious.addEventListener("click",()=>loadAdminLinks(Math.max(1,adminPage-1)));
+adminNext.addEventListener("click",()=>loadAdminLinks(Math.min(adminTotalPages,adminPage+1)));

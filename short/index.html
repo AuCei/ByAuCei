@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content="AuCei 短链接生成器" />
     <title>短链接生成器 | AuCei</title>
-    <link rel="stylesheet" href="style.css?v=20260812-full-alphanumeric" />
+    <link rel="stylesheet" href="style.css?v=20260812-solid-controls" />
   </head>
   <body>
     <div class="grid" aria-hidden="true"></div>
@@ -55,7 +55,7 @@
         <div class="card-heading">
           <div>
             <h2 id="generatorTitle">创建短链接</h2>
-            <p>仅管理员可创建，管理密钥不会写入网站源码。</p>
+            <p>仅管理员可创建</p>
           </div>
           <span class="status" id="serviceStatus"
             ><i></i><span>检查服务</span></span
@@ -133,7 +133,7 @@
                 ></label
               >
             </div>
-            <p class="hint">到期后短链接会自动停止跳转，无法选择永久有效。</p>
+            <p class="hint">到期后短链接会自动停止跳转</p>
           </div>
 
           <div class="field">
@@ -157,11 +157,14 @@
                 type="button"
                 aria-label="显示管理密钥"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-                  ></path>
+                <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
                   <circle cx="12" cy="12" r="2.5"></circle>
+                </svg>
+                <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 3l18 18"></path>
+                  <path d="M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.1 2.8"></path>
+                  <path d="M6.1 6.1C3.8 7.7 2.5 12 2.5 12s3.5 6 9.5 6a9.8 9.8 0 0 0 4.1-.9"></path>
                 </svg>
               </button>
             </div>
@@ -190,7 +193,7 @@
                 d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"
               ></path>
             </svg>
-            <span>生成短链接</span>
+            <span>生成短链接</span><i class="button-shine" aria-hidden="true"></i>
           </button>
         </form>
       </section>
@@ -223,6 +226,30 @@
         </button>
       </section>
 
+      <section class="admin-card" aria-labelledby="adminTitle">
+        <div class="admin-heading">
+          <div>
+            <span class="eyebrow"><i></i> LINK MANAGEMENT</span>
+            <h2 id="adminTitle">短链管理</h2>
+          </div>
+          <button class="admin-load" id="adminLoad" type="button"><span class="button-icon">↻</span><span>加载短链</span><i class="button-shine" aria-hidden="true"></i></button>
+        </div>
+        <div class="admin-tools">
+          <label class="admin-search" for="adminSearch">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="adminSearch" type="search" maxlength="7" placeholder="搜索短码">
+          </label>
+          <button class="admin-secondary" id="adminSearchButton" type="button"><span class="button-icon">⌕</span><span>搜索</span></button>
+          <button class="admin-secondary" id="adminRefresh" type="button"><span class="button-icon">↻</span><span>刷新</span></button>
+        </div>
+        <p class="admin-message" id="adminMessage" role="status" aria-live="polite">输入管理密钥后点击“加载短链”。</p>
+        <div class="admin-list" id="adminList" hidden></div>
+        <div class="admin-pagination" id="adminPagination" hidden>
+          <button class="admin-secondary" id="adminPrevious" type="button">上一页</button>
+          <span id="adminPageInfo">第 1 页</span>
+          <button class="admin-secondary" id="adminNext" type="button">下一页</button>
+        </div>
+      </section>
       <section class="security-note">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -242,6 +269,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="script.js?v=20260812-full-alphanumeric"></script>
+    <script src="script.js?v=20260812-solid-controls"></script>
   </body>
 </html>

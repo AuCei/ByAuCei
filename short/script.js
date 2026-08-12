@@ -28,7 +28,58 @@ function clearMessage(){formMessage.textContent="";formMessage.className="messag
 function validUrl(value){try{const url=new URL(value);return url.protocol==="http:"||url.protocol==="https:"}catch{return false}}
 async function copyText(value){if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()}
 function applyTheme(theme){const light=theme==="light";root.classList.toggle("light",light);themeToggle.setAttribute("aria-pressed",String(light));themeToggle.setAttribute("aria-label",light?"切换到深色主题":"切换到浅色主题")}
-function initTheme(){let saved=null;try{saved=localStorage.getItem("card-theme")}catch{}const initial=saved==="dark"||saved==="light"?saved:matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";applyTheme(initial);themeToggle.addEventListener("click",()=>{const next=root.classList.contains("light")?"dark":"light";applyTheme(next);try{localStorage.setItem("card-theme",next)}catch{}})}
+function initTheme(){
+  let saved=null;
+  let switching=false;
+  const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
+  try{saved=localStorage.getItem("card-theme")}catch{}
+  const initial=saved==="dark"||saved==="light"?saved:window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";
+  applyTheme(initial);
+
+  const saveTheme=(theme)=>{try{localStorage.setItem("card-theme",theme)}catch{}};
+  const commitTheme=(theme)=>{applyTheme(theme);saveTheme(theme)};
+
+  themeToggle.addEventListener("click",async()=>{
+    if(switching)return;
+    switching=true;
+    themeToggle.disabled=true;
+    const next=root.classList.contains("light")?"dark":"light";
+
+    if(reduceMotion.matches){
+      commitTheme(next);
+      switching=false;
+      themeToggle.disabled=false;
+      return;
+    }
+
+    if(document.startViewTransition){
+      root.classList.add("theme-crossfade");
+      try{
+        const transition=document.startViewTransition(()=>commitTheme(next));
+        await transition.finished;
+      }catch{
+        commitTheme(next);
+      }finally{
+        root.classList.remove("theme-crossfade");
+        switching=false;
+        themeToggle.disabled=false;
+      }
+      return;
+    }
+
+    root.classList.add("theme-fade-out");
+    window.setTimeout(()=>{
+      commitTheme(next);
+      root.classList.remove("theme-fade-out");
+      root.classList.add("theme-fade-in");
+      window.setTimeout(()=>{
+        root.classList.remove("theme-fade-in");
+        switching=false;
+        themeToggle.disabled=false;
+      },260);
+    },170);
+  });
+}
 function restoreToken(){try{const token=sessionStorage.getItem("aucei-short-token");if(token){adminToken.value=token;rememberToken.checked=true}}catch{}}
 function saveToken(){try{if(rememberToken.checked)sessionStorage.setItem("aucei-short-token",adminToken.value);else sessionStorage.removeItem("aucei-short-token")}catch{}}
 async function checkHealth(){try{const response=await fetch(HEALTH_URL,{headers:{Accept:"application/json"}});const data=await response.json();if(response.ok&&data.success){serviceStatus.classList.add("is-online");serviceStatus.querySelector("span").textContent="服务正常";return}throw new Error()}catch{serviceStatus.classList.add("is-offline");serviceStatus.querySelector("span").textContent="服务异常"}}

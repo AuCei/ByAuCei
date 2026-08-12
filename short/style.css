@@ -2,3 +2,26 @@
 .expiry-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.expiry-option{position:relative;cursor:pointer}.expiry-option input{position:absolute;opacity:0;pointer-events:none}.expiry-option>span{display:grid;gap:1px;padding:12px 13px;color:var(--muted);border:1px solid var(--border);border-radius:13px;background:rgba(0,0,0,.1);transition:border-color .16s,background .16s,transform .16s}.expiry-option strong{color:var(--text);font-size:14px}.expiry-option small{font-size:10px}.expiry-option input:checked+span{color:#cfd4ff;border-color:rgba(124,92,255,.72);background:rgba(124,92,255,.13);box-shadow:0 0 0 3px rgba(124,92,255,.08)}.expiry-option:hover>span{transform:translateY(-1px)}html.light .expiry-option>span{background:rgba(255,255,255,.62)}.result-copy .expires{color:#73d9a8}@media(max-width:480px){.expiry-options{grid-template-columns:1fr}.expiry-option>span{grid-template-columns:auto 1fr;align-items:center;gap:10px}.expiry-option small{text-align:right}}
 
 [hidden]{display:none!important}
+
+
+/* Soft theme cross-fade */
+::view-transition-old(root),
+::view-transition-new(root){
+  animation-duration:360ms;
+  animation-timing-function:cubic-bezier(.22,1,.36,1);
+  mix-blend-mode:normal;
+}
+::view-transition-old(root){animation-name:theme-old-fade}
+::view-transition-new(root){animation-name:theme-new-fade}
+@keyframes theme-old-fade{from{opacity:1}to{opacity:0}}
+@keyframes theme-new-fade{from{opacity:0}to{opacity:1}}
+html.theme-crossfade .theme-toggle{pointer-events:none}
+html.theme-fade-out body{opacity:.12;transform:scale(.997)}
+html.theme-fade-in body{animation:theme-fallback-in 260ms cubic-bezier(.22,1,.36,1) both}
+@keyframes theme-fallback-in{from{opacity:.12;transform:scale(.997)}to{opacity:1;transform:none}}
+body{transition:opacity 170ms ease,transform 260ms cubic-bezier(.22,1,.36,1),color .24s ease,background .24s ease}
+.theme-toggle:disabled{cursor:wait}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+  html.theme-fade-out body,html.theme-fade-in body{opacity:1!important;transform:none!important;animation:none!important}
+}

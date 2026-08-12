@@ -325,7 +325,15 @@ function localizedAdminError(error){
 function adminTokenValue(){return adminToken.value.trim()}
 function setAdminMessage(message,type=""){adminMessage.textContent=message;adminMessage.className=`admin-message${type?` is-${type}`:""}`}
 function adminHeaders(jsonBody=false){const headers={Authorization:`Bearer ${adminTokenValue()}`};if(jsonBody)headers["Content-Type"]="application/json";return headers}
-function formatAdminDate(value){if(!value)return "未设置";const date=new Date(value);return Number.isNaN(date.getTime())?value:new Intl.DateTimeFormat("zh-CN",{dateStyle:"medium",timeStyle:"short"}).format(date)}
+function formatAdminDate(value){
+  if(!value)return "未设置";
+  const raw=String(value).trim();
+  const hasTimeZone=/Z$|[+-]\d{2}:?\d{2}$/.test(raw);
+  const normalized=hasTimeZone?raw:`${raw.replace(" ","T")}Z`;
+  const date=new Date(normalized);
+  if(Number.isNaN(date.getTime()))return raw;
+  return new Intl.DateTimeFormat("zh-CN",{timeZone:"Asia/Shanghai",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(date);
+}
 function statusLabel(status){return {active:"启用中",disabled:"已停用",expired:"已过期","missing-expiry":"未设置有效期"}[status]||status}
 function escapeHtml(value){return String(value).replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]))}
 function renderAdminLinks(links){adminList.replaceChildren();if(!links.length){adminList.hidden=false;adminList.innerHTML='<div class="link-item"><div class="link-main">没有找到短链。</div></div>';return}for(const link of links){const item=document.createElement("article");item.className="link-item";item.dataset.code=link.code;item.innerHTML=`<div class="link-main"><div class="link-top"><span class="link-code">${escapeHtml(link.code)}</span><span class="link-status ${escapeHtml(link.status)}">${statusLabel(link.status)}</span></div><a class="link-url" href="${escapeHtml(link.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.shortUrl)}</a><div class="link-meta"><span>访问 ${Number(link.clickCount)||0} 次</span><span>创建 ${formatAdminDate(link.createdAt)}</span><span>到期 ${formatAdminDate(link.expiresAt)}</span></div></div><div class="link-actions"><button class="link-action" data-action="copy" type="button">复制</button><button class="link-action" data-action="toggle" type="button">${link.isActive?"停用":"启用"}</button><button class="link-action" data-action="extend" data-days="7" type="button">设为 7 天</button><button class="link-action" data-action="extend" data-days="30" type="button">设为 30 天</button><button class="link-action" data-action="extend" data-days="365" type="button">设为 1 年</button><button class="link-action danger" data-action="delete" type="button">删除</button></div>`;adminList.appendChild(item)}adminList.hidden=false}

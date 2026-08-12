@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content="AuCei 短链接生成器" />
     <title>短链接生成器 | AuCei</title>
-    <link rel="stylesheet" href="style.css?v=20260812-china-time" />
+    <link rel="stylesheet" href="style.css?v=20260813-search-inside" />
   </head>
   <body>
     <div class="grid" aria-hidden="true"></div>
@@ -235,11 +235,13 @@
           <button class="admin-load" id="adminLoad" type="button"><span class="button-icon">↻</span><span>加载短链</span><i class="button-shine" aria-hidden="true"></i></button>
         </div>
         <div class="admin-tools">
-          <label class="admin-search" for="adminSearch">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
-            <input id="adminSearch" type="search" maxlength="7" placeholder="搜索短码">
-          </label>
-          <button class="admin-secondary" id="adminSearchButton" type="button"><span class="button-icon">⌕</span><span>搜索</span></button>
+          <div class="admin-search">
+            <svg class="admin-search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="adminSearch" type="search" maxlength="7" placeholder="搜索短码" aria-label="搜索短码">
+            <button class="admin-search-submit" id="adminSearchButton" type="button" aria-label="搜索" title="搜索">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            </button>
+          </div>
           <button class="admin-secondary" id="adminRefresh" type="button"><span class="button-icon">↻</span><span>刷新</span></button>
         </div>
         <p class="admin-message" id="adminMessage" role="status" aria-live="polite">输入管理密钥后点击“加载短链”。</p>
@@ -269,6 +271,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="script.js?v=20260812-china-time"></script>
+    <script src="script.js?v=20260813-search-inside"></script>
   </body>
 </html>

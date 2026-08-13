@@ -1390,11 +1390,6 @@ html.light .expiry-option input:checked + span strong {
 .admin-heading h2{margin-bottom:0}
 .reveal{width:50px;height:48px;margin-right:0;border-radius:0 13px 13px 0;border-left:1px solid var(--border)}
 .reveal svg{position:absolute;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.reveal .eye-open{opacity:0;transform:rotate(-12deg) scale(.7)}
-.reveal .eye-closed{opacity:1;transform:rotate(0) scale(1)}
-.reveal.is-visible .eye-open{opacity:1;transform:rotate(0) scale(1)}
-.reveal.is-visible .eye-closed{opacity:0;transform:rotate(12deg) scale(.7)}
-.reveal.is-visible svg circle{fill:none;stroke:currentColor}
 .reveal:active svg{transform:scale(.82)}
 
 .submit,.admin-load{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(105deg,#7257f4 0%,#596ef0 52%,#2bb8dc 100%);box-shadow:0 12px 28px rgba(76,85,225,.30),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .18s cubic-bezier(.22,1,.36,1),filter .18s ease,box-shadow .18s ease}
@@ -1533,4 +1528,44 @@ html.light .admin-secondary:hover,html.light .admin-secondary:active{color:#fff;
     color: var(--cyan);
     background: rgba(34,211,238,.09);
   }
+}
+
+/* Keep only the custom eye control and switch its state correctly. */
+#adminToken::-ms-reveal,
+#adminToken::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+#adminToken::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+}
+.reveal .eye-open,
+.reveal .eye-closed {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity .16s ease, transform .22s cubic-bezier(.22,1,.36,1);
+}
+.reveal .eye-open {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.72);
+}
+.reveal .eye-closed {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.reveal.is-visible .eye-open {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.reveal.is-visible .eye-closed {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.72);
+}
+.reveal:active .eye-open,
+.reveal:active .eye-closed {
+  transform: translate(-50%, -50%) scale(.84);
 }

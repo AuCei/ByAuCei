@@ -180,13 +180,6 @@
             </label>
           </div>
 
-          <p
-            class="message"
-            id="formMessage"
-            role="alert"
-            aria-live="polite"
-          ></p>
-
           <button class="submit" id="submitButton" type="submit">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path
@@ -195,6 +188,13 @@
             </svg>
             <span>生成短链接</span><i class="button-shine" aria-hidden="true"></i>
           </button>
+
+          <p
+            class="message"
+            id="formMessage"
+            role="alert"
+            aria-live="polite"
+          ></p>
         </form>
       </section>
 
@@ -244,6 +244,21 @@
           </div>
         </div>
         <p class="admin-message" id="adminMessage" role="status" aria-live="polite">输入管理密钥后点击“加载短链”。</p>
+        <div class="batch-toolbar" id="batchToolbar" hidden>
+          <label class="batch-select-all" for="batchSelectAll">
+            <input id="batchSelectAll" type="checkbox">
+            <span>全选本页</span>
+          </label>
+          <span class="batch-count" id="batchCount">已选择 0 条</span>
+          <div class="batch-actions" aria-label="批量操作">
+            <button class="batch-action" type="button" data-batch-action="enable">启用</button>
+            <button class="batch-action" type="button" data-batch-action="disable">停用</button>
+            <button class="batch-action" type="button" data-batch-action="expiry" data-days="7">设为 7 天</button>
+            <button class="batch-action" type="button" data-batch-action="expiry" data-days="30">设为 30 天</button>
+            <button class="batch-action" type="button" data-batch-action="expiry" data-days="365">设为 1 年</button>
+            <button class="batch-action danger" type="button" data-batch-action="delete">删除</button>
+          </div>
+        </div>
         <div class="admin-list" id="adminList" hidden></div>
         <div class="admin-pagination" id="adminPagination" hidden>
           <button class="admin-secondary" id="adminPrevious" type="button">上一页</button>

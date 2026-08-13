@@ -302,6 +302,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 
 const ADMIN_API_URL = `${API_BASE}/api/admin/links`;
+const ADMIN_PAGE_SIZE = 5;
 const adminLoad = document.getElementById("adminLoad");
 const adminSearch = document.getElementById("adminSearch");
 const adminSearchButton = document.getElementById("adminSearchButton");
@@ -311,36 +312,157 @@ const adminPagination = document.getElementById("adminPagination");
 const adminPrevious = document.getElementById("adminPrevious");
 const adminNext = document.getElementById("adminNext");
 const adminPageInfo = document.getElementById("adminPageInfo");
-let adminPage=1;
-let adminTotalPages=1;
-let adminLoaded=false;
+const batchToolbar = document.getElementById("batchToolbar");
+const batchSelectAll = document.getElementById("batchSelectAll");
+const batchCount = document.getElementById("batchCount");
+let adminPage = 1;
+let adminTotalPages = 1;
+let adminLoaded = false;
 
-function localizedAdminError(error){
-  const message=String(error?.message||error||"");
-  if(message==="Failed to fetch"||message.includes("NetworkError")||message.includes("Load failed"))return "无法连接短链服务，请检查网络后重试";
-  if(message.includes("HTTP 401")||message.includes("Unauthorized"))return "管理密钥错误";
-  return message||"操作失败，请稍后重试";
+function localizedAdminError(error) {
+  const message = String(error?.message || error || "");
+  if (message === "Failed to fetch" || message.includes("NetworkError") || message.includes("Load failed")) return "无法连接短链服务，请检查网络后重试";
+  if (message.includes("HTTP 401") || message.includes("Unauthorized")) return "管理密钥错误";
+  return message || "操作失败，请稍后重试";
 }
-function adminTokenValue(){return adminToken.value.trim()}
-function setAdminMessage(message,type=""){adminMessage.textContent=message;adminMessage.className=`admin-message${type?` is-${type}`:""}`}
-function adminHeaders(jsonBody=false){const headers={Authorization:`Bearer ${adminTokenValue()}`};if(jsonBody)headers["Content-Type"]="application/json";return headers}
-function formatAdminDate(value){
-  if(!value)return "未设置";
-  const raw=String(value).trim();
-  const hasTimeZone=/Z$|[+-]\d{2}:?\d{2}$/.test(raw);
-  const normalized=hasTimeZone?raw:`${raw.replace(" ","T")}Z`;
-  const date=new Date(normalized);
-  if(Number.isNaN(date.getTime()))return raw;
-  return new Intl.DateTimeFormat("zh-CN",{timeZone:"Asia/Shanghai",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(date);
+function adminTokenValue() { return adminToken.value.trim(); }
+function setAdminMessage(message, type = "") { adminMessage.textContent = message; adminMessage.className = `admin-message${type ? ` is-${type}` : ""}`; }
+function adminHeaders(jsonBody = false) { const headers = { Authorization: `Bearer ${adminTokenValue()}` }; if (jsonBody) headers["Content-Type"] = "application/json"; return headers; }
+function formatAdminDate(value) {
+  if (!value) return "未设置";
+  const raw = String(value).trim();
+  const hasTimeZone = /Z$|[+-]\d{2}:?\d{2}$/.test(raw);
+  const normalized = hasTimeZone ? raw : `${raw.replace(" ", "T")}Z`;
+  const date = new Date(normalized);
+  if (Number.isNaN(date.getTime())) return raw;
+  return new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(date);
 }
-function statusLabel(status){return {active:"启用中",disabled:"已停用",expired:"已过期","missing-expiry":"未设置有效期"}[status]||status}
-function escapeHtml(value){return String(value).replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]))}
-function renderAdminLinks(links){adminList.replaceChildren();if(!links.length){adminList.hidden=false;adminList.innerHTML='<div class="link-item"><div class="link-main">没有找到短链。</div></div>';return}for(const link of links){const item=document.createElement("article");item.className="link-item";item.dataset.code=link.code;item.innerHTML=`<div class="link-main"><div class="link-top"><span class="link-code">${escapeHtml(link.code)}</span><span class="link-status ${escapeHtml(link.status)}">${statusLabel(link.status)}</span></div><a class="link-url" href="${escapeHtml(link.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.shortUrl)}</a><div class="link-meta"><span>访问 ${Number(link.clickCount)||0} 次</span><span>创建 ${formatAdminDate(link.createdAt)}</span><span>到期 ${formatAdminDate(link.expiresAt)}</span></div></div><div class="link-actions"><button class="link-action" data-action="copy" type="button">复制</button><button class="link-action" data-action="toggle" type="button">${link.isActive?"停用":"启用"}</button><button class="link-action" data-action="extend" data-days="7" type="button">设为 7 天</button><button class="link-action" data-action="extend" data-days="30" type="button">设为 30 天</button><button class="link-action" data-action="extend" data-days="365" type="button">设为 1 年</button><button class="link-action danger" data-action="delete" type="button">删除</button></div>`;adminList.appendChild(item)}adminList.hidden=false}
-async function loadAdminLinks(page=1){const token=adminTokenValue();if(!token){setAdminMessage("请先输入上方的管理密钥。","error");adminToken.focus();return}saveToken();adminLoad.disabled=true;adminLoad.classList.add("is-loading");adminLoad.querySelector("span:nth-of-type(2)").textContent="正在加载";setAdminMessage("正在加载短链列表...");try{const params=new URLSearchParams({page:String(page),limit:"20"});const search=adminSearch.value.trim();if(search)params.set("search",search);const response=await fetch(`${ADMIN_API_URL}?${params}`,{headers:adminHeaders(),cache:"no-store"});const data=await response.json();if(!response.ok||!data.success)throw new Error(data.message||"短链列表加载失败");adminLoaded=true;adminPage=data.page;adminTotalPages=data.totalPages;renderAdminLinks(data.links);adminPageInfo.textContent=`第 ${data.page} / ${data.totalPages} 页，共 ${data.total} 条`;adminPrevious.disabled=data.page<=1;adminNext.disabled=data.page>=data.totalPages;adminPagination.hidden=data.totalPages<=1;setAdminMessage(`已加载 ${data.links.length} 条短链。`,"success")}catch(error){setAdminMessage(localizedAdminError(error),"error")}finally{adminLoad.disabled=false;adminLoad.classList.remove("is-loading");adminLoad.querySelector("span:nth-of-type(2)").textContent="加载短链"}}
-async function adminMutation(code,method,body){const response=await fetch(`${ADMIN_API_URL}/${encodeURIComponent(code)}`,{method,headers:adminHeaders(Boolean(body)),body:body?JSON.stringify(body):undefined});let data;try{data=await response.json()}catch{throw new Error("服务器返回了无法识别的内容")}if(!response.ok||!data.success)throw new Error(data.message||"操作失败");return data}
-adminList.addEventListener("click",async event=>{const button=event.target.closest("button[data-action]");if(!button)return;const item=button.closest(".link-item");const code=item?.dataset.code;if(!code)return;const action=button.dataset.action;if(action==="copy"){await copyText(`${API_BASE||window.location.origin}/${code}`);showToast("短链接已复制");return}if(action==="delete"&&!window.confirm(`确定永久删除短链 ${code} 吗？此操作无法撤销。`))return;button.disabled=true;try{if(action==="delete")await adminMutation(code,"DELETE");else if(action==="toggle")await adminMutation(code,"PATCH",{action:"setActive",isActive:button.textContent.trim()==="启用"});else if(action==="extend")await adminMutation(code,"PATCH",{action:"setExpiry",days:Number(button.dataset.days)});showToast(action==="delete"?"短链已删除":"短链已更新");await loadAdminLinks(adminPage)}catch(error){setAdminMessage(localizedAdminError(error),"error")}finally{button.disabled=false}});
-adminLoad.addEventListener("click",()=>loadAdminLinks(adminLoaded?adminPage:1));
-adminSearchButton.addEventListener("click",()=>loadAdminLinks(1));
-adminSearch.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();loadAdminLinks(1)}});
-adminPrevious.addEventListener("click",()=>loadAdminLinks(Math.max(1,adminPage-1)));
-adminNext.addEventListener("click",()=>loadAdminLinks(Math.min(adminTotalPages,adminPage+1)));
+function statusLabel(status) { return { active: "启用中", disabled: "已停用", expired: "已过期", "missing-expiry": "未设置有效期" }[status] || status; }
+function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char])); }
+function selectedCodes() { return [...adminList.querySelectorAll(".link-select:checked")].map(input => input.value); }
+function updateBatchState() {
+  const checkboxes = [...adminList.querySelectorAll(".link-select")];
+  const selected = checkboxes.filter(input => input.checked).length;
+  batchCount.textContent = `已选择 ${selected} 条`;
+  batchSelectAll.checked = checkboxes.length > 0 && selected === checkboxes.length;
+  batchSelectAll.indeterminate = selected > 0 && selected < checkboxes.length;
+  batchToolbar.querySelectorAll("button[data-batch-action]").forEach(button => button.disabled = selected === 0);
+}
+function renderAdminLinks(links) {
+  adminList.replaceChildren();
+  batchToolbar.hidden = links.length === 0;
+  batchSelectAll.checked = false;
+  batchSelectAll.indeterminate = false;
+  if (!links.length) {
+    adminList.hidden = false;
+    adminList.innerHTML = '<div class="link-item link-empty"><div class="link-main">没有找到短链。</div></div>';
+    updateBatchState();
+    return;
+  }
+  for (const link of links) {
+    const item = document.createElement("article");
+    item.className = "link-item";
+    item.dataset.code = link.code;
+    item.innerHTML = `<label class="link-selector" title="选择 ${escapeHtml(link.code)}"><input class="link-select" type="checkbox" value="${escapeHtml(link.code)}" aria-label="选择短链 ${escapeHtml(link.code)}"><span></span></label><div class="link-main"><div class="link-top"><span class="link-code">${escapeHtml(link.code)}</span><span class="link-status ${escapeHtml(link.status)}">${statusLabel(link.status)}</span></div><a class="link-url" href="${escapeHtml(link.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.shortUrl)}</a><div class="link-meta"><span>访问 ${Number(link.clickCount) || 0} 次</span><span>创建 ${formatAdminDate(link.createdAt)}</span><span>到期 ${formatAdminDate(link.expiresAt)}</span></div></div><div class="link-actions"><button class="link-action" data-action="copy" type="button">复制</button><button class="link-action" data-action="toggle" type="button">${link.isActive ? "停用" : "启用"}</button><button class="link-action" data-action="extend" data-days="7" type="button">设为 7 天</button><button class="link-action" data-action="extend" data-days="30" type="button">设为 30 天</button><button class="link-action" data-action="extend" data-days="365" type="button">设为 1 年</button><button class="link-action danger" data-action="delete" type="button">删除</button></div>`;
+    adminList.appendChild(item);
+  }
+  adminList.hidden = false;
+  updateBatchState();
+}
+async function loadAdminLinks(page = 1) {
+  const token = adminTokenValue();
+  if (!token) { setAdminMessage("请先输入上方的管理密钥。", "error"); adminToken.focus(); return; }
+  saveToken();
+  adminLoad.disabled = true;
+  adminLoad.classList.add("is-loading");
+  adminLoad.querySelector("span:nth-of-type(2)").textContent = "正在加载";
+  setAdminMessage("正在加载短链列表...");
+  try {
+    const params = new URLSearchParams({ page: String(page), limit: String(ADMIN_PAGE_SIZE) });
+    const search = adminSearch.value.trim();
+    if (search) params.set("search", search);
+    const response = await fetch(`${ADMIN_API_URL}?${params}`, { headers: adminHeaders(), cache: "no-store" });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || "短链列表加载失败");
+    adminLoaded = true;
+    adminPage = data.page;
+    adminTotalPages = data.totalPages;
+    renderAdminLinks(data.links);
+    adminPageInfo.textContent = `第 ${data.page} / ${data.totalPages} 页，共 ${data.total} 条`;
+    adminPrevious.disabled = data.page <= 1;
+    adminNext.disabled = data.page >= data.totalPages;
+    adminPagination.hidden = data.totalPages <= 1;
+    setAdminMessage(`本页已加载 ${data.links.length} 条短链，每页最多 ${ADMIN_PAGE_SIZE} 条。`, "success");
+  } catch (error) {
+    setAdminMessage(localizedAdminError(error), "error");
+  } finally {
+    adminLoad.disabled = false;
+    adminLoad.classList.remove("is-loading");
+    adminLoad.querySelector("span:nth-of-type(2)").textContent = "加载短链";
+  }
+}
+async function adminMutation(code, method, body) {
+  const response = await fetch(`${ADMIN_API_URL}/${encodeURIComponent(code)}`, { method, headers: adminHeaders(Boolean(body)), body: body ? JSON.stringify(body) : undefined });
+  let data;
+  try { data = await response.json(); } catch { throw new Error("服务器返回了无法识别的内容"); }
+  if (!response.ok || !data.success) throw new Error(data.message || "操作失败");
+  return data;
+}
+async function batchMutation(codes, action, days) {
+  const body = { codes, action };
+  if (action === "setExpiry") body.days = days;
+  if (action === "setActive") body.isActive = Boolean(days);
+  const response = await fetch(`${ADMIN_API_URL}/batch`, { method: "POST", headers: adminHeaders(true), body: JSON.stringify(body) });
+  let data;
+  try { data = await response.json(); } catch { throw new Error("服务器返回了无法识别的内容"); }
+  if (!response.ok || !data.success) throw new Error(data.message || "批量操作失败");
+  return data;
+}
+adminList.addEventListener("change", event => { if (event.target.matches(".link-select")) updateBatchState(); });
+batchSelectAll.addEventListener("change", () => {
+  adminList.querySelectorAll(".link-select").forEach(input => input.checked = batchSelectAll.checked);
+  updateBatchState();
+});
+batchToolbar.addEventListener("click", async event => {
+  const button = event.target.closest("button[data-batch-action]");
+  if (!button) return;
+  const codes = selectedCodes();
+  if (!codes.length) { showToast("请先选择短链"); return; }
+  const uiAction = button.dataset.batchAction;
+  const action = uiAction === "enable" || uiAction === "disable" ? "setActive" : uiAction === "expiry" ? "setExpiry" : "delete";
+  const days = Number(button.dataset.days) || undefined;
+  if (action === "delete" && !window.confirm(`确定永久删除选中的 ${codes.length} 条短链吗？此操作无法撤销。`)) return;
+  batchToolbar.querySelectorAll("button[data-batch-action]").forEach(control => control.disabled = true);
+  try {
+    const data = await batchMutation(codes, action, days || (uiAction === "enable" ? 1 : uiAction === "disable" ? 0 : undefined));
+    showToast(data.message || `已处理 ${codes.length} 条短链`);
+    await loadAdminLinks(adminPage);
+  } catch (error) {
+    setAdminMessage(localizedAdminError(error), "error");
+    updateBatchState();
+  }
+});
+adminList.addEventListener("click", async event => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const item = button.closest(".link-item");
+  const code = item?.dataset.code;
+  if (!code) return;
+  const action = button.dataset.action;
+  if (action === "copy") { await copyText(`${API_BASE || window.location.origin}/${code}`); showToast("短链接已复制"); return; }
+  if (action === "delete" && !window.confirm(`确定永久删除短链 ${code} 吗？此操作无法撤销。`)) return;
+  button.disabled = true;
+  try {
+    if (action === "delete") await adminMutation(code, "DELETE");
+    else if (action === "toggle") await adminMutation(code, "PATCH", { action: "setActive", isActive: button.textContent.trim() === "启用" });
+    else if (action === "extend") await adminMutation(code, "PATCH", { action: "setExpiry", days: Number(button.dataset.days) });
+    showToast(action === "delete" ? "短链已删除" : "短链已更新");
+    await loadAdminLinks(adminPage);
+  } catch (error) { setAdminMessage(localizedAdminError(error), "error"); }
+  finally { button.disabled = false; }
+});
+adminLoad.addEventListener("click", () => loadAdminLinks(adminLoaded ? adminPage : 1));
+adminSearchButton.addEventListener("click", () => loadAdminLinks(1));
+adminSearch.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); loadAdminLinks(1); } });
+adminPrevious.addEventListener("click", () => loadAdminLinks(Math.max(1, adminPage - 1)));
+adminNext.addEventListener("click", () => loadAdminLinks(Math.min(adminTotalPages, adminPage + 1)));

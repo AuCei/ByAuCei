@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content="AuCei 短链接生成器" />
     <title>短链接生成器 | AuCei</title>
-    <link rel="stylesheet" href="style.css?v=20260813-no-refresh-control" />
+    <link rel="stylesheet" href="style.css?v=20260813-add-expiry-v2" />
   </head>
   <body>
     <div class="grid" aria-hidden="true"></div>
@@ -253,9 +253,9 @@
           <div class="batch-actions" aria-label="批量操作">
             <button class="batch-action" type="button" data-batch-action="enable">启用</button>
             <button class="batch-action" type="button" data-batch-action="disable">停用</button>
-            <button class="batch-action" type="button" data-batch-action="expiry" data-days="7">设为 7 天</button>
-            <button class="batch-action" type="button" data-batch-action="expiry" data-days="30">设为 30 天</button>
-            <button class="batch-action" type="button" data-batch-action="expiry" data-days="365">设为 1 年</button>
+            <button class="batch-action" type="button" data-batch-action="expiry" data-days="7">增加 7 天</button>
+            <button class="batch-action" type="button" data-batch-action="expiry" data-days="30">增加 30 天</button>
+            <button class="batch-action" type="button" data-batch-action="expiry" data-days="365">增加 1 年</button>
             <button class="batch-action danger" type="button" data-batch-action="delete">删除</button>
           </div>
         </div>
@@ -285,6 +285,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="script.js?v=20260813-no-refresh-control"></script>
+    <script src="script.js?v=20260813-add-expiry-v2"></script>
   </body>
 </html>

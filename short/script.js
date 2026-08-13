@@ -302,7 +302,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 
 const ADMIN_API_URL = `${API_BASE}/api/admin/links`;
-const ADMIN_PAGE_SIZE = 5;
+const ADMIN_PAGE_SIZE = 10;
 const adminLoad = document.getElementById("adminLoad");
 const adminSearch = document.getElementById("adminSearch");
 const adminSearchButton = document.getElementById("adminSearchButton");
@@ -363,7 +363,7 @@ function renderAdminLinks(links) {
     const item = document.createElement("article");
     item.className = "link-item";
     item.dataset.code = link.code;
-    item.innerHTML = `<label class="link-selector" title="选择 ${escapeHtml(link.code)}"><input class="link-select" type="checkbox" value="${escapeHtml(link.code)}" aria-label="选择短链 ${escapeHtml(link.code)}"><span></span></label><div class="link-main"><div class="link-top"><span class="link-code">${escapeHtml(link.code)}</span><span class="link-status ${escapeHtml(link.status)}">${statusLabel(link.status)}</span></div><a class="link-url" href="${escapeHtml(link.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.shortUrl)}</a><div class="link-meta"><span>访问 ${Number(link.clickCount) || 0} 次</span><span>创建 ${formatAdminDate(link.createdAt)}</span><span>到期 ${formatAdminDate(link.expiresAt)}</span></div></div><div class="link-actions"><button class="link-action" data-action="copy" type="button">复制</button><button class="link-action" data-action="toggle" type="button">${link.isActive ? "停用" : "启用"}</button><button class="link-action" data-action="extend" data-days="7" type="button">设为 7 天</button><button class="link-action" data-action="extend" data-days="30" type="button">设为 30 天</button><button class="link-action" data-action="extend" data-days="365" type="button">设为 1 年</button><button class="link-action danger" data-action="delete" type="button">删除</button></div>`;
+    item.innerHTML = `<label class="link-selector" title="选择 ${escapeHtml(link.code)}"><input class="link-select" type="checkbox" value="${escapeHtml(link.code)}" aria-label="选择短链 ${escapeHtml(link.code)}"><span></span></label><div class="link-main"><div class="link-top"><span class="link-code">${escapeHtml(link.code)}</span><span class="link-status ${escapeHtml(link.status)}">${statusLabel(link.status)}</span></div><a class="link-url" href="${escapeHtml(link.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.shortUrl)}</a><div class="link-meta"><span>访问 ${Number(link.clickCount) || 0} 次</span><span>创建 ${formatAdminDate(link.createdAt)}</span><span>到期 ${formatAdminDate(link.expiresAt)}</span></div></div><div class="link-actions"><button class="link-action" data-action="copy" type="button">复制</button><button class="link-action" data-action="toggle" type="button">${link.isActive ? "停用" : "启用"}</button><button class="link-action" data-action="extend" data-days="7" type="button">增加 7 天</button><button class="link-action" data-action="extend" data-days="30" type="button">增加 30 天</button><button class="link-action" data-action="extend" data-days="365" type="button">增加 1 年</button><button class="link-action danger" data-action="delete" type="button">删除</button></div>`;
     adminList.appendChild(item);
   }
   adminList.hidden = false;
@@ -392,7 +392,7 @@ async function loadAdminLinks(page = 1) {
     adminPrevious.disabled = data.page <= 1;
     adminNext.disabled = data.page >= data.totalPages;
     adminPagination.hidden = data.totalPages <= 1;
-    setAdminMessage(`本页已加载 ${data.links.length} 条短链，每页最多 ${ADMIN_PAGE_SIZE} 条。`, "success");
+    setAdminMessage(`当前页仅展示 ${data.links.length} 条。`, "success");
   } catch (error) {
     setAdminMessage(localizedAdminError(error), "error");
   } finally {
@@ -461,8 +461,16 @@ adminList.addEventListener("click", async event => {
   } catch (error) { setAdminMessage(localizedAdminError(error), "error"); }
   finally { button.disabled = false; }
 });
+function searchAdminLinks() {
+  if (!adminSearch.value.trim()) {
+    setAdminMessage("请输入短码后再搜索。", "error");
+    adminSearch.focus();
+    return;
+  }
+  loadAdminLinks(1);
+}
 adminLoad.addEventListener("click", () => loadAdminLinks(adminLoaded ? adminPage : 1));
-adminSearchButton.addEventListener("click", () => loadAdminLinks(1));
-adminSearch.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); loadAdminLinks(1); } });
+adminSearchButton.addEventListener("click", searchAdminLinks);
+adminSearch.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); searchAdminLinks(); } });
 adminPrevious.addEventListener("click", () => loadAdminLinks(Math.max(1, adminPage - 1)));
 adminNext.addEventListener("click", () => loadAdminLinks(Math.min(adminTotalPages, adminPage + 1)));

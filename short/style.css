@@ -1569,3 +1569,219 @@ html.light .admin-secondary:hover,html.light .admin-secondary:active{color:#fff;
 .reveal:active .eye-closed {
   transform: translate(-50%, -50%) scale(.84);
 }
+
+/* Redundant standalone refresh control removed; search keeps the existing visual design. */
+.admin-tools{grid-template-columns:minmax(0,1fr)}
+@media(max-width:600px){.admin-tools{grid-template-columns:minmax(0,1fr)}.admin-search{grid-column:1/-1}}
+
+/* 2026-08-13: remove mobile blue tap highlight from the generate button */
+.submit,
+.submit * {
+  -webkit-tap-highlight-color: transparent;
+}
+.submit {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: 0;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.submit:focus {
+  outline: 0;
+}
+.submit:focus-visible {
+  outline: 3px solid rgba(34, 211, 238, 0.42);
+  outline-offset: 3px;
+}
+@media (hover: none) {
+  .submit:hover {
+    background: #6557e8 !important;
+    transform: none;
+    box-shadow: 0 10px 24px rgba(60, 53, 174, 0.28);
+  }
+  .submit:active {
+    background: #594ccf !important;
+    transform: scale(0.975);
+  }
+}
+
+/* 2026-08-13: restrained, product-style action controls */
+.submit,
+.admin-load,
+.admin-secondary,
+.admin-search-submit {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: 0;
+  box-shadow: none;
+  filter: none;
+  text-shadow: none;
+  letter-spacing: 0;
+  transition:
+    background-color .14s ease,
+    border-color .14s ease,
+    color .14s ease,
+    opacity .14s ease;
+}
+
+/* Primary action: quiet solid color, no gradient, shine, lift or glow. */
+.submit {
+  min-height: 50px;
+  color: #f8f7ff;
+  border: 1px solid #7167e8;
+  border-radius: 12px;
+  background: #6258d6 !important;
+  box-shadow: none !important;
+  font-size: 14px;
+  font-weight: 700;
+}
+.submit::before,
+.submit .button-shine {
+  display: none !important;
+}
+.submit svg {
+  width: 18px;
+  height: 18px;
+  transition: none;
+}
+.submit:hover {
+  color: #fff;
+  border-color: #7b71ed;
+  background: #6b61df !important;
+  box-shadow: none !important;
+  filter: none;
+  transform: none;
+}
+.submit:active {
+  border-color: #554bbc;
+  background: #554bbc !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.16) !important;
+  transform: none;
+}
+.submit:disabled {
+  color: rgba(255,255,255,.68);
+  border-color: rgba(113,103,232,.45);
+  background: rgba(98,88,214,.56) !important;
+  cursor: wait;
+}
+
+/* Management action: neutral by default, accent only on deliberate hover. */
+.admin-load {
+  min-height: 40px;
+  padding: 0 14px;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel) !important;
+  box-shadow: none !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+.admin-load::before,
+.admin-load .button-shine {
+  display: none !important;
+}
+.admin-load .button-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  font-size: 16px;
+  transition: none;
+}
+.admin-load:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--primary) 44%, var(--border));
+  background: var(--panel-hover) !important;
+  box-shadow: none !important;
+  filter: none;
+  transform: none;
+}
+.admin-load:hover .button-icon {
+  color: var(--text);
+  transform: none;
+}
+.admin-load:active {
+  background: color-mix(in srgb, var(--primary) 12%, var(--panel)) !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.12) !important;
+  transform: none;
+}
+.admin-load.is-loading .button-icon {
+  animation: control-spin .8s linear infinite;
+}
+
+/* Secondary/refresh actions use the same understated neutral treatment. */
+.admin-secondary {
+  min-height: 40px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 12px;
+  font-weight: 650;
+}
+.admin-secondary:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--primary) 34%, var(--border));
+  background: var(--panel) !important;
+  box-shadow: none !important;
+  transform: none;
+}
+.admin-secondary:active {
+  color: var(--text);
+  background: var(--panel-hover) !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1) !important;
+  transform: none;
+}
+
+/* Search action stays visually attached to the field. */
+.admin-search-submit {
+  color: var(--muted);
+  background: transparent;
+}
+.admin-search-submit:hover {
+  color: var(--text);
+  background: var(--panel);
+  transform: none;
+}
+.admin-search-submit:active {
+  color: var(--text);
+  background: var(--panel-hover);
+  transform: none;
+}
+
+.submit:focus-visible,
+.admin-load:focus-visible,
+.admin-secondary:focus-visible,
+.admin-search-submit:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 74%, white);
+  outline-offset: 2px;
+}
+
+@media (hover: none) {
+  .submit:hover {
+    border-color: #7167e8;
+    background: #6258d6 !important;
+  }
+  .admin-load:hover {
+    color: var(--text);
+    border-color: var(--border);
+    background: var(--panel) !important;
+  }
+  .admin-secondary:hover,
+  .admin-search-submit:hover {
+    color: var(--muted);
+    background: transparent !important;
+  }
+  .submit:active {
+    background: #554bbc !important;
+  }
+  .admin-load:active,
+  .admin-secondary:active,
+  .admin-search-submit:active {
+    color: var(--text);
+    background: var(--panel-hover) !important;
+  }
+}

@@ -1,3 +1,16 @@
+/*
+ * AuCei Short Link UI
+ * Maintenance baseline: 2026-08-14
+ *
+ * Structure:
+ * 1. Theme tokens and document foundation
+ * 2. Header and hero
+ * 3. Generator form and result
+ * 4. Responsive and accessibility behavior
+ * 5. Theme transition and interaction refinements
+ * 6. Short-link management and batch controls
+ * 7. Final mobile alignment overrides
+ */
 :root {
   color-scheme: dark;
   --bg: #070b17;
@@ -1167,23 +1180,6 @@ html.light .expiry-option input:checked + span strong {
   outline-offset: 2px;
 }
 
-.remember,
-.remember * {
-  -webkit-tap-highlight-color: transparent;
-}
-.remember {
-  background: transparent;
-  outline: 0;
-  -webkit-touch-callout: none;
-}
-.remember:focus-within {
-  background: transparent;
-  box-shadow: none;
-}
-.remember input:focus-visible + .remember-box {
-  outline: 2px solid rgba(34, 211, 238, 0.55);
-  outline-offset: 2px;
-}
 
 
 /* Short-link management */

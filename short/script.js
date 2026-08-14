@@ -392,7 +392,17 @@ async function loadAdminLinks(page = 1) {
     adminPrevious.disabled = data.page <= 1;
     adminNext.disabled = data.page >= data.totalPages;
     adminPagination.hidden = data.totalPages <= 1;
-    setAdminMessage(`当前页仅展示 ${data.links.length} 条。`, "success");
+    if (search) {
+      setAdminMessage(
+        data.links.length
+          ? `找到 ${data.total} 条匹配的短链`
+          : "未找到匹配的短链",
+      );
+    } else {
+      setAdminMessage(
+        data.total ? `已加载 ${data.total} 条短链` : "暂无短链",
+      );
+    }
   } catch (error) {
     setAdminMessage(localizedAdminError(error), "error");
   } finally {

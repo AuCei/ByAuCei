@@ -1833,3 +1833,37 @@ html.light .admin-secondary:hover,html.light .admin-secondary:active{color:#fff;
 @media (max-width: 380px) {
   .batch-actions { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
+
+/* 2026-08-14: keep service status in the mobile card heading top-right */
+@media (max-width: 600px) {
+  .card-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 10px;
+    row-gap: 12px;
+  }
+
+  .card-heading > div {
+    min-width: 0;
+  }
+
+  .card-heading .status {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    width: max-content;
+    margin-top: 1px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-heading {
+    column-gap: 7px;
+  }
+
+  .card-heading .status {
+    padding-inline: 8px;
+  }
+}

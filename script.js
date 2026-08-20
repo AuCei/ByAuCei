@@ -14,7 +14,6 @@ const SELECTORS = {
 const body = document.body;
 const pageContent = document.getElementById("pageContent");
 const themeToggle = document.getElementById("themeToggle");
-const copyBtn = document.getElementById("copyBtn");
 const shareBtn = document.getElementById("shareBtn");
 const toast = document.getElementById("toast");
 const clock = document.getElementById("clock");
@@ -159,15 +158,6 @@ async function copyText(text) {
 }
 
 function initClipboard() {
-  copyBtn?.addEventListener("click", async () => {
-    const email = copyBtn.dataset.copy || "Me@AuCei.cn";
-    try {
-      const copied = await copyText(email);
-      showToast(copied ? "邮箱已复制" : `邮箱：${email}`);
-    } catch (error) {
-      showToast(`邮箱：${email}`);
-    }
-  });
   copyWechatBtn?.addEventListener("click", async () => {
     const wechatId = copyWechatBtn.dataset.wechatId || "ByAuCei";
     const originalText = "复制微信号";

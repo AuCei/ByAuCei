@@ -780,3 +780,5 @@ html,body,.page-shell,.guestbook-shell,.composer,.messages-section,.message-list
 
 /* 2026-08-23 reply region label */
 .reply-region{color:var(--muted);font-size:9px;white-space:nowrap}
+
+.message-meta-time{display:flex!important;align-items:center;gap:0}.message-region{color:var(--muted);white-space:nowrap}

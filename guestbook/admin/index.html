@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex,nofollow">
+<title>留言板管理 · AuCei</title>
+<link rel="stylesheet" href="admin.css?v=20260824-admin-v1">
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<main class="shell">
+<header class="topbar"><a href="../">← 返回留言板</a><div><span class="brand-dot"></span>GUESTBOOK ADMIN</div></header>
+<section class="login-card" id="loginView">
+  <div class="lock">⌁</div><p class="eyebrow">ADMIN ACCESS</p><h1>留言板管理</h1><p>输入 Cloudflare Worker 中配置的管理员密钥。</p>
+  <form id="loginForm"><label>管理员密钥<input id="adminKey" type="password" autocomplete="current-password" required placeholder="请输入管理员密钥"></label><button id="loginButton">进入管理后台</button></form>
+  <small>密钥仅保存在当前标签页，关闭标签页后自动清除。</small>
+</section>
+<section class="dashboard" id="dashboard" hidden>
+  <div class="dashboard-head"><div><p class="eyebrow">OVERVIEW</p><h1>管理控制台</h1><p id="lastUpdate">正在加载数据…</p></div><button class="ghost" id="logoutButton">退出登录</button></div>
+  <div class="stats" id="stats"></div>
+  <section class="panel">
+    <div class="toolbar"><div><h2>留言管理</h2><span id="resultSummary"></span></div><div class="filters"><label class="search"><span>⌕</span><input id="adminSearch" type="search" placeholder="搜索昵称或内容"></label><select id="statusFilter" aria-label="状态筛选"><option value="">全部状态</option><option value="approved">已显示</option><option value="pending">待审核</option><option value="hidden">已隐藏</option></select><button class="ghost" id="refreshButton">刷新</button></div></div>
+    <div class="message-list" id="adminList"></div>
+    <div class="empty" id="adminEmpty" hidden>没有符合条件的留言</div>
+    <nav class="pager" id="adminPager" hidden><button id="adminPrev">上一页</button><span id="pageInfo"></span><button id="adminNext">下一页</button></nav>
+  </section>
+</section>
+</main>
+<div class="toast" id="adminToast" role="status" aria-live="polite"></div>
+<div class="modal" id="deleteConfirm" hidden><div class="backdrop" data-close></div><div class="modal-card"><h2>永久删除？</h2><p id="deleteText">删除后无法恢复。</p><div><button class="ghost" data-close>取消</button><button class="danger" id="confirmDelete">永久删除</button></div></div></div>
+<script src="../guestbook-config.js?v=20260824-admin-v1"></script><script src="admin.js?v=20260824-admin-v1"></script>
+</body></html>

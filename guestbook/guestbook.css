@@ -783,46 +783,222 @@ html,body,.page-shell,.guestbook-shell,.composer,.messages-section,.message-list
 
 .message-meta-time{display:flex!important;align-items:center;gap:0}.message-region{color:var(--muted);white-space:nowrap}
 
+/* 2026-08-24 keep the reply composer below visible replies */
+.reply-section>.reply-list+.reply-form{margin-top:14px}
+@media(min-width:701px){.reply-section>.reply-list+.reply-form{margin-top:16px}}
 
-/* 2026-08-24: improve desktop message-list readability */
-@media(min-width:701px){
-  .message-card{padding:21px 22px}
-  .avatar{width:42px;height:42px;font-size:16px}
-  .author strong{font-size:16px;line-height:1.45}
-  .author small,.message-meta-time{font-size:12px;line-height:1.55}
-  .mood{font-size:20px}
-  .message-card__body{margin:16px 0 17px;font-size:16px;line-height:1.78}
-  .like-button,.reply-button,.delete-button{min-height:36px;font-size:13px}
-  .like-button svg,.reply-button svg{width:17px;height:17px}
-  .message-id{font-size:12px}
-  .reply-meta strong{font-size:13px}
-  .reply-owner-badge{font-size:10px}
-  .reply-item p{font-size:14px;line-height:1.72}
-  .reply-footer time,.reply-region,.reply-inline,.reply-delete{font-size:11px}
-  .reply-expand{font-size:12px}
-  .reply-form__heading{font-size:13px}
-  .reply-form input,.reply-form textarea{font-size:14px}
-  .reply-counter{font-size:11px}
-  .reply-submit{font-size:12px}
+/* 2026-08-24 prevent mobile browsers from zooming the page when focusing reply fields */
+@media(max-width:700px){
+  .reply-form input,
+  .reply-form textarea{
+    font-size:16px;
+  }
 }
 
-
-/* 2026-08-24: improve desktop composer readability */
+/* 2026-08-24 reply composer: clean vertical layout */
+.reply-form{
+  padding:15px;
+  border-color:rgba(139,108,255,.18);
+  background:rgba(139,108,255,.035);
+}
+.reply-form__heading{
+  margin:0 0 11px;
+}
+.reply-form__row{
+  display:block;
+}
+.reply-form .reply-avatar--form{
+  display:none;
+}
+.reply-form__inputs{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+  width:100%;
+}
+.reply-form input,
+.reply-form textarea{
+  width:100%;
+  max-width:none;
+}
+.reply-form input{
+  height:42px;
+}
+.reply-form textarea{
+  min-height:78px;
+  padding:11px 12px 27px;
+  resize:vertical;
+}
+.reply-form__footer{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:12px;
+  margin:9px 0 0;
+  padding:0;
+}
+.reply-counter{
+  margin-right:auto;
+  font-variant-numeric:tabular-nums;
+}
+.reply-submit{
+  min-width:82px;
+  height:36px;
+  padding:0 16px;
+}
 @media(min-width:701px){
-  .composer .section-heading h2{font-size:21px}
-  .composer .section-heading__index{font-size:12px}
-  .connection-status{padding:7px 11px;font-size:12px}
-  .field{gap:9px;font-size:14px}
-  .field input{height:52px;padding-inline:15px;font-size:15px}
-  .field textarea{min-height:142px;padding:15px 16px 32px;font-size:15px;line-height:1.75}
-  .mood-heading legend{font-size:14px}
-  .mood-current{font-size:12px}
-  .mood-picker{grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
-  .mood-option{height:50px}
-  .mood-option span{font-size:20px}
-  .mood-option::after{font-size:12px}
-  .field--message small,.char-counter{right:14px;bottom:11px;font-size:11px}
-  .remember span{font-size:13px}
-  .remember input{width:15px;height:15px}
-  .submit-button{min-width:142px;min-height:46px;font-size:14px}
+  .reply-form{
+    margin-right:50px;
+    margin-left:50px;
+    padding:15px;
+  }
+  .reply-form__heading{
+    margin:0 0 11px;
+  }
+  .reply-form__row{
+    display:block;
+  }
+  .reply-form__inputs{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  .reply-form input{
+    height:42px;
+  }
+  .reply-form textarea{
+    min-height:78px;
+  }
+  .reply-form__footer{
+    display:flex;
+    min-height:36px;
+    margin:9px 0 0;
+    padding:0;
+  }
+  .reply-counter{
+    display:block;
+    text-align:left;
+  }
+  .reply-submit{
+    min-width:82px;
+    height:36px;
+    padding:0 16px;
+  }
+}
+@media(max-width:700px){
+  .reply-form{
+    padding:13px;
+  }
+  .reply-form input,
+  .reply-form textarea{
+    font-size:16px;
+  }
+  .reply-form textarea{
+    min-height:92px;
+  }
+  .reply-form__footer{
+    margin-top:10px;
+  }
+  .reply-submit{
+    min-width:92px;
+    height:40px;
+  }
+}
+
+/* 2026-08-24 mobile readable typography */
+@media(max-width:700px){
+  .author strong{
+    font-size:15px;
+  }
+  .author small,
+  .message-meta-time{
+    font-size:12px;
+    line-height:1.5;
+  }
+  .message-card__body{
+    font-size:15px;
+    line-height:1.75;
+  }
+  .like-button,
+  .reply-button,
+  .delete-button{
+    font-size:12px;
+  }
+  .message-id{
+    font-size:11px;
+  }
+  .reply-meta strong{
+    font-size:13px;
+  }
+  .reply-owner-badge{
+    font-size:10px;
+  }
+  .reply-item p{
+    margin-top:5px;
+    font-size:14px;
+    line-height:1.7;
+  }
+  .reply-footer{
+    gap:12px;
+    min-height:28px;
+  }
+  .reply-footer time,
+  .reply-region,
+  .reply-inline,
+  .reply-delete{
+    font-size:11px;
+  }
+  .reply-inline,
+  .reply-delete{
+    min-height:28px!important;
+  }
+  .reply-expand{
+    min-height:36px;
+    font-size:12px;
+  }
+  .reply-form__heading{
+    font-size:13px;
+  }
+  .reply-counter{
+    font-size:11px;
+  }
+  .reply-submit{
+    font-size:12px;
+  }
+}
+
+/* 2026-08-24 minimum usable viewport width */
+html{
+  min-width:320px;
+}
+body{
+  min-width:320px;
+}
+@media(max-width:319px){
+  html,
+  body{
+    overflow-x:auto;
+  }
+  .page-shell{
+    width:320px;
+    min-width:320px;
+  }
+}
+
+/* 2026-08-24 center hero content on mobile */
+@media(max-width:430px){
+  .hero{
+    text-align:center;
+  }
+  .hero>p:not(.eyebrow){
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .hero__stats{
+    justify-content:center;
+  }
+  .hero__stats div{
+    justify-content:center;
+    min-width:84px;
+  }
 }

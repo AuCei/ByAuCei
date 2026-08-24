@@ -1064,3 +1064,60 @@ body{
   .mood-option::after{content:attr(data-label);overflow:hidden;color:var(--muted);font-size:12px;font-weight:700;line-height:1;text-overflow:ellipsis;white-space:nowrap}
   .mood-option:hover::after,.mood-option.is-selected::after{color:var(--text)}
 }
+
+/* 2026-08-24 icon-only delete actions */
+.delete-button{
+  width:32px;
+  min-width:32px;
+  height:32px;
+  min-height:32px;
+  padding:0;
+  justify-content:center;
+  color:var(--muted);
+  border:1px solid transparent;
+  border-radius:9px;
+  background:transparent;
+}
+.delete-button svg{
+  width:15px;
+  height:15px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.delete-button:hover,.delete-button:focus-visible{
+  color:var(--danger);
+  border-color:transparent;
+  background:rgba(255,107,129,.09);
+}
+.reply-delete{
+  display:inline-grid;
+  width:24px;
+  min-width:24px!important;
+  height:24px;
+  min-height:24px!important;
+  padding:0!important;
+  place-items:center;
+  border-radius:7px;
+}
+.reply-delete svg{
+  width:13px;
+  height:13px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.reply-delete:hover,.reply-delete:focus-visible{
+  color:var(--danger);
+  background:rgba(255,107,129,.08);
+}
+@media(max-width:700px){
+  .delete-button{width:40px;min-width:40px;height:40px;min-height:40px;padding:0}
+  .delete-button svg{width:16px;height:16px}
+  .reply-delete{width:30px;min-width:30px!important;height:30px;min-height:30px!important}
+  .reply-delete svg{width:14px;height:14px}
+}

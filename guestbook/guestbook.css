@@ -1002,3 +1002,65 @@ body{
     min-width:84px;
   }
 }
+
+/* 2026-08-24 final responsive typography and mood layout */
+@media(min-width:701px){
+  .section-heading h2{font-size:22px}
+  .section-heading__index{width:32px;height:32px;font-size:12px}
+  .connection-status{padding:7px 12px;font-size:13px}
+  .field{font-size:14px}
+  .field input,.field textarea{font-size:15px}
+  .field input{height:50px}
+  .field textarea{line-height:1.75}
+  .mood-option::after{font-size:14px}
+  .mood-option span{font-size:20px}
+  .remember span{font-size:13px}
+  .submit-button{min-width:142px;min-height:46px;font-size:14px}
+  .char-counter{font-size:11px!important}
+  .search{width:200px;height:42px}
+  .search input,.tools select{font-size:14px}
+  .tools select{width:122px;height:42px}
+  .author strong{font-size:16px}
+  .author small,.message-meta-time{font-size:12px}
+  .message-card__body{font-size:16px;line-height:1.75}
+  .like-button,.reply-button,.delete-button{font-size:13px}
+  .message-id{font-size:12px}
+  .reply-meta strong{font-size:13px}
+  .reply-owner-badge{font-size:9px}
+  .reply-item p{font-size:14px;line-height:1.7}
+  .reply-footer time,.reply-region,.reply-inline,.reply-delete{font-size:11px}
+  .reply-expand{font-size:12px}
+  .reply-form__heading{font-size:13px}
+  .reply-form input,.reply-form textarea{font-size:14px}
+  .reply-counter{font-size:11px}
+  .reply-submit{font-size:12px}
+  .pagination__button,.pagination__number{font-size:13px}
+}
+@media(max-width:700px){
+  .section-heading h2{font-size:20px}
+  .section-heading__index{font-size:12px}
+  .connection-status{font-size:12px}
+  .field{font-size:13px}
+  .field input,.field textarea,.search input,.tools select{font-size:16px}
+  .field input{height:50px}
+  .field textarea{line-height:1.7}
+  .char-counter{font-size:11px!important}
+  .mood-option span{font-size:20px}
+  .remember span{font-size:12px}
+  .submit-button{font-size:14px}
+  .search{height:44px}
+  .tools select{height:44px}
+  .empty-state h3{font-size:17px}
+  .empty-state p{font-size:13px}
+  .empty-action{font-size:12px}
+  .pagination__button,.pagination__number{font-size:12px}
+  footer{font-size:12px}
+}
+@media(min-width:481px) and (max-width:700px){
+  .mood-heading{margin-bottom:10px}
+  .mood-current{display:none}
+  .mood-picker{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:7px}
+  .mood-option{display:flex;width:100%;min-width:0;height:48px;flex-direction:row;align-items:center;justify-content:center;gap:5px;padding:0 5px}
+  .mood-option::after{content:attr(data-label);overflow:hidden;color:var(--muted);font-size:12px;font-weight:700;line-height:1;text-overflow:ellipsis;white-space:nowrap}
+  .mood-option:hover::after,.mood-option.is-selected::after{color:var(--text)}
+}

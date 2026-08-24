@@ -1863,3 +1863,64 @@ html.light .admin-secondary:hover,html.light .admin-secondary:active{color:#fff;
     padding-inline: 8px;
   }
 }
+
+
+/* 2026-08-24: simplify short-code search and clarify the action area */
+.admin-search{
+  min-height:48px;
+}
+.admin-search input[type="search"]{
+  height:46px;
+  padding-left:15px;
+  padding-right:12px;
+  font-size:14px;
+}
+.admin-search-submit{
+  flex-basis:52px;
+  min-width:52px;
+  min-height:46px;
+  color:var(--muted);
+  border-left-color:var(--border);
+  background:color-mix(in srgb,var(--panel) 72%,transparent);
+}
+.admin-search-submit:hover{
+  color:var(--text);
+  background:var(--panel-hover);
+}
+.admin-search-submit:active{
+  color:#fff;
+  background:color-mix(in srgb,var(--primary) 36%,var(--panel));
+}
+.admin-message{
+  margin-top:10px;
+  padding-inline:2px;
+  line-height:1.6;
+}
+@media(max-width:600px){
+  .admin-search{
+    min-height:50px;
+  }
+  .admin-search input[type="search"]{
+    height:48px;
+    padding-left:14px;
+    font-size:16px;
+  }
+  .admin-search-submit{
+    flex-basis:50px;
+    min-width:50px;
+    min-height:48px;
+  }
+  .admin-message{
+    margin-top:11px;
+  }
+}
+@media(hover:none){
+  .admin-search-submit:hover{
+    color:var(--muted);
+    background:color-mix(in srgb,var(--panel) 72%,transparent);
+  }
+  .admin-search-submit:active{
+    color:#fff;
+    background:color-mix(in srgb,var(--primary) 36%,var(--panel));
+  }
+}

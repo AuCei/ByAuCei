@@ -53,3 +53,11 @@ html.light .filters select option:checked{
   color:#fff;
   background:#6653c7 linear-gradient(#6653c7,#6653c7);
 }
+
+/* 2026-08-25 detailed address for administrators */
+.address-detail{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:8px;margin:10px 0 12px;padding:9px 11px;color:var(--muted);border:1px solid var(--border);border-radius:10px;background:rgba(139,108,255,.035);font-size:11px}
+.address-detail span{color:#aaa0ff;font-weight:800;white-space:nowrap}
+.address-detail strong{min-width:0;color:var(--text);font-weight:600;line-height:1.6;overflow-wrap:anywhere}
+.address-detail.is-empty{opacity:.62}
+.admin-reply .address-detail{margin:7px 0 8px;padding:7px 9px;font-size:10px}
+@media(max-width:700px){.address-detail{grid-template-columns:1fr;gap:2px;font-size:12px}.admin-reply .address-detail{font-size:11px}}

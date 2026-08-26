@@ -7,7 +7,7 @@
 <meta name="description" content="CNAuCei 的留言板，写下一句话，留下一点回声。"/>
 <title>留言板 · 阿张的小破站</title>
 <link href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png" rel="icon" type="image/png"/>
-<link href="guestbook.css?v=20260824-final-responsive" rel="stylesheet"/>
+<link href="guestbook.css?v=20260826-refresh-button" rel="stylesheet"/>
 </head>
 <body>
 <div aria-hidden="true" class="page-background__grid"></div>
@@ -61,6 +61,10 @@
 <div class="section-heading section-heading--messages">
 <div><span class="section-heading__index">02</span><h2 id="messagesTitle">最近留言</h2></div>
 <div class="tools">
+<button class="refresh-button" id="refreshButton" type="button" aria-label="刷新留言" title="刷新留言">
+<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11a8.1 8.1 0 1 0-2.4 5.8"></path><path d="M20 4v7h-7"></path></svg>
+<span>刷新</span>
+</button>
 <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg><input id="searchInput" type="search" placeholder="搜索留言" aria-label="搜索留言"/><button class="search-clear" id="searchClear" type="button" aria-label="清除搜索" hidden>×</button></label>
 <select id="sortSelect" aria-label="留言排序"><option value="newest">最新优先</option><option value="oldest">最早优先</option><option value="likes">点赞最多</option></select>
 </div>
@@ -92,6 +96,6 @@
 </div>
 </div>
 <script src="guestbook-config.js?v=20260824-final-responsive"></script>
-<script src="guestbook.js?v=20260825-device-info-v2"></script>
+<script src="guestbook.js?v=20260826-refresh-button"></script>
 </body>
 </html>

@@ -1121,3 +1121,53 @@ body{
   .reply-delete{width:30px;min-width:30px!important;height:30px;min-height:30px!important}
   .reply-delete svg{width:14px;height:14px}
 }
+
+/* 2026-08-26 message list refresh button */
+.refresh-button{
+  display:inline-flex;
+  height:42px;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:0 12px;
+  cursor:pointer;
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--panel);
+  font-size:13px;
+  font-weight:800;
+  white-space:nowrap;
+  transition:color .16s,border-color .16s,background .16s,transform .16s;
+}
+.refresh-button svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.refresh-button:hover:not(:disabled){
+  color:var(--text);
+  border-color:rgba(139,108,255,.4);
+  background:var(--panel2);
+  transform:translateY(-1px);
+}
+.refresh-button:active:not(:disabled){transform:scale(.96)}
+.refresh-button:disabled{cursor:wait;opacity:.68}
+.refresh-button.is-refreshing svg{animation:refresh-spin .8s linear infinite}
+@keyframes refresh-spin{to{transform:rotate(360deg)}}
+@media(max-width:700px){
+  .refresh-button{height:44px;font-size:14px}
+}
+@media(max-width:430px){
+  .tools{grid-template-columns:44px minmax(0,1fr)}
+  .refresh-button{width:44px;padding:0}
+  .refresh-button span{display:none}
+  .tools select{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){
+  .refresh-button.is-refreshing svg{animation-duration:1.5s!important}
+}

@@ -158,3 +158,8 @@ html.light .search input{
 /* Inline admin reply form is inserted directly below the selected reply. */
 .admin-reply + .admin-reply-form{margin:8px 0 12px 18px;border-color:rgba(53,214,161,.38);background:rgba(53,214,161,.065)}
 @media(max-width:700px){.admin-reply + .admin-reply-form{margin:8px 0 12px}}
+
+/* V4: every child reply has its own inline admin reply form. */
+.child-admin-reply-form{margin:8px 0 14px 18px;border-color:rgba(53,214,161,.4);background:rgba(53,214,161,.07)}
+.child-admin-reply-form .admin-reply-target{display:block;font-weight:800}
+@media(max-width:700px){.child-admin-reply-form{margin:8px 0 14px}}

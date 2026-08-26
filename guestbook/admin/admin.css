@@ -110,3 +110,7 @@ html.light .filters select option:checked{
     font-size:13px;
   }
 }
+
+/* 2026-08-26 reliable inline SVG search icon */
+.search-icon::before,.search-icon::after{content:none!important}
+.search-icon svg{display:block;width:17px;height:17px;overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}

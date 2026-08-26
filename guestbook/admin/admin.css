@@ -111,44 +111,34 @@ html.light .filters select option:checked{
   }
 }
 
-/* 2026-08-26 metadata size and light search field fix v9 */
+/* 2026-08-26 admin interface fine tuning v10 */
 .admin-card .card-head .author .meta{
-  margin-top:3px;
-  font-size:15px !important;
+  font-size:12px !important;
   line-height:1.65;
 }
-.search-icon{
-  display:grid;
-  width:18px;
-  height:18px;
-  flex:0 0 18px;
-  place-items:center;
-  color:var(--muted);
+.search{
+  transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease;
 }
-.search-icon svg{
-  display:block;
-  width:18px;
-  height:18px;
-  fill:none;
-  stroke:currentColor;
-  stroke-width:2;
-  stroke-linecap:round;
-  stroke-linejoin:round;
+.search:focus-within{
+  border-color:rgba(124,92,255,.82);
+  box-shadow:0 0 0 3px rgba(124,92,255,.14);
 }
-.search:focus-within .search-icon{color:#7964dc}
-html.light .filters .search input,
-html.light .search input,
-.filters .search input{
-  border:0;
-  outline:0;
-  background:transparent !important;
-  box-shadow:none !important;
-  appearance:none;
-  -webkit-appearance:none;
+html.light .search:focus-within{
+  border-color:rgba(102,83,199,.78);
+  box-shadow:0 0 0 3px rgba(102,83,199,.13);
+}
+.admin-card .card-head > .status{
+  padding:4px 9px;
+  font-size:11px;
+  line-height:1.35;
 }
 @media(max-width:700px){
   .admin-card .card-head .author .meta{
-    font-size:15px !important;
+    font-size:12px !important;
     line-height:1.7;
+  }
+  .admin-card .card-head > .status{
+    padding:4px 9px;
+    font-size:11px;
   }
 }

@@ -115,7 +115,7 @@ html.light .filters select option:checked{
 .search-icon::before,.search-icon::after{content:none!important}
 .search-icon svg{display:block;width:17px;height:17px;overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* 2026-08-26 enlarge message metadata and fix search icon */
+/* 2026-08-26 admin UI v15: readability and light search fix */
 .author .meta{
   margin-top:2px;
   font-size:13px;
@@ -134,9 +134,21 @@ html.light .filters select option:checked{
   stroke-linecap:round;
   stroke-linejoin:round;
 }
+html.light .search input{
+  background:transparent;
+  box-shadow:none;
+}
+.status{
+  padding:4px 9px;
+  font-size:11px;
+  line-height:1.35;
+}
 @media(max-width:700px){
   .author .meta{
     font-size:13px;
     line-height:1.6;
+  }
+  .status{
+    font-size:12px;
   }
 }

@@ -111,6 +111,44 @@ html.light .filters select option:checked{
   }
 }
 
-/* 2026-08-26 reliable inline SVG search icon */
-.search-icon::before,.search-icon::after{content:none!important}
-.search-icon svg{display:block;width:17px;height:17px;overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* 2026-08-26 metadata size and light search field fix v9 */
+.admin-card .card-head .author .meta{
+  margin-top:3px;
+  font-size:15px !important;
+  line-height:1.65;
+}
+.search-icon{
+  display:grid;
+  width:18px;
+  height:18px;
+  flex:0 0 18px;
+  place-items:center;
+  color:var(--muted);
+}
+.search-icon svg{
+  display:block;
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.search:focus-within .search-icon{color:#7964dc}
+html.light .filters .search input,
+html.light .search input,
+.filters .search input{
+  border:0;
+  outline:0;
+  background:transparent !important;
+  box-shadow:none !important;
+  appearance:none;
+  -webkit-appearance:none;
+}
+@media(max-width:700px){
+  .admin-card .card-head .author .meta{
+    font-size:15px !important;
+    line-height:1.7;
+  }
+}

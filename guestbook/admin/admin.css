@@ -114,3 +114,29 @@ html.light .filters select option:checked{
 /* 2026-08-26 reliable inline SVG search icon */
 .search-icon::before,.search-icon::after{content:none!important}
 .search-icon svg{display:block;width:17px;height:17px;overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 2026-08-26 enlarge message metadata and fix search icon */
+.author .meta{
+  margin-top:2px;
+  font-size:13px;
+  line-height:1.55;
+}
+.search-icon-svg{
+  display:block;
+  flex:0 0 17px;
+  width:17px;
+  height:17px;
+  overflow:visible;
+  color:var(--muted);
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:700px){
+  .author .meta{
+    font-size:13px;
+    line-height:1.6;
+  }
+}

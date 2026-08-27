@@ -1176,37 +1176,23 @@ body{
 .message-card.is-pinned{border-color:rgba(139,108,255,.38);background:linear-gradient(145deg,rgba(139,108,255,.09),var(--panel))}.message-card.is-featured{box-shadow:inset 3px 0 0 rgba(245,189,88,.72)}.message-badge,.admin-reply-badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:999px;font-size:9px;font-weight:900;line-height:1.4;white-space:nowrap}.message-badge.pinned{color:#c9c2ff;border:1px solid rgba(139,108,255,.28);background:rgba(139,108,255,.11)}.message-badge.featured{color:#ffd47b;border:1px solid rgba(240,189,88,.3);background:rgba(240,189,88,.1)}.admin-reply-badge{color:#7de8c2;border:1px solid rgba(53,214,161,.28);background:rgba(53,214,161,.1)}html.light .admin-reply-badge{color:#087355}@media(max-width:700px){.message-badge,.admin-reply-badge{font-size:10px}}
 
 
-/* 2026-08-27 merged refresh and search icons */
-.refresh-button__icon{
-  display:block;
-  width:16px;
-  height:16px;
-  flex:0 0 16px;
-  fill:none;
-  stroke:currentColor;
-  stroke-width:1.9;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
+/* 2026-08-27 cumulative icons and NO. number */
+.refresh-button__icon{display:block;width:16px;height:16px;flex:0 0 16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .refresh-button.is-refreshing .refresh-button__icon{animation:refresh-spin .8s linear infinite}
-.search__icon{
-  display:block;
-  width:17px;
-  height:17px;
-  flex:0 0 17px;
-  color:var(--muted);
-  fill:none;
-  stroke:currentColor;
-  stroke-width:1.9;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  pointer-events:none;
-  transition:color .16s,transform .16s;
-}
+.search__icon{display:block;width:17px;height:17px;flex:0 0 17px;color:var(--muted);fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:color .16s,transform .16s}
 .search:focus-within .search__icon{color:#a99cff;transform:scale(1.04)}
 .search input{min-width:0;padding-right:26px}
-@media(max-width:430px){
-  .refresh-button{width:44px;min-width:44px;flex:0 0 44px;padding:0}
-  .refresh-button__icon{width:18px;height:18px;flex-basis:18px}
-  .refresh-button span{display:none}
+.message-id{display:inline-flex;align-items:baseline;gap:1px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.message-id__prefix{font-size:9px;font-weight:700;letter-spacing:.04em;opacity:.72}
+.message-id__number{font-size:11px;font-weight:800;letter-spacing:.01em}
+@media(min-width:701px){.message-id__prefix{font-size:10px}.message-id__number{font-size:12px}}
+@media(max-width:430px){.refresh-button{width:44px;min-width:44px;flex:0 0 44px;padding:0}.refresh-button__icon{width:18px;height:18px;flex-basis:18px}.refresh-button span{display:none}}
+
+
+/* 2026-08-27 pinned and featured badge size plus 1px */
+.message-badge.pinned,
+.message-badge.featured{font-size:10px}
+@media(max-width:700px){
+  .message-badge.pinned,
+  .message-badge.featured{font-size:11px}
 }

@@ -214,3 +214,16 @@ html.light .search input{
 @media(prefers-reduced-motion:reduce){
   .details-toggle svg{transition-duration:.01ms!important}
 }
+
+
+/* 2026-08-27 admin pinned and featured badges 11px */
+.flag-badge.pinned,
+.flag-badge.featured{
+  font-size:11px;
+}
+@media(max-width:700px){
+  .flag-badge.pinned,
+  .flag-badge.featured{
+    font-size:11px;
+  }
+}

@@ -156,74 +156,9 @@ html.light .search input{
 /* 2026-08-26 pin, featured and admin reply controls */
 .flag-badge,.admin-identity{display:inline-flex;margin-left:6px;padding:2px 6px;border-radius:999px;font-size:9px;font-weight:900;vertical-align:middle}.flag-badge.pinned{color:#c9c2ff;background:rgba(139,108,255,.12)}.flag-badge.featured{color:#ffd47b;background:rgba(240,189,88,.11)}.admin-identity{color:#78e8bf;background:rgba(53,214,161,.1)}.action.pin{color:#c7c1ff}.action.feature{color:#ffd47b}.action.admin-reply-action{color:#78e8bf}.admin-reply-form{margin:0 17px 15px;padding:14px;border:1px solid rgba(53,214,161,.24);border-radius:12px;background:rgba(53,214,161,.045)}.admin-reply-form[hidden]{display:none}.admin-reply-form__head,.admin-reply-form__foot{display:flex;align-items:center;justify-content:space-between;gap:10px}.admin-reply-form__head{margin-bottom:9px;font-size:12px}.admin-reply-form__head button{width:26px;height:26px;padding:0;color:var(--muted);border:0;border-radius:50%;background:transparent;cursor:pointer}.admin-reply-target{margin-bottom:8px;color:#78e8bf;font-size:11px}.admin-reply-form textarea{width:100%;min-height:82px;padding:10px 12px;resize:vertical;color:var(--text);border:1px solid var(--border);border-radius:10px;outline:0;background:var(--panel);font:inherit;font-size:14px}.admin-reply-form textarea:focus{border-color:rgba(53,214,161,.48);box-shadow:0 0 0 3px rgba(53,214,161,.08)}.admin-reply-form__foot{margin-top:9px}.admin-reply-counter{color:var(--muted);font-size:10px}.admin-reply-submit{color:#fff!important;background:linear-gradient(135deg,#16956f,#35b993)!important}@media(max-width:700px){.admin-reply-form{margin:0 15px 13px}.admin-reply-form textarea{font-size:16px}.flag-badge,.admin-identity{font-size:10px}}
 
-/* 2026-08-27 admin login avatar */
-.lock.admin-avatar{
-  overflow:hidden;
-  padding:0;
-  border-radius:50%;
-  background:var(--panel);
-  box-shadow:0 0 0 5px rgba(139,108,255,.1),0 10px 28px rgba(0,0,0,.22);
-}
-.admin-avatar img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:inherit;
-}
-
-
-/* 2026-08-27 collapsible visitor details */
-.admin-details-wrap{margin:11px 0 13px}
-.details-toggle{
-  display:inline-flex;
-  min-height:34px;
-  align-items:center;
-  gap:7px;
-  padding:0 10px;
-  cursor:pointer;
-  color:var(--muted);
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:rgba(139,108,255,.035);
-  font-size:11px;
-  font-weight:800;
-  transition:color .16s,border-color .16s,background .16s;
-}
-.details-toggle:hover,.details-toggle[aria-expanded="true"]{
-  color:#bdb5ff;
-  border-color:rgba(139,108,255,.3);
-  background:rgba(139,108,255,.08);
-}
-.details-toggle svg{
-  width:14px;
-  height:14px;
-  fill:none;
-  stroke:currentColor;
-  stroke-width:2;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  transition:transform .2s ease;
-}
-.details-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
-.admin-details-wrap>.admin-details{margin:9px 0 0}
-.admin-details-wrap>.admin-details[hidden]{display:none}
-@media(max-width:700px){
-  .details-toggle{min-height:38px;font-size:12px}
-}
-@media(prefers-reduced-motion:reduce){
-  .details-toggle svg{transition-duration:.01ms!important}
-}
-
-
-/* 2026-08-27 admin pinned and featured badges 11px */
-.flag-badge.pinned,
-.flag-badge.featured{
-  font-size:11px;
-}
-@media(max-width:700px){
-  .flag-badge.pinned,
-  .flag-badge.featured{
-    font-size:11px;
-  }
-}
+.lock.admin-avatar{overflow:hidden;padding:0;border-radius:50%;background:var(--panel);box-shadow:0 0 0 5px rgba(139,108,255,.1),0 10px 28px rgba(0,0,0,.22)}.admin-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.admin-details-wrap{margin:11px 0 13px}.details-toggle{display:inline-flex;min-height:34px;align-items:center;gap:7px;padding:0 10px;cursor:pointer;color:var(--muted);border:1px solid var(--border);border-radius:9px;background:rgba(139,108,255,.035);font-size:11px;font-weight:800}.details-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .2s}.details-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}.admin-details-wrap>.admin-details{margin:9px 0 0}.admin-details-wrap>.admin-details[hidden]{display:none}
+.flag-badge.pinned,.flag-badge.featured{font-size:11px}@media(max-width:700px){.flag-badge.pinned,.flag-badge.featured{font-size:11px}.details-toggle{min-height:38px;font-size:12px}}
+/* Old iOS Safari: suppress native search decoration, keep custom SVG only */
+.search input[type="search"]{-webkit-appearance:none;appearance:none}
+.search input[type="search"]::-webkit-search-decoration,.search input[type="search"]::-webkit-search-cancel-button,.search input[type="search"]::-webkit-search-results-button,.search input[type="search"]::-webkit-search-results-decoration{display:none;-webkit-appearance:none;appearance:none}

@@ -7,6 +7,7 @@ const root = document.documentElement;
 const form = document.getElementById("shortForm");
 const longUrl = document.getElementById("longUrl");
 const customCode = document.getElementById("customCode");
+const linkModeHint = document.getElementById("linkModeHint");
 const adminToken = document.getElementById("adminToken");
 const rememberToken = document.getElementById("rememberToken");
 const revealToken = document.getElementById("revealToken");
@@ -45,6 +46,33 @@ function validUrl(value) {
     return false;
   }
 }
+function selectedLinkMode() {
+  return form.elements.linkMode?.value || "normal";
+}
+function isSupportedMicrosoftShareUrl(value) {
+  try {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase();
+    return url.protocol === "https:" && (
+      host === "1drv.ms" ||
+      host === "onedrive.live.com" ||
+      host.endsWith(".sharepoint.com") ||
+      host.endsWith(".sharepoint.cn")
+    );
+  } catch {
+    return false;
+  }
+}
+function syncLinkMode() {
+  const downloadMode = selectedLinkMode() === "onedrive";
+  linkModeHint.textContent = downloadMode ? "OneDrive 下载模式" : "普通短链";
+  longUrl.placeholder = downloadMode
+    ? "粘贴 OneDrive 或 SharePoint 公开分享链接"
+    : "https://example.com/a/very/long/link";
+}
+form.querySelectorAll('input[name="linkMode"]').forEach((input) =>
+  input.addEventListener("change", syncLinkMode),
+);
 async function copyText(value) {
   if (navigator.clipboard && window.isSecureContext) {
     await navigator.clipboard.writeText(value);
@@ -240,6 +268,12 @@ form.addEventListener("submit", async (event) => {
     longUrl.focus();
     return;
   }
+  const linkMode = selectedLinkMode();
+  if (linkMode === "onedrive" && !isSupportedMicrosoftShareUrl(urlValue)) {
+    setMessage("OneDrive 下载模式仅支持 OneDrive 或 SharePoint 的 HTTPS 分享链接");
+    longUrl.focus();
+    return;
+  }
   if (codeValue && !/^[A-Za-z0-9]{3,7}$/.test(codeValue)) {
     setMessage("自定义短码需为 3 至 7 位，只能包含大小写字母和数字");
     customCode.focus();
@@ -256,7 +290,7 @@ form.addEventListener("submit", async (event) => {
   setMessage("正在连接短链服务，请稍候", "info");
   try {
     const expiryDays = Number(form.elements.expiryDays.value);
-    const payload = { url: urlValue, expiryDays };
+    const payload = { url: urlValue, expiryDays, linkMode };
     if (codeValue) payload.code = codeValue;
     const response = await fetch(API_URL, {
       method: "POST",
@@ -297,6 +331,7 @@ form.addEventListener("submit", async (event) => {
 });
 initTheme();
 restoreToken();
+syncLinkMode();
 checkHealth();
 document.getElementById("year").textContent = new Date().getFullYear();
 

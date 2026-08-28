@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content="AuCei 短链接生成器" />
     <title>短链接生成器 | AuCei</title>
-    <link rel="stylesheet" href="style.css?v=20260824-search-clean-v1" />
+    <link rel="stylesheet" href="style.css?v=20260828-onedrive-v1" />
   </head>
   <body>
     <div class="grid" aria-hidden="true"></div>
@@ -84,6 +84,22 @@
             </div>
           </div>
 
+          <div class="field link-mode-field">
+            <div class="label-row">
+              <label>链接处理方式</label><span id="linkModeHint">普通短链</span>
+            </div>
+            <div class="link-mode" role="radiogroup" aria-label="链接处理方式">
+              <label class="link-mode-option">
+                <input type="radio" name="linkMode" value="normal" checked />
+                <span><strong>普通短链</strong><small>原链接直接缩短</small></span>
+              </label>
+              <label class="link-mode-option">
+                <input type="radio" name="linkMode" value="onedrive" />
+                <span><strong>OneDrive 下载</strong><small>自动添加下载参数</small></span>
+              </label>
+            </div>
+            <p class="hint">OneDrive 下载模式仅接受 OneDrive 或 SharePoint 的 HTTPS 分享链接。</p>
+          </div>
           <div class="field">
             <div class="label-row">
               <label for="customCode">自定义短码</label
@@ -284,6 +300,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="script.js?v=20260824-search-clean-v1"></script>
+    <script src="script.js?v=20260828-onedrive-v1"></script>
   </body>
 </html>

@@ -1925,15 +1925,11 @@ html.light .admin-secondary:hover,html.light .admin-secondary:active{color:#fff;
   }
 }
 
-/* 2026-08-28: integrated OneDrive / SharePoint download mode */
-.link-mode{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.link-mode-option{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.link-mode-option input{position:absolute;opacity:0;pointer-events:none}
-.link-mode-option>span{display:grid;gap:2px;height:100%;padding:13px 14px;color:var(--muted);border:1px solid var(--border);border-radius:13px;background:rgba(0,0,0,.1);transition:border-color .16s,background-color .16s}
-.link-mode-option strong{color:var(--text);font-size:13px}
-.link-mode-option small{font-size:10px}
-.link-mode-option input:checked+span{border-color:rgba(124,92,255,.72);background:rgba(124,92,255,.13);box-shadow:0 0 0 3px rgba(124,92,255,.08)}
-.link-mode-option input:focus-visible+span{outline:2px solid rgba(34,211,238,.55);outline-offset:2px}
-html.light .link-mode-option>span{background:rgba(255,255,255,.62)}
-html.light .link-mode-option input:checked+span{background:#fff}
-@media(max-width:480px){.link-mode{grid-template-columns:1fr}.link-mode-option>span{grid-template-columns:auto 1fr;align-items:center;gap:10px}.link-mode-option small{text-align:right}}
+
+/* 2026-08-29: integrated service switch and OneDrive converter */
+.service-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0 0 16px;padding:5px;border:1px solid var(--border);border-radius:15px;background:var(--panel)}
+.service-switch-button{min-height:42px;color:var(--muted);border:0;border-radius:11px;background:transparent;font-weight:750;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.service-switch-button.is-active{color:var(--text);background:var(--surface);box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.onedrive-card{animation:result-in .22s ease-out}.onedrive-input-wrap{position:relative}.onedrive-input-wrap textarea{width:100%;min-height:122px;resize:vertical;padding:14px 44px 14px 14px;color:var(--text);border:1px solid var(--border);border-radius:14px;outline:0;background:rgba(0,0,0,.13);font:inherit;line-height:1.6}.onedrive-input-wrap textarea:focus{border-color:rgba(124,92,255,.65);box-shadow:0 0 0 4px rgba(124,92,255,.1)}html.light .onedrive-input-wrap textarea{background:rgba(255,255,255,.65)}
+.onedrive-clear{position:absolute;top:7px;right:7px;width:34px;height:34px;color:var(--muted);border:0;background:transparent;font-size:23px;cursor:pointer}.onedrive-actions{display:grid;grid-template-columns:105px 1fr;gap:10px}.onedrive-actions .admin-load{min-height:50px}.onedrive-result{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}.onedrive-result-meta{display:flex;align-items:center;gap:9px;margin-bottom:14px;color:var(--muted);font-size:11px}.onedrive-badge{padding:4px 8px;color:#cfd4ff;border-radius:999px;background:rgba(124,92,255,.14);font-weight:750}.onedrive-result label{display:block;margin:12px 0 7px;font-size:12px;font-weight:750}.onedrive-output{display:grid;grid-template-columns:minmax(0,1fr) 68px;gap:8px}.onedrive-output input{min-width:0;height:44px;padding:0 11px;color:var(--text);border:1px solid var(--border);border-radius:11px;background:var(--panel)}.onedrive-output button{color:var(--text);border:1px solid var(--border);border-radius:11px;background:var(--panel);font-weight:700;cursor:pointer}.onedrive-warning{margin:14px 0;color:var(--muted);font-size:11px;line-height:1.65}.onedrive-test{color:#aeb7ff;text-decoration:none;font-size:12px;font-weight:750}.message.is-success{display:block;color:#8af0bd;border:1px solid rgba(69,230,154,.25);background:rgba(69,230,154,.08)}
+@media(max-width:600px){.service-switch{margin-bottom:14px}.onedrive-actions{grid-template-columns:88px 1fr}.onedrive-card{padding:20px 16px}.onedrive-output{grid-template-columns:minmax(0,1fr) 62px}}

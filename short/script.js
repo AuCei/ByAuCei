@@ -7,7 +7,6 @@ const root = document.documentElement;
 const form = document.getElementById("shortForm");
 const longUrl = document.getElementById("longUrl");
 const customCode = document.getElementById("customCode");
-const linkModeHint = document.getElementById("linkModeHint");
 const adminToken = document.getElementById("adminToken");
 const rememberToken = document.getElementById("rememberToken");
 const revealToken = document.getElementById("revealToken");
@@ -46,33 +45,6 @@ function validUrl(value) {
     return false;
   }
 }
-function selectedLinkMode() {
-  return form.elements.linkMode?.value || "normal";
-}
-function isSupportedMicrosoftShareUrl(value) {
-  try {
-    const url = new URL(value);
-    const host = url.hostname.toLowerCase();
-    return url.protocol === "https:" && (
-      host === "1drv.ms" ||
-      host === "onedrive.live.com" ||
-      host.endsWith(".sharepoint.com") ||
-      host.endsWith(".sharepoint.cn")
-    );
-  } catch {
-    return false;
-  }
-}
-function syncLinkMode() {
-  const downloadMode = selectedLinkMode() === "onedrive";
-  linkModeHint.textContent = downloadMode ? "OneDrive 下载模式" : "普通短链";
-  longUrl.placeholder = downloadMode
-    ? "粘贴 OneDrive 或 SharePoint 公开分享链接"
-    : "https://example.com/a/very/long/link";
-}
-form.querySelectorAll('input[name="linkMode"]').forEach((input) =>
-  input.addEventListener("change", syncLinkMode),
-);
 async function copyText(value) {
   if (navigator.clipboard && window.isSecureContext) {
     await navigator.clipboard.writeText(value);
@@ -268,12 +240,6 @@ form.addEventListener("submit", async (event) => {
     longUrl.focus();
     return;
   }
-  const linkMode = selectedLinkMode();
-  if (linkMode === "onedrive" && !isSupportedMicrosoftShareUrl(urlValue)) {
-    setMessage("OneDrive 下载模式仅支持 OneDrive 或 SharePoint 的 HTTPS 分享链接");
-    longUrl.focus();
-    return;
-  }
   if (codeValue && !/^[A-Za-z0-9]{3,7}$/.test(codeValue)) {
     setMessage("自定义短码需为 3 至 7 位，只能包含大小写字母和数字");
     customCode.focus();
@@ -290,7 +256,7 @@ form.addEventListener("submit", async (event) => {
   setMessage("正在连接短链服务，请稍候", "info");
   try {
     const expiryDays = Number(form.elements.expiryDays.value);
-    const payload = { url: urlValue, expiryDays, linkMode };
+    const payload = { url: urlValue, expiryDays };
     if (codeValue) payload.code = codeValue;
     const response = await fetch(API_URL, {
       method: "POST",
@@ -331,7 +297,6 @@ form.addEventListener("submit", async (event) => {
 });
 initTheme();
 restoreToken();
-syncLinkMode();
 checkHealth();
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -519,3 +484,65 @@ adminSearchButton.addEventListener("click", searchAdminLinks);
 adminSearch.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); searchAdminLinks(); } });
 adminPrevious.addEventListener("click", () => loadAdminLinks(Math.max(1, adminPage - 1)));
 adminNext.addEventListener("click", () => loadAdminLinks(Math.min(adminTotalPages, adminPage + 1)));
+
+
+// OneDrive / SharePoint public-link converter
+const ONEDRIVE_API_URL = `${API_BASE}/api/onedrive/convert`;
+const shortServicePanel = document.getElementById("shortServicePanel");
+const onedrivePanel = document.getElementById("onedrivePanel");
+document.querySelectorAll("[data-service]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const useOneDrive = button.dataset.service === "onedrive";
+    document.querySelectorAll("[data-service]").forEach((item) => {
+      const active = item === button;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+    onedrivePanel.hidden = !useOneDrive;
+    shortServicePanel.hidden = useOneDrive;
+    document.querySelector(".hero .eyebrow").lastChild.textContent = useOneDrive ? " AUCEI ONEDRIVE LINK" : " AUCEI SHORT LINK";
+    document.querySelector(".hero h1").innerHTML = useOneDrive ? "公开分享链接，<span>转换为下载链接</span>" : "让链接更短，<span>分享更简单</span>";
+    document.querySelector(".hero p").innerHTML = useOneDrive ? "支持个人版 OneDrive、Microsoft 365 SharePoint 和世纪互联公开分享链接。" : "输入长链接并设置可选短码，生成专属于 <strong>s.aucei.cn</strong> 的短链接。";
+  });
+});
+const odForm = document.getElementById("onedriveForm");
+const odUrl = document.getElementById("onedriveUrl");
+const odClear = document.getElementById("onedriveClear");
+const odSubmit = document.getElementById("onedriveSubmit");
+const odMessage = document.getElementById("onedriveMessage");
+const odResult = document.getElementById("onedriveResult");
+odUrl.addEventListener("input", () => { odClear.hidden = !odUrl.value; });
+odClear.addEventListener("click", () => { odUrl.value = ""; odClear.hidden = true; odResult.hidden = true; odMessage.className = "message"; odMessage.textContent = ""; odUrl.focus(); });
+document.getElementById("onedrivePaste").addEventListener("click", async () => {
+  try { odUrl.value = await navigator.clipboard.readText(); odClear.hidden = !odUrl.value; }
+  catch { odMessage.textContent = "浏览器未允许读取剪贴板，请手动粘贴。"; odMessage.className = "message is-error"; }
+});
+odForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const value = odUrl.value.trim();
+  odResult.hidden = true;
+  if (!value) { odMessage.textContent = "请先粘贴公开分享链接"; odMessage.className = "message is-error"; return; }
+  odSubmit.disabled = true; odSubmit.querySelector("span").textContent = "正在转换...";
+  odMessage.textContent = "正在解析微软分享链接"; odMessage.className = "message is-info";
+  try {
+    const response = await fetch(ONEDRIVE_API_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({url:value}) });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || "转换失败");
+    document.getElementById("onedriveService").textContent = data.service;
+    document.getElementById("onedriveType").textContent = data.itemType;
+    document.getElementById("onedriveDirect").value = data.directUrl;
+    document.getElementById("onedriveFallback").value = data.fallbackUrl || "";
+    document.getElementById("onedriveFallbackArea").hidden = !data.fallbackUrl;
+    document.getElementById("onedriveWarning").textContent = data.warning;
+    document.getElementById("onedriveTest").href = data.directUrl;
+    odResult.hidden = false; odMessage.textContent = "转换完成，建议打开链接确认下载权限。"; odMessage.className = "message is-success";
+  } catch (error) {
+    odMessage.textContent = error.message === "Failed to fetch" ? "无法连接转链服务，请检查 Worker 部署和跨域设置" : error.message;
+    odMessage.className = "message is-error";
+  } finally { odSubmit.disabled = false; odSubmit.querySelector("span").textContent = "开始转换"; }
+});
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-od-copy]"); if (!button) return;
+  try { await copyText(document.getElementById(button.dataset.odCopy).value); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制", 1400); }
+  catch { showToast("复制失败，请手动复制"); }
+});

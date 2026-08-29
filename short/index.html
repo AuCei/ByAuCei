@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content="AuCei 短链接生成器" />
     <title>短链接生成器 | AuCei</title>
-    <link rel="stylesheet" href="style.css?v=20260828-onedrive-v2" />
+    <link rel="stylesheet" href="style.css?v=20260829-onedrive" />
   </head>
   <body>
     <div class="grid" aria-hidden="true"></div>
@@ -51,6 +51,46 @@
         </p>
       </section>
 
+      <nav class="service-switch" aria-label="选择工具">
+        <button class="service-switch-button is-active" type="button" data-service="short" aria-pressed="true">短链接</button>
+        <button class="service-switch-button" type="button" data-service="onedrive" aria-pressed="false">OneDrive 转链</button>
+      </nav>
+      <section class="card onedrive-card" id="onedrivePanel" aria-labelledby="onedriveTitle" hidden>
+        <div class="card-heading">
+          <div>
+            <h2 id="onedriveTitle">OneDrive 公开链接转链</h2>
+            <p>支持个人版、Microsoft 365 SharePoint 和世纪互联</p>
+          </div>
+          <span class="status is-online"><i></i><span>在线解析</span></span>
+        </div>
+        <form id="onedriveForm" novalidate>
+          <div class="field">
+            <label for="onedriveUrl">公开分享链接</label>
+            <div class="onedrive-input-wrap">
+              <textarea id="onedriveUrl" maxlength="4096" rows="4" spellcheck="false" placeholder="粘贴 OneDrive、1drv.ms 或 SharePoint 分享链接" required></textarea>
+              <button class="onedrive-clear" id="onedriveClear" type="button" aria-label="清空链接" hidden>×</button>
+            </div>
+            <p class="hint">仅转换已有公开权限的链接，不保存或代理文件。</p>
+          </div>
+          <div class="onedrive-actions">
+            <button class="admin-load" id="onedrivePaste" type="button">粘贴</button>
+            <button class="submit" id="onedriveSubmit" type="submit"><span>开始转换</span></button>
+          </div>
+          <p class="message" id="onedriveMessage" role="alert" aria-live="polite"></p>
+        </form>
+        <section class="onedrive-result" id="onedriveResult" hidden aria-live="polite">
+          <div class="onedrive-result-meta"><span class="onedrive-badge" id="onedriveService"></span><span id="onedriveType"></span></div>
+          <label for="onedriveDirect">直接下载链接</label>
+          <div class="onedrive-output"><input id="onedriveDirect" readonly><button type="button" data-od-copy="onedriveDirect">复制</button></div>
+          <div id="onedriveFallbackArea" hidden>
+            <label for="onedriveFallback">兼容链接</label>
+            <div class="onedrive-output"><input id="onedriveFallback" readonly><button type="button" data-od-copy="onedriveFallback">复制</button></div>
+          </div>
+          <p class="onedrive-warning" id="onedriveWarning"></p>
+          <a class="onedrive-test" id="onedriveTest" href="#" target="_blank" rel="noopener noreferrer">在新窗口测试链接</a>
+        </section>
+      </section>
+      <div id="shortServicePanel">
       <section class="card" aria-labelledby="generatorTitle">
         <div class="card-heading">
           <div>
@@ -84,22 +124,6 @@
             </div>
           </div>
 
-          <div class="field link-mode-field">
-            <div class="label-row">
-              <label>链接处理方式</label><span id="linkModeHint">普通短链</span>
-            </div>
-            <div class="link-mode" role="radiogroup" aria-label="链接处理方式">
-              <label class="link-mode-option">
-                <input type="radio" name="linkMode" value="normal" checked />
-                <span><strong>普通短链</strong><small>原链接直接缩短</small></span>
-              </label>
-              <label class="link-mode-option">
-                <input type="radio" name="linkMode" value="onedrive" />
-                <span><strong>OneDrive 下载</strong><small>实时解析下载入口</small></span>
-              </label>
-            </div>
-            <p class="hint">OneDrive 下载模式会实时解析个人版 OneDrive 下载入口；SharePoint 链接使用下载参数。</p>
-          </div>
           <div class="field">
             <div class="label-row">
               <label for="customCode">自定义短码</label
@@ -281,6 +305,7 @@
           <button class="admin-secondary" id="adminNext" type="button">下一页</button>
         </div>
       </section>
+      </div>
       <section class="security-note">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -300,6 +325,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="script.js?v=20260828-onedrive-v2"></script>
+    <script src="script.js?v=20260829-onedrive"></script>
   </body>
 </html>

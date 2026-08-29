@@ -490,59 +490,17 @@ adminNext.addEventListener("click", () => loadAdminLinks(Math.min(adminTotalPage
 const ONEDRIVE_API_URL = `${API_BASE}/api/onedrive/convert`;
 const shortServicePanel = document.getElementById("shortServicePanel");
 const onedrivePanel = document.getElementById("onedrivePanel");
-document.querySelectorAll("[data-service]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const useOneDrive = button.dataset.service === "onedrive";
-    document.querySelectorAll("[data-service]").forEach((item) => {
-      const active = item === button;
-      item.classList.toggle("is-active", active);
-      item.setAttribute("aria-pressed", String(active));
-    });
-    onedrivePanel.hidden = !useOneDrive;
-    shortServicePanel.hidden = useOneDrive;
-    document.querySelector(".hero .eyebrow").lastChild.textContent = useOneDrive ? " AUCEI ONEDRIVE LINK" : " AUCEI SHORT LINK";
-    document.querySelector(".hero h1").innerHTML = useOneDrive ? "公开分享链接，<span>转换为下载链接</span>" : "让链接更短，<span>分享更简单</span>";
-    document.querySelector(".hero p").innerHTML = useOneDrive ? "支持个人版 OneDrive、Microsoft 365 SharePoint 和世纪互联公开分享链接。" : "输入长链接并设置可选短码，生成专属于 <strong>s.aucei.cn</strong> 的短链接。";
-  });
-});
-const odForm = document.getElementById("onedriveForm");
-const odUrl = document.getElementById("onedriveUrl");
-const odClear = document.getElementById("onedriveClear");
-const odSubmit = document.getElementById("onedriveSubmit");
-const odMessage = document.getElementById("onedriveMessage");
-const odResult = document.getElementById("onedriveResult");
-odUrl.addEventListener("input", () => { odClear.hidden = !odUrl.value; });
-odClear.addEventListener("click", () => { odUrl.value = ""; odClear.hidden = true; odResult.hidden = true; odMessage.className = "message"; odMessage.textContent = ""; odUrl.focus(); });
-document.getElementById("onedrivePaste").addEventListener("click", async () => {
-  try { odUrl.value = await navigator.clipboard.readText(); odClear.hidden = !odUrl.value; }
-  catch { odMessage.textContent = "浏览器未允许读取剪贴板，请手动粘贴。"; odMessage.className = "message is-error"; }
-});
-odForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const value = odUrl.value.trim();
-  odResult.hidden = true;
-  if (!value) { odMessage.textContent = "请先粘贴公开分享链接"; odMessage.className = "message is-error"; return; }
-  odSubmit.disabled = true; odSubmit.querySelector("span").textContent = "正在转换...";
-  odMessage.textContent = "正在解析微软分享链接"; odMessage.className = "message is-info";
-  try {
-    const response = await fetch(ONEDRIVE_API_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({url:value}) });
-    const data = await response.json();
-    if (!response.ok || !data.success) throw new Error(data.message || "转换失败");
-    document.getElementById("onedriveService").textContent = data.service;
-    document.getElementById("onedriveType").textContent = data.itemType;
-    document.getElementById("onedriveDirect").value = data.directUrl;
-    document.getElementById("onedriveFallback").value = data.fallbackUrl || "";
-    document.getElementById("onedriveFallbackArea").hidden = !data.fallbackUrl;
-    document.getElementById("onedriveWarning").textContent = data.warning;
-    document.getElementById("onedriveTest").href = data.directUrl;
-    odResult.hidden = false; odMessage.textContent = "转换完成，建议打开链接确认下载权限。"; odMessage.className = "message is-success";
-  } catch (error) {
-    odMessage.textContent = error.message === "Failed to fetch" ? "无法连接转链服务，请检查 Worker 部署和跨域设置" : error.message;
-    odMessage.className = "message is-error";
-  } finally { odSubmit.disabled = false; odSubmit.querySelector("span").textContent = "开始转换"; }
-});
-document.addEventListener("click", async (event) => {
-  const button = event.target.closest("[data-od-copy]"); if (!button) return;
-  try { await copyText(document.getElementById(button.dataset.odCopy).value); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制", 1400); }
-  catch { showToast("复制失败，请手动复制"); }
-});
+document.querySelectorAll("[data-service]").forEach((button) => button.addEventListener("click", () => {
+  const od = button.dataset.service === "onedrive";
+  document.querySelectorAll("[data-service]").forEach((item) => { const active=item===button; item.classList.toggle("is-active",active); item.setAttribute("aria-pressed",String(active)); });
+  onedrivePanel.hidden=!od; shortServicePanel.hidden=od;
+  document.querySelector(".hero .eyebrow").lastChild.textContent=od?" AUCEI ONEDRIVE LINK":" AUCEI SHORT LINK";
+  document.querySelector(".hero h1").innerHTML=od?'公开分享链接，<span>转换为下载直链</span>':'让链接更短，<span>分享更简单</span>';
+  document.querySelector(".hero p").innerHTML=od?'支持个人版 OneDrive、Microsoft 365 SharePoint 和世纪互联公开分享链接。':'输入长链接并设置可选短码，生成专属于 <strong>s.aucei.cn</strong> 的短链接。';
+}));
+const odForm=document.getElementById("onedriveForm"), odUrl=document.getElementById("onedriveUrl"), odClear=document.getElementById("onedriveClear"), odSubmit=document.getElementById("onedriveSubmit"), odMessage=document.getElementById("onedriveMessage"), odResult=document.getElementById("onedriveResult");
+odUrl.addEventListener("input",()=>odClear.hidden=!odUrl.value);
+odClear.addEventListener("click",()=>{odUrl.value="";odClear.hidden=true;odResult.hidden=true;odMessage.className="message";odMessage.textContent="";odUrl.focus()});
+document.getElementById("onedrivePaste").addEventListener("click",async()=>{try{odUrl.value=await navigator.clipboard.readText();odClear.hidden=!odUrl.value}catch{odMessage.textContent="浏览器未允许读取剪贴板，请手动粘贴。";odMessage.className="message is-error"}});
+odForm.addEventListener("submit",async(event)=>{event.preventDefault();const value=odUrl.value.trim();odResult.hidden=true;if(!value){odMessage.textContent="请先粘贴公开分享链接";odMessage.className="message is-error";return}odSubmit.disabled=true;odSubmit.querySelector("span").textContent="正在转换...";odMessage.textContent="正在解析微软分享链接";odMessage.className="message is-info";try{const response=await fetch(ONEDRIVE_API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:value})});const data=await response.json();if(!response.ok||!data.success)throw new Error(data.message||"转换失败");document.getElementById("onedriveService").textContent=data.service;document.getElementById("onedriveType").textContent=data.itemType;document.getElementById("onedriveDirect").value=data.directUrl;document.getElementById("onedriveFallback").value=data.fallbackUrl||"";document.getElementById("onedriveFallbackArea").hidden=!data.fallbackUrl;document.getElementById("onedriveWarning").textContent=data.warning;document.getElementById("onedriveTest").href=data.directUrl;odResult.hidden=false;odMessage.textContent="转换完成，建议在无痕窗口确认下载行为。";odMessage.className="message is-success"}catch(error){odMessage.textContent=error.message==="Failed to fetch"?"无法连接转链服务，请检查 Worker 部署和跨域设置":error.message;odMessage.className="message is-error"}finally{odSubmit.disabled=false;odSubmit.querySelector("span").textContent="开始转换"}});
+document.addEventListener("click",async(event)=>{const button=event.target.closest("[data-od-copy]");if(!button)return;try{await copyText(document.getElementById(button.dataset.odCopy).value);button.textContent="已复制";setTimeout(()=>button.textContent="复制",1400)}catch{showToast("复制失败，请手动复制")}});

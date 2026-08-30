@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content="AuCei 短链接生成器" />
     <title>短链接生成器 | AuCei</title>
-    <link rel="stylesheet" href="style.css?v=20260829-onedrive-direct-fix" />
+    <link rel="stylesheet" href="style.css?v=20260830-sharepoint-only" />
   </head>
   <body>
     <div class="grid" aria-hidden="true"></div>
@@ -52,18 +52,46 @@
       </section>
 
       <nav class="service-switch" aria-label="选择工具">
-<button class="service-switch-button is-active" type="button" data-service="short" aria-pressed="true">短链接</button>
-<button class="service-switch-button" type="button" data-service="onedrive" aria-pressed="false">OneDrive 转链</button>
-</nav>
-<section class="card onedrive-card" id="onedrivePanel" aria-labelledby="onedriveTitle" hidden>
-<div class="card-heading"><div><h2 id="onedriveTitle">OneDrive 公开链接转链</h2><p>支持个人版、Microsoft 365 SharePoint 和世纪互联</p></div><span class="status is-online"><i></i><span>在线解析</span></span></div>
-<form id="onedriveForm" novalidate>
-<div class="field"><label for="onedriveUrl">公开分享链接</label><div class="onedrive-input-wrap"><textarea id="onedriveUrl" maxlength="4096" rows="4" spellcheck="false" placeholder="粘贴 OneDrive、1drv.ms 或 SharePoint 分享链接" required></textarea><button class="onedrive-clear" id="onedriveClear" type="button" aria-label="清空链接" hidden>×</button></div><p class="hint">仅转换已有公开权限的链接，不保存或代理文件。</p></div>
-<div class="onedrive-actions"><button class="admin-load" id="onedrivePaste" type="button">粘贴</button><button class="submit" id="onedriveSubmit" type="submit"><span>开始转换</span></button></div><p class="message" id="onedriveMessage" role="alert" aria-live="polite"></p>
-</form>
-<section class="onedrive-result" id="onedriveResult" hidden aria-live="polite"><div class="onedrive-result-meta"><span class="onedrive-badge" id="onedriveService"></span><span id="onedriveType"></span></div><label for="onedriveDirect">直接下载链接</label><div class="onedrive-output"><input id="onedriveDirect" readonly><button type="button" data-od-copy="onedriveDirect">复制</button></div><div id="onedriveFallbackArea" hidden><label for="onedriveFallback">原分享链接</label><div class="onedrive-output"><input id="onedriveFallback" readonly><button type="button" data-od-copy="onedriveFallback">复制</button></div></div><p class="onedrive-warning" id="onedriveWarning"></p><a class="onedrive-test" id="onedriveTest" href="#" target="_blank" rel="noopener noreferrer">在新窗口测试链接</a></section>
-</section>
-<div id="shortServicePanel"><section class="card" aria-labelledby="generatorTitle">
+        <button class="service-switch-button is-active" type="button" data-service="short" aria-pressed="true">短链接</button>
+        <button class="service-switch-button" type="button" data-service="onedrive" aria-pressed="false">OneDrive 转链</button>
+      </nav>
+      <section class="card onedrive-card" id="onedrivePanel" aria-labelledby="onedriveTitle" hidden>
+        <div class="card-heading">
+          <div>
+            <h2 id="onedriveTitle">OneDrive 公开链接转链</h2>
+            <p>支持 Microsoft 365 SharePoint 和世纪互联</p>
+          </div>
+          <span class="status is-online"><i></i><span>在线解析</span></span>
+        </div>
+        <form id="onedriveForm" novalidate>
+          <div class="field">
+            <label for="onedriveUrl">公开分享链接</label>
+            <div class="onedrive-input-wrap">
+              <textarea id="onedriveUrl" maxlength="4096" rows="4" spellcheck="false" placeholder="粘贴 Microsoft 365 或世纪互联 SharePoint 分享链接" required></textarea>
+              <button class="onedrive-clear" id="onedriveClear" type="button" aria-label="清空链接" hidden>×</button>
+            </div>
+            <p class="hint">仅转换已有公开权限的链接，不保存或代理文件。</p>
+          </div>
+          <div class="onedrive-actions">
+            <button class="admin-load" id="onedrivePaste" type="button">粘贴</button>
+            <button class="submit" id="onedriveSubmit" type="submit"><span>开始转换</span></button>
+          </div>
+          <p class="message" id="onedriveMessage" role="alert" aria-live="polite"></p>
+        </form>
+        <section class="onedrive-result" id="onedriveResult" hidden aria-live="polite">
+          <div class="onedrive-result-meta"><span class="onedrive-badge" id="onedriveService"></span><span id="onedriveType"></span></div>
+          <label for="onedriveDirect">直接下载链接</label>
+          <div class="onedrive-output"><input id="onedriveDirect" readonly><button type="button" data-od-copy="onedriveDirect">复制</button></div>
+          <div id="onedriveFallbackArea" hidden>
+            <label for="onedriveFallback">兼容链接</label>
+            <div class="onedrive-output"><input id="onedriveFallback" readonly><button type="button" data-od-copy="onedriveFallback">复制</button></div>
+          </div>
+          <p class="onedrive-warning" id="onedriveWarning"></p>
+          <a class="onedrive-test" id="onedriveTest" href="#" target="_blank" rel="noopener noreferrer">在新窗口测试链接</a>
+        </section>
+      </section>
+      <div id="shortServicePanel">
+      <section class="card" aria-labelledby="generatorTitle">
         <div class="card-heading">
           <div>
             <h2 id="generatorTitle">创建短链接</h2>
@@ -278,7 +306,7 @@
         </div>
       </section>
       </div>
-<section class="security-note">
+      <section class="security-note">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M12 3 5 6v5c0 4.6 2.9 8.3 7 10 4.1-1.7 7-5.4 7-10V6l-7-3Z"
@@ -297,6 +325,6 @@
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="script.js?v=20260829-onedrive-direct-fix"></script>
+    <script src="script.js?v=20260830-sharepoint-only"></script>
   </body>
 </html>

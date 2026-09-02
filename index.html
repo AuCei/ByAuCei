@@ -5,12 +5,38 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="dark light" name="color-scheme"/>
+<script>
+try {
+  const savedTheme = localStorage.getItem("card-theme");
+  const useLight = savedTheme === "light" ||
+    (!savedTheme && window.matchMedia("(prefers-color-scheme: light)").matches);
+  document.documentElement.classList.toggle("light", useLight);
+} catch {}
+</script>
 <title>阿张的小破站</title>
-<link href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png" data-fallback-href="https://dlink.host/sharepoint/aHR0cHM6Ly9hdWNlaS1teS5zaGFyZXBvaW50LmNvbS86aTovZy9wZXJzb25hbC9tZV9hdWNlaV9jbi9JUUNOdy0xZENLSzdRNlAxdnV1cmYyN2JBZXdWMDZ6VHFFZDJWRllramZ1VTA3ST9lPVg3cXo1Wg.png" onerror="this.onerror=null;this.href=this.dataset.fallbackHref" rel="icon" type="image/png"/>
-<link href="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQWVFLTluS0l1alQ2SVgtbHFqYWNjTEFWMDhtdFQycDNPTGkxeWlmZUpsMTNFP2U9V1BVWVVV.png" data-fallback-href="https://dlink.host/sharepoint/aHR0cHM6Ly9hdWNlaS1teS5zaGFyZXBvaW50LmNvbS86aTovZy9wZXJzb25hbC9tZV9hdWNlaV9jbi9JUUNOdy0xZENLSzdRNlAxdnV1cmYyN2JBZXdWMDZ6VHFFZDJWRllramZ1VTA3ST9lPVg3cXo1Wg.png" onerror="this.onerror=null;this.href=this.dataset.fallbackHref" rel="apple-touch-icon"/>
-<link href="style.css?v=20260820-folder-all" rel="stylesheet"/>
+<link rel="icon" href="https://aucei-my.sharepoint.com/:i:/g/personal/me_aucei_cn/IQBFIU3MWz_ZQbLD0cH-aUodAcK6JlGfGZQYT2qD7M9f7EI?download=1" sizes="any">
+
+
+<!-- Meta description and social preview tags (added for SEO & sharing) -->
+<meta name="description" content="CNAuCei 的个人主页 — 在游戏中学会专注、判断与取舍。留言板、联系方式与音乐。">
+<meta property="og:title" content="CNAuCei — 个人主页">
+<meta property="og:description" content="在游戏中学会专注、判断与取舍。留言板、联系方式与音乐。">
+<meta property="og:image" content="https://q1.qlogo.cn/g?b=qq&nk=3442695370&s=640">
+<meta property="og:url" content="https://aucei.cn/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="阿张的小破站">
+<meta property="og:locale" content="zh_CN">
+<link rel="canonical" href="https://aucei.cn/">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Theme color for mobile UI -->
+<meta name="theme-color" content="#090c16">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f5ff">
+<!-- Preconnect to common external domains used by the page -->
+<link rel="preconnect" href="https://q1.qlogo.cn" crossorigin>
+<link href="style.css?v=20260902-chevron4" rel="stylesheet"/>
 </head>
 <body>
+<a class="skip-link" href="#pageContent">跳到内容</a>
 <div aria-hidden="true" class="page-background__grid"></div>
 <div aria-hidden="true" class="ambient-orb ambient-orb--top"></div>
 <div aria-hidden="true" class="ambient-orb ambient-orb--bottom"></div>
@@ -26,14 +52,16 @@
 <section class="profile-hero">
 <div class="profile-avatar">
 <div aria-hidden="true" class="profile-avatar__ring"></div>
-<img alt="头像" class="profile-avatar__image" src="https://q1.qlogo.cn/g?b=qq&amp;nk=3442695370&amp;s=640" data-fallback-src="https://dlink.host/sharepoint/aHR0cHM6Ly9hdWNlaS1teS5zaGFyZXBvaW50LmNvbS86aTovZy9wZXJzb25hbC9tZV9hdWNlaV9jbi9JUUJZY21vMFQ5ZWNUS1dXMWZPQXVzVGVBWTZpaG9mSmVaaGtWUlR6NHlRN19uOD9lPXExMXBlYw.jpg" onerror="this.onerror=null;this.src=this.dataset.fallbackSrc"/>
-<span aria-label="在线" class="profile-avatar__status"></span>
+<picture>
+        <img alt="头像" class="profile-avatar__image" src="https://q1.qlogo.cn/g?b=qq&amp;nk=3442695370&amp;s=640" loading="eager" fetchpriority="high" decoding="async" width="156" height="156">
+      </picture>
+<span aria-hidden="true" class="profile-avatar__status"></span>
 </div>
 <div>
 <h1 class="profile-name"><span>CNAuCei</span></h1>
 <p class="profile-bio">在游戏中学会专注、判断与取舍，也把这种思维带到现实生活里。不断尝试、不断调整，在每一次对局和每一次选择中优化自己。比起结果，更看重长期的成长曲线。</p>
 <div aria-label="快捷操作" class="hero-actions">
-<a aria-label="进入留言板" class="action-button action-button--guestbook" href="guestbook/" target="_blank">
+<a aria-label="进入留言板" class="action-button action-button--guestbook" href="https://aucei.cn/guestbook" target="_blank" rel="noopener noreferrer">
 <span aria-hidden="true" class="action-button__icon"><svg viewBox="0 0 24 24"><path d="M5 5h14v11H9l-4 4V5Z"></path><path d="M8 9h8M8 12h5"></path></svg></span>
 <span class="action-button__label">留言板</span>
 </a>
@@ -56,22 +84,22 @@
 <a aria-label="发送邮件给 CNAuCei" class="contact-card" href="mailto:Me@AuCei.cn">
 <span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg></span>
 <span class="contact-card__content"><span class="contact-card__label">邮箱 <b>EMAIL</b></span><span class="contact-card__value">点击发送邮件</span></span>
-<span aria-hidden="true" class="contact-card__arrow">→</span>
+<span aria-hidden="true" class="contact-card__arrow"><svg viewBox="0 0 20 20" focusable="false"><path d="M7.5 4.5 13 10l-5.5 5.5"></path></svg></span>
 </a>
 <button aria-controls="wechatModal" aria-haspopup="dialog" class="contact-card" id="wechatBtn" type="button">
 <span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M8.5 5C4.9 5 2 7.4 2 10.3c0 1.7 1 3.2 2.5 4.2L4 17l2.8-1.4c.6.1 1.1.2 1.7.2 3.6 0 6.5-2.4 6.5-5.4S12.1 5 8.5 5Z"></path><path d="M15.5 9c3.6 0 6.5 2.3 6.5 5.2 0 1.7-1 3.1-2.5 4.1L20 21l-2.8-1.4c-.6.1-1.1.2-1.7.2-2.6 0-4.8-1.2-5.9-3"></path></svg></span>
 <span class="contact-card__content"><span class="contact-card__label">微信 <b>WECHAT</b></span><span class="contact-card__value">添加微信好友</span></span>
-<span aria-hidden="true" class="contact-card__arrow">→</span>
+<span aria-hidden="true" class="contact-card__arrow"><svg viewBox="0 0 20 20" focusable="false"><path d="M7.5 4.5 13 10l-5.5 5.5"></path></svg></span>
 </button>
 <a aria-label="进入 CNAuCei 的抖音主页，新窗口打开" class="contact-card" href="https://v.douyin.com/vyspksoAxyg" rel="noopener noreferrer" target="_blank">
 <span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M14 4v10.2a4.2 4.2 0 1 1-3.1-4.1"></path><path d="M14 4c.8 2.7 2.6 4.2 5 4.5"></path></svg></span>
 <span class="contact-card__content"><span class="contact-card__label">抖音 <b>DOUYIN</b></span><span class="contact-card__value">进入抖音主页</span></span>
-<span aria-hidden="true" class="contact-card__arrow">→</span>
+<span aria-hidden="true" class="contact-card__arrow"><svg viewBox="0 0 20 20" focusable="false"><path d="M7.5 4.5 13 10l-5.5 5.5"></path></svg></span>
 </a>
 <button aria-controls="qqModal" aria-haspopup="dialog" class="contact-card" id="qqBtn" type="button">
 <span aria-hidden="true" class="contact-card__icon"><svg viewbox="0 0 24 24"><path d="M8.2 17.1c-1.1.8-2.3 1.2-3.4 1.2.4-1.1.8-2.2 1.4-3.1C5.8 13.8 6 12.4 6 11c0-4 2.4-7 6-7s6 3 6 7c0 1.4.2 2.8.8 4.2.6.9 1 2 1.4 3.1-1.1 0-2.3-.4-3.4-1.2-.9 1.7-2.6 2.9-4.8 2.9s-3.9-1.2-4.8-2.9Z"></path><path d="M9.5 10.2h.01M14.5 10.2h.01"></path></svg></span>
 <span class="contact-card__content"><span class="contact-card__label">企鹅 <b>QQ</b></span><span class="contact-card__value">添加企鹅好友</span></span>
-<span aria-hidden="true" class="contact-card__arrow">→</span>
+<span aria-hidden="true" class="contact-card__arrow"><svg viewBox="0 0 20 20" focusable="false"><path d="M7.5 4.5 13 10l-5.5 5.5"></path></svg></span>
 </button>
 </div>
 </div>
@@ -83,6 +111,7 @@
 </main>
 </div>
 <div id="music-player-root"></div>
+<noscript><p class="noscript-tip">当前浏览器未启用 JavaScript，部分交互功能暂不可用。</p></noscript>
 <div aria-hidden="true" aria-labelledby="wechatModalTitle" aria-modal="true" class="modal" id="wechatModal" role="dialog">
 <div class="modal__backdrop" data-wechat-close=""></div>
 <div class="modal__dialog" role="document">
@@ -90,7 +119,9 @@
 <h2 id="wechatModalTitle">添加我的微信</h2>
 <p class="modal__description">打开微信扫一扫，扫描二维码即可添加好友</p>
 <div class="modal__qr-frame">
-<img alt="CNAuCei 的微信好友二维码" class="modal__qr-image" height="1131" src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRRHp0bWxMb0c1Q1RMMnhlSk5aaE53NkFVOS1EYXZFRVRzdktHVzNBQ2l2clBVP2U9aDM1bUtv.jpg" data-fallback-src="https://dlink.host/sharepoint/aHR0cHM6Ly9hdWNlaS1teS5zaGFyZXBvaW50LmNvbS86aTovZy9wZXJzb25hbC9tZV9hdWNlaV9jbi9JUURpeVNja2tlaXJTYlZjNV9pd0MzY09BZHJUQmluN3Z3azJ5NUFtRW9IdEh5VT9lPTdEc2pITQ.jpg" onerror="this.onerror=null;this.src=this.dataset.fallbackSrc" width="888"/>
+<picture>
+          <img alt="CNAuCei 的微信好友二维码" class="modal__qr-image" height="1131" loading="lazy" decoding="async" src="https://aucei-my.sharepoint.com/personal/me_aucei_cn/_layouts/15/download.aspx?share=IQDJ4eDS2VieTaDrcGY3E018AXSWZsSVLFpN7KuRr23IjIc">
+        </picture>
 </div>
 <div class="modal__copy-row">
 <span class="modal__account">微信号：<strong>ByAuCei</strong></span>
@@ -106,17 +137,18 @@
 <h2 id="qqModalTitle">添加我的QQ</h2>
 <p class="modal__description">打开手机QQ扫一扫，扫描二维码即可添加好友</p>
 <div class="modal__qr-frame modal__qr-frame--qq">
-<img alt="CNAuCei 的QQ好友二维码" class="modal__qr-image" src="https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL2kvYy9jY2U2ZTdkODY5ZWM3MDVkL0lRQW04UXFlWkpCN1JabGhTY0xGaEswWUFUVzhWUGNRVEJjc2RTSG9DRFItd000P2U9YWpvNkM2.jpg" data-fallback-src="https://dlink.host/sharepoint/aHR0cHM6Ly9hdWNlaS1teS5zaGFyZXBvaW50LmNvbS86aTovZy9wZXJzb25hbC9tZV9hdWNlaV9jbi9JUURXUVJiVWJGaVNUcHhGMjV4NVRQeklBVjJ0Y0RzaUpiR2VnN25CWE5qN0c0QT9lPWtzV1h0Nw.jpg" onerror="this.onerror=null;this.src=this.dataset.fallbackSrc"/>
+<picture>
+          <img alt="CNAuCei 的QQ好友二维码" class="modal__qr-image" loading="lazy" decoding="async" src="https://aucei-my.sharepoint.com/personal/me_aucei_cn/_layouts/15/download.aspx?share=IQAh793Vi_5kS7w7BdX6JtFKAT237I9ZimJeCJ0PSBqme-E">
+        </picture>
 </div>
 <div class="modal__copy-row modal__copy-row--qq">
 <span class="modal__account">QQ号：<strong>3442695370</strong></span>
 <button aria-label="复制QQ号 3442695370" class="modal__copy-button modal__copy-button--qq" data-qq-id="3442695370" id="copyQqBtn" type="button">复制QQ号</button>
 </div>
-<a aria-label="打开QQ添加好友" class="modal__open-app" draggable="false" href="mqqapi://card/show_pslcard?src_type=internal&amp;source=sharecard&amp;version=1&amp;uin=3442695370" id="qqOpenBtn">打开QQ添加好友</a>
 <p class="modal__tip">手机访客可直接打开QQ，或长按保存二维码后识别</p>
 </div>
 </div>
 <div aria-live="polite" class="toast" id="toast" role="status">已复制</div>
-<script src="script.js?v=20260820-folder-all"></script>
+<script src="script.js?v=20260902-chevron4"></script>
 </body>
 </html>

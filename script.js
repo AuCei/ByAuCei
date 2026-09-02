@@ -29,7 +29,6 @@ const qqModal = document.getElementById("qqModal");
 const qqClose = document.getElementById("qqClose");
 const qqBackdrop = document.querySelector("[data-qq-close]");
 const copyQqBtn = document.getElementById("copyQqBtn");
-const qqOpenBtn = document.getElementById("qqOpenBtn");
 const musicToggle = document.getElementById("musicToggle");
 const musicPlayerRoot = document.getElementById("music-player-root");
 
@@ -158,48 +157,50 @@ async function copyText(text) {
 }
 
 function initClipboard() {
-  copyWechatBtn?.addEventListener("click", async () => {
-    const wechatId = copyWechatBtn.dataset.wechatId || "ByAuCei";
-    const originalText = "复制微信号";
-    window.clearTimeout(copyWechatBtn._resetTimer);
-    try {
-      const copied = await copyText(wechatId);
-      if (!copied) throw new Error("复制失败");
-      copyWechatBtn.textContent = "已复制 ✓";
-      copyWechatBtn.classList.add("is-copied");
-      copyWechatBtn.setAttribute("aria-label", "微信号 ByAuCei 已复制");
-    } catch (error) {
-      copyWechatBtn.textContent = "复制失败";
-      copyWechatBtn.classList.add("is-error");
-      copyWechatBtn.setAttribute("aria-label", `复制失败，微信号为 ${wechatId}`);
-    }
-    copyWechatBtn._resetTimer = window.setTimeout(() => {
-      copyWechatBtn.textContent = originalText;
-      copyWechatBtn.classList.remove("is-copied", "is-error");
-      copyWechatBtn.setAttribute("aria-label", `复制微信号 ${wechatId}`);
-    }, 1600);
+  const resetTimers = new WeakMap();
+
+  const bindCopyButton = (button, { value, defaultText, labelName }) => {
+    if (!button) return;
+
+    button.addEventListener("click", async () => {
+      const textToCopy = button.dataset.copyValue || value;
+      window.clearTimeout(resetTimers.get(button));
+      button.classList.remove("is-copied", "is-error");
+
+      try {
+        const copied = await copyText(textToCopy);
+        if (!copied) throw new Error("复制失败");
+        button.textContent = "已复制 ✓";
+        button.classList.add("is-copied");
+        button.setAttribute("aria-label", `${labelName} ${textToCopy} 已复制`);
+      } catch {
+        button.textContent = "复制失败";
+        button.classList.add("is-error");
+        button.setAttribute("aria-label", `复制失败，${labelName}为 ${textToCopy}`);
+      }
+
+      const timer = window.setTimeout(() => {
+        button.textContent = defaultText;
+        button.classList.remove("is-copied", "is-error");
+        button.setAttribute("aria-label", `${defaultText} ${textToCopy}`);
+        resetTimers.delete(button);
+      }, 1600);
+      resetTimers.set(button, timer);
+    });
+  };
+
+  bindCopyButton(copyWechatBtn, {
+    value: "ByAuCei",
+    defaultText: "复制微信号",
+    labelName: "微信号"
   });
-  copyQqBtn?.addEventListener("click", async () => {
-    const qqId = copyQqBtn.dataset.qqId || "3442695370";
-    window.clearTimeout(copyQqBtn._resetTimer);
-    try {
-      const copied = await copyText(qqId);
-      if (!copied) throw new Error("复制失败");
-      copyQqBtn.textContent = "已复制 ✓";
-      copyQqBtn.classList.add("is-copied");
-      copyQqBtn.setAttribute("aria-label", `QQ号 ${qqId} 已复制`);
-    } catch (error) {
-      copyQqBtn.textContent = "复制失败";
-      copyQqBtn.classList.add("is-error");
-      copyQqBtn.setAttribute("aria-label", `复制失败，QQ号为 ${qqId}`);
-    }
-    copyQqBtn._resetTimer = window.setTimeout(() => {
-      copyQqBtn.textContent = "复制QQ号";
-      copyQqBtn.classList.remove("is-copied", "is-error");
-      copyQqBtn.setAttribute("aria-label", `复制QQ号 ${qqId}`);
-    }, 1600);
+  bindCopyButton(copyQqBtn, {
+    value: "3442695370",
+    defaultText: "复制QQ号",
+    labelName: "QQ号"
   });
 }
+
 function initShare() {
   shareBtn?.addEventListener("click", async () => {
     const isWebPage = window.location.protocol === "http:" || window.location.protocol === "https:";
@@ -261,128 +262,84 @@ function initClock() {
   document.addEventListener("visibilitychange", startClock);
 }
 
-function initWechatModal() {
-  if (!wechatModal) return;
+function initModals() {
+  const modalConfigs = [
+    { modal: wechatModal, openButton: wechatBtn, closeButton: wechatClose, backdrop: wechatBackdrop },
+    { modal: qqModal, openButton: qqBtn, closeButton: qqClose, backdrop: qqBackdrop }
+  ].filter(({ modal }) => modal);
 
+  let activeModal = null;
   let lastFocusedElement = null;
+  const closeTimers = new WeakMap();
   let modalAnimationFrame = 0;
-  let closeTimer = 0;
-  const getFocusableElements = () => Array.from(
-    wechatModal.querySelectorAll(SELECTORS.focusable)
+
+  const getFocusableElements = (modal) => Array.from(
+    modal.querySelectorAll(SELECTORS.focusable)
   ).filter((element) => element instanceof HTMLElement && !element.hasAttribute("hidden"));
 
-  const openWechatModal = () => {
-    if (wechatModal.classList.contains("is-open")) return;
-    lastFocusedElement = document.activeElement;
-    window.clearTimeout(closeTimer);
-    wechatModal.setAttribute("aria-hidden", "false");
-    pageContent?.setAttribute("inert", "");
-
-    window.cancelAnimationFrame(modalAnimationFrame);
-    modalAnimationFrame = window.requestAnimationFrame(() => {
-      wechatModal.classList.add("is-open");
-      body.classList.add("modal-open");
-      window.setTimeout(() => wechatClose?.focus(), 80);
-    });
+  const syncPageLock = () => {
+    const hasOpenModal = modalConfigs.some(({ modal }) => modal.classList.contains("is-open"));
+    body.classList.toggle("modal-open", hasOpenModal);
+    if (hasOpenModal) pageContent?.setAttribute("inert", "");
+    else pageContent?.removeAttribute("inert");
   };
 
-  const closeWechatModal = () => {
-    if (!wechatModal.classList.contains("is-open")) return;
+  const closeModal = (modal, { restoreFocus = true } = {}) => {
+    if (!modal?.classList.contains("is-open")) return;
     window.cancelAnimationFrame(modalAnimationFrame);
-    wechatModal.classList.remove("is-open");
-    body.classList.remove("modal-open");
-    pageContent?.removeAttribute("inert");
+    modal.classList.remove("is-open");
+    if (activeModal === modal) activeModal = null;
+    syncPageLock();
 
-    if (lastFocusedElement instanceof HTMLElement && lastFocusedElement.isConnected) {
+    if (restoreFocus && lastFocusedElement instanceof HTMLElement && lastFocusedElement.isConnected) {
       lastFocusedElement.focus({ preventScroll: true });
     }
 
-    window.clearTimeout(closeTimer);
-    closeTimer = window.setTimeout(() => {
-      if (!wechatModal.classList.contains("is-open")) {
-        wechatModal.setAttribute("aria-hidden", "true");
-      }
+    window.clearTimeout(closeTimers.get(modal));
+    const timer = window.setTimeout(() => {
+      if (!modal.classList.contains("is-open")) modal.setAttribute("aria-hidden", "true");
+      closeTimers.delete(modal);
     }, 540);
+    closeTimers.set(modal, timer);
   };
 
-  const trapFocus = (event) => {
-    if (event.key !== "Tab" || !wechatModal.classList.contains("is-open")) return;
-    const focusable = getFocusableElements();
-    if (!focusable.length) {
-      event.preventDefault();
-      wechatClose?.focus();
-      return;
-    }
+  const openModal = (modal, closeButton) => {
+    if (!modal || modal.classList.contains("is-open")) return;
+    if (activeModal && activeModal !== modal) closeModal(activeModal, { restoreFocus: false });
 
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
-
-  wechatBtn?.addEventListener("click", openWechatModal);
-  wechatClose?.addEventListener("click", closeWechatModal);
-  wechatBackdrop?.addEventListener("click", closeWechatModal);
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && wechatModal.classList.contains("is-open")) {
-      closeWechatModal();
-      return;
-    }
-    trapFocus(event);
-  });
-}
-
-function initQqModal() {
-  if (!qqModal) return;
-  let lastFocusedElement = null;
-  let closeTimer = 0;
-
-  const focusableElements = () => Array.from(qqModal.querySelectorAll(SELECTORS.focusable))
-    .filter((element) => element instanceof HTMLElement && !element.hasAttribute("hidden"));
-
-  const openQqModal = () => {
-    if (qqModal.classList.contains("is-open")) return;
     lastFocusedElement = document.activeElement;
-    window.clearTimeout(closeTimer);
-    qqModal.setAttribute("aria-hidden", "false");
-    pageContent?.setAttribute("inert", "");
-    window.requestAnimationFrame(() => {
-      qqModal.classList.add("is-open");
-      body.classList.add("modal-open");
-      window.setTimeout(() => qqClose?.focus(), 80);
+    activeModal = modal;
+    window.clearTimeout(closeTimers.get(modal));
+    closeTimers.delete(modal);
+    modal.setAttribute("aria-hidden", "false");
+    syncPageLock();
+    window.cancelAnimationFrame(modalAnimationFrame);
+    modalAnimationFrame = window.requestAnimationFrame(() => {
+      modal.classList.add("is-open");
+      syncPageLock();
+      window.setTimeout(() => closeButton?.focus(), 80);
     });
   };
 
-  const closeQqModal = () => {
-    if (!qqModal.classList.contains("is-open")) return;
-    qqModal.classList.remove("is-open");
-    body.classList.remove("modal-open");
-    pageContent?.removeAttribute("inert");
-    lastFocusedElement?.focus?.({ preventScroll: true });
-    window.clearTimeout(closeTimer);
-    closeTimer = window.setTimeout(() => {
-      if (!qqModal.classList.contains("is-open")) qqModal.setAttribute("aria-hidden", "true");
-    }, 540);
-  };
+  modalConfigs.forEach(({ modal, openButton, closeButton, backdrop }) => {
+    openButton?.addEventListener("click", () => openModal(modal, closeButton));
+    closeButton?.addEventListener("click", () => closeModal(modal));
+    backdrop?.addEventListener("click", () => closeModal(modal));
+  });
 
-  qqBtn?.addEventListener("click", openQqModal);
-  qqClose?.addEventListener("click", closeQqModal);
-  qqBackdrop?.addEventListener("click", closeQqModal);
   document.addEventListener("keydown", (event) => {
-    if (!qqModal.classList.contains("is-open")) return;
+    if (!activeModal?.classList.contains("is-open")) return;
     if (event.key === "Escape") {
-      closeQqModal();
+      closeModal(activeModal);
       return;
     }
     if (event.key !== "Tab") return;
-    const focusable = focusableElements();
-    if (!focusable.length) return;
+
+    const focusable = getFocusableElements(activeModal);
+    if (!focusable.length) {
+      event.preventDefault();
+      return;
+    }
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     if (event.shiftKey && document.activeElement === first) {
@@ -395,12 +352,6 @@ function initQqModal() {
   });
 }
 
-function initQqOpenButton() {
-  if (!qqOpenBtn) return;
-  qqOpenBtn.setAttribute("draggable", "false");
-  qqOpenBtn.addEventListener("dragstart", (event) => event.preventDefault());
-  qqOpenBtn.addEventListener("contextmenu", (event) => event.preventDefault());
-}
 
 function initContactTouchFeedback() {
   const contactItems = document.querySelectorAll(".contact-card");
@@ -434,35 +385,6 @@ function initContactTouchFeedback() {
 
 const musicPlayerCdn = "https://player.xfyun.club/js/music-player/music-player.min.js";
 
-// 仅过滤第三方音乐播放器输出的品牌提示，不影响其他控制台日志或报错。
-function installMusicPlayerConsoleFilter() {
-  const filterMark = Symbol.for("aucei.musicPlayerConsoleFilter");
-  if (console[filterMark]) return;
-
-  const methods = ["log", "info", "debug"];
-  const blockedPhrases = ["自豪采用", "小枫音乐播放器"];
-
-  methods.forEach((method) => {
-    const original = console[method];
-    if (typeof original !== "function") return;
-
-    console[method] = function (...args) {
-      const message = args
-        .filter((value) => typeof value === "string")
-        .join(" ");
-
-      if (blockedPhrases.some((phrase) => message.includes(phrase))) return;
-      return original.apply(console, args);
-    };
-  });
-
-  Object.defineProperty(console, filterMark, {
-    value: true,
-    configurable: false,
-    enumerable: false
-  });
-}
-
 let musicPlayerInstance = null;
 let musicPlayerLoading = null;
 let musicPlayerBusy = false;
@@ -483,17 +405,21 @@ function syncMusicPerformanceMode() {
 }
 
 function loadMusicPlayerLibrary(timeoutMs = 10000) {
-  installMusicPlayerConsoleFilter();
   if (window.XfMusicPlayer?.MusicPlayer) return Promise.resolve();
   if (musicPlayerLoading) return musicPlayerLoading;
 
   musicPlayerLoading = new Promise((resolve, reject) => {
     let loader = document.querySelector(`script[src="${musicPlayerCdn}"]`);
-    const createdLoader = !loader;
+    if (loader && loader.dataset.loadState !== "loading") {
+      loader.remove();
+      loader = null;
+    }
     if (!loader) {
       loader = document.createElement("script");
       loader.src = musicPlayerCdn;
       loader.async = true;
+      loader.dataset.loadState = "loading";
+      document.head.appendChild(loader);
     }
 
     let settled = false;
@@ -508,19 +434,26 @@ function loadMusicPlayerLibrary(timeoutMs = 10000) {
       cleanup();
       callback();
     };
-    const handleLoad = () => finish(() => {
-      if (window.XfMusicPlayer?.MusicPlayer) resolve();
-      else reject(new Error("播放器组件未正确注册"));
+    const fail = (message) => finish(() => {
+      loader.dataset.loadState = "error";
+      loader.remove();
+      reject(new Error(message));
     });
-    const handleError = () => finish(() => reject(new Error("播放器脚本加载失败")));
-    const timeoutId = window.setTimeout(() => finish(() => {
-      if (createdLoader) loader.remove();
-      reject(new Error("播放器加载超时"));
-    }), timeoutMs);
+    const handleLoad = () => finish(() => {
+      if (window.XfMusicPlayer?.MusicPlayer) {
+        loader.dataset.loadState = "loaded";
+        resolve();
+      } else {
+        loader.dataset.loadState = "error";
+        loader.remove();
+        reject(new Error("播放器组件未正确注册"));
+      }
+    });
+    const handleError = () => fail("播放器脚本加载失败");
+    const timeoutId = window.setTimeout(() => fail("播放器加载超时"), timeoutMs);
 
     loader.addEventListener("load", handleLoad, { once: true });
     loader.addEventListener("error", handleError, { once: true });
-    if (createdLoader) document.head.appendChild(loader);
   });
 
   musicPlayerLoading.catch(() => {
@@ -642,17 +575,24 @@ function initMusicPlayer() {
   });
 }
 
+function initPageVisibility() {
+  const syncVisibilityState = () => {
+    body.classList.toggle("page-hidden", document.hidden);
+  };
+  syncVisibilityState();
+  document.addEventListener("visibilitychange", syncVisibilityState);
+}
+
 function initPage() {
   initTheme();
   initClipboard();
   initShare();
   initClock();
-  initWechatModal();
-  initQqModal();
-  initQqOpenButton();
+  initModals();
   initContactTouchFeedback();
   initActionTouchFeedback();
   initMusicPlayer();
+  initPageVisibility();
 
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());
 }

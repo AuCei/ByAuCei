@@ -1,5 +1,6 @@
 "use strict";
 const $=s=>document.querySelector(s);
+const backToHome=$("#backToHome");
 const form=$("#messageForm"),nickname=$("#nickname"),mood=$("#mood"),message=$("#message"),remember=$("#rememberName"),list=$("#messageList"),empty=$("#emptyState"),emptyTitle=$("#emptyTitle"),emptyText=$("#emptyText"),emptyAction=$("#emptyAction"),search=$("#searchInput"),searchClear=$("#searchClear"),sort=$("#sortSelect"),charCount=$("#charCount"),charCounter=$("#charCounter"),messageCount=$("#messageCount"),likeCount=$("#likeCount"),heroStats=$("#heroStats"),toast=$("#toast"),themeToggle=$("#themeToggle"),connectionStatus=$("#connectionStatus"),submitButton=$("#submitButton"),refreshButton=$("#refreshButton"),deleteModal=$("#deleteModal"),cancelDelete=$("#cancelDelete"),confirmDelete=$("#confirmDelete"),moodCurrent=$("#moodCurrent"),pagination=$("#pagination"),paginationPages=$("#paginationPages"),prevPage=$("#prevPage"),nextPage=$("#nextPage");
 const config=window.AUCEI_GUESTBOOK_CONFIG||{},API_BASE=String(config.apiBaseUrl||"").replace(/\/$/,""),REQUEST_TIMEOUT=Number(config.requestTimeout)||10000;
 const NAME_KEY="aucei-guestbook-name",VISITOR_KEY="aucei-guestbook-visitor",DELETE_TOKENS_KEY="aucei-guestbook-delete-tokens";
@@ -88,6 +89,28 @@ list.addEventListener("submit",async e=>{const f=e.target.closest("form[data-rep
 search.addEventListener("input",()=>{searchClear.hidden=!search.value;currentPage=1;clearTimeout(searchTimer);searchTimer=window.setTimeout(()=>render(false,true),180)});searchClear.addEventListener("click",()=>{search.value="";searchClear.hidden=true;currentPage=1;search.focus();render(false,true)});emptyAction.addEventListener("click",()=>searchClear.click());sort.addEventListener("change",()=>{currentPage=1;render(false,true)});paginationPages.addEventListener("click",e=>{const button=e.target.closest("button[data-page]");if(button)goToPage(Number(button.dataset.page))});prevPage.addEventListener("click",()=>goToPage(currentPage-1));nextPage.addEventListener("click",()=>goToPage(currentPage+1));
 refreshButton.addEventListener("click",async()=>{await loadMessages(false);if(connectionStatus.classList.contains("is-online"))showToast("留言已刷新")});
 connectionStatus.addEventListener("click",()=>{if(connectionStatus.classList.contains("is-error"))loadMessages(false)});cancelDelete.addEventListener("click",closeDeleteModal);confirmDelete.addEventListener("click",deletePending);deleteModal.addEventListener("click",e=>{if(e.target.hasAttribute("data-close-modal"))closeDeleteModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!deleteModal.hidden)closeDeleteModal()});
+
+function initBackToHome(){
+  if(!backToHome)return;
+  backToHome.addEventListener("click",event=>{
+    event.preventDefault();
+
+    if(window.opener&&!window.opener.closed){
+      window.opener.focus();
+      window.close();
+      return;
+    }
+
+    // target="_blank" 打开的标签页通常可直接关闭，浏览器会回到原主站标签页。
+    window.close();
+
+    // 直接访问留言板或浏览器拒绝关闭时，在当前标签页返回主站。
+    window.setTimeout(()=>{
+      window.location.href=backToHome.href;
+    },180);
+  });
+}
+
 function initTheme(){
   const root=document.documentElement;
   const saved=storageGet("card-theme");
@@ -121,4 +144,4 @@ function initTheme(){
     themeToggle.setAttribute("aria-label",light?"切换到深色主题":"切换到浅色主题");
   }
 }
-nickname.value=storageGet(NAME_KEY);$("#currentYear").textContent=new Date().getFullYear();initTheme();updateCharacterCount();loadMessages();
+nickname.value=storageGet(NAME_KEY);$("#currentYear").textContent=new Date().getFullYear();initBackToHome();initTheme();updateCharacterCount();loadMessages();

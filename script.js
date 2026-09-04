@@ -499,7 +499,7 @@ async function enableMusicPlayer() {
         volume: 0.8,
         isAutoPopup: false,
         isAutoPlaylist: false,
-        colorfulLyric: true,
+        colorfulLyric: false,
         audioVisualizer: false
       }
     });

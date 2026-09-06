@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f4f7fb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+  <title>页面不存在</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f7fb;
+      --card: rgba(255, 255, 255, 0.82);
+      --text: #172033;
+      --muted: #687386;
+      --line: rgba(23, 32, 51, 0.09);
+      --primary: #246bfd;
+      --primary-hover: #1555d8;
+      --secondary: rgba(23, 32, 51, 0.07);
+      --shadow: 0 24px 70px rgba(34, 61, 115, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 24px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 18%, rgba(36, 107, 253, 0.14), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(117, 73, 255, 0.12), transparent 32%),
+        var(--bg);
+      font-family: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .decoration {
+      position: fixed;
+      width: 280px;
+      height: 280px;
+      border: 1px solid rgba(36, 107, 253, 0.12);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .decoration.one {
+      top: -170px;
+      right: -90px;
+    }
+
+    .decoration.two {
+      bottom: -210px;
+      left: -80px;
+      width: 360px;
+      height: 360px;
+    }
+
+    main {
+      position: relative;
+      width: min(100%, 620px);
+      padding: 52px 44px 44px;
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      animation: appear 0.55s ease-out both;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 28px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-mark {
+      width: 11px;
+      height: 11px;
+      border-radius: 4px;
+      background: var(--primary);
+      box-shadow: 0 0 0 5px rgba(36, 107, 253, 0.12);
+      transform: rotate(12deg);
+    }
+
+    .code {
+      margin: 0;
+      font-size: clamp(88px, 22vw, 142px);
+      font-weight: 800;
+      line-height: 0.86;
+      letter-spacing: -0.075em;
+      color: transparent;
+      background: linear-gradient(135deg, #246bfd 5%, #7549ff 92%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: drop-shadow(0 10px 24px rgba(36, 107, 253, 0.18));
+    }
+
+    h1 {
+      margin: 28px 0 12px;
+      font-size: clamp(24px, 5vw, 32px);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .description {
+      max-width: 440px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .path {
+      display: inline-block;
+      max-width: 100%;
+      margin-top: 14px;
+      padding: 7px 12px;
+      overflow: hidden;
+      color: var(--muted);
+      background: var(--secondary);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      min-width: 130px;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 13px;
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 9px 22px rgba(36, 107, 253, 0.25);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 650;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .button svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .button:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 12px 28px rgba(36, 107, 253, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.secondary {
+      color: var(--text);
+      background: var(--secondary);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(23, 32, 51, 0.11);
+    }
+
+    .button:focus-visible {
+      outline: 3px solid rgba(36, 107, 253, 0.3);
+      outline-offset: 3px;
+    }
+
+    footer {
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 540px) {
+      body {
+        padding: 16px;
+      }
+
+      main {
+        padding: 42px 22px 32px;
+        border-radius: 24px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --card: rgba(22, 27, 35, 0.82);
+        --text: #f0f4fa;
+        --muted: #9aa6b6;
+        --line: rgba(255, 255, 255, 0.09);
+        --primary: #4d84ff;
+        --primary-hover: #6997ff;
+        --secondary: rgba(255, 255, 255, 0.07);
+        --shadow: 0 26px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      body {
+        background:
+          radial-gradient(circle at 15% 18%, rgba(36, 107, 253, 0.18), transparent 30%),
+          radial-gradient(circle at 85% 80%, rgba(117, 73, 255, 0.15), transparent 32%),
+          var(--bg);
+      }
+
+      .button.secondary:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="decoration one" aria-hidden="true"></div>
+  <div class="decoration two" aria-hidden="true"></div>
+
+  <main>
+    <!-- <div class="brand" aria-label="AuCei">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>AuCei</span>
+    </div> -->
+
+    <p class="code" aria-label="错误代码 404">404</p>
+    <h1>页面走丢了</h1>
+    <p class="description">
+      你访问的页面可能已被移动、删除，或者网址输入有误。
+    </p>
+    <div class="path" id="current-path" title="当前访问地址"></div>
+
+    <div class="actions">
+      <a class="button" href="/" aria-label="返回 AuCei 首页">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 10.8 12 3l9 7.8"></path>
+          <path d="M5.5 9.5V21h13V9.5"></path>
+          <path d="M9.5 21v-6h5v6"></path>
+        </svg>
+        返回首页
+      </a>
+      <button class="button secondary" id="back-button" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M19 12H5"></path>
+          <path d="m11 18-6-6 6-6"></path>
+        </svg>
+        返回上一页
+      </button>
+    </div>
+
+    <!-- <footer>AuCei · aucei.cn</footer> -->
+  </main>
+
+  <script>
+    const pathElement = document.getElementById('current-path');
+    const backButton = document.getElementById('back-button');
+
+    pathElement.textContent = window.location.pathname;
+    pathElement.title = window.location.href;
+
+    backButton.addEventListener('click', () => {
+      if (window.history.length > 1 && document.referrer) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
+  </script>
+</body>
+</html>

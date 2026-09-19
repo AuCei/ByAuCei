@@ -13,6 +13,26 @@ try {
   document.documentElement.classList.toggle("light", useLight);
 } catch {}
 </script>
+
+<script data-random-background-loader>
+(() => {
+  const root = document.documentElement;
+  const apis = ["https://t.alcy.cc/fj", "https://t.alcy.cc/pc", "https://t.alcy.cc/ycy"];
+  const start = Math.floor(Math.random() * apis.length);
+  let attempt = 0;
+  const load = () => {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => {
+      root.style.setProperty("--random-wallpaper", `url("${img.src}")`);
+      requestAnimationFrame(() => root.classList.add("wallpaper-ready"));
+    };
+    img.onerror = () => { attempt += 1; if (attempt < apis.length) load(); else root.classList.add("wallpaper-error"); };
+    img.src = apis[(start + attempt) % apis.length];
+  };
+  load();
+})();
+</script>
 <title>阿张的小破站</title>
 <link rel="icon" href="https://aucei-my.sharepoint.com/:i:/g/personal/me_aucei_cn/IQBFIU3MWz_ZQbLD0cH-aUodAcK6JlGfGZQYT2qD7M9f7EI?download=1" sizes="any">
 
@@ -33,7 +53,7 @@ try {
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f5ff">
 <!-- Preconnect to common external domains used by the page -->
 <link rel="preconnect" href="https://q1.qlogo.cn" crossorigin>
-<link href="style.css?v=20260904-colorlyric-off1" rel="stylesheet"/>
+<link href="style.css?v=20260919-rebuilt-v14" rel="stylesheet"/>
 </head>
 <body>
 <a class="skip-link" href="#pageContent">跳到内容</a>
@@ -149,6 +169,6 @@ try {
 </div>
 </div>
 <div aria-live="polite" class="toast" id="toast" role="status">已复制</div>
-<script src="script.js?v=20260904-colorlyric-off1"></script>
+<script src="script.js?v=20260919-rebuilt-v14"></script>
 </body>
 </html>

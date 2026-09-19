@@ -450,3 +450,17 @@ body.modal-open .page-shell {
     box-shadow: 0 24px 64px rgba(31, 42, 62, .17), inset 0 1px 0 rgba(255,255,255,.70);
   }
 }
+
+/* v18 iOS theme switching: never animate the glass layer itself */
+@media (hover: none), (pointer: coarse) {
+  html.theme-ripple-fallback body,
+  html.theme-ripple-fallback .page-shell,
+  html.theme-ripple-fallback .profile-card {
+    animation: none !important;
+  }
+
+  html.theme-ripple-fallback .profile-card,
+  html.light.theme-ripple-fallback .profile-card {
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease !important;
+  }
+}

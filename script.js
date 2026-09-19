@@ -93,7 +93,15 @@ function initTheme() {
     const nextTheme = root.classList.contains("light") ? "dark" : "light";
     const commitTheme = () => { applyTheme(nextTheme); saveTheme(nextTheme); };
 
-    if (!document.startViewTransition || reduceMotion.matches) {
+    // iOS/WebKit 在 View Transition 快照期间可能丢失 backdrop-filter，
+    // 导致毛玻璃卡片短暂显示为透明。触屏设备改用稳定的普通切换。
+    const isCoarsePointer = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    const isIOSWebKit = /iP(?:hone|ad|od)/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const useStableFallback = !document.startViewTransition || reduceMotion.matches ||
+      isCoarsePointer || isIOSWebKit;
+
+    if (useStableFallback) {
       root.classList.add("theme-ripple-fallback");
       commitTheme();
       cleanupTimer = window.setTimeout(cleanupTransition, reduceMotion.matches ? 30 : 240);

@@ -145,3 +145,54 @@ function initTheme(){
   }
 }
 nickname.value=storageGet(NAME_KEY);$("#currentYear").textContent=new Date().getFullYear();initBackToHome();initTheme();updateCharacterCount();loadMessages();
+
+// 2026-09-23 三组背景图 API：随机选择，失败时自动轮换。
+const GUESTBOOK_BACKGROUND_APIS = Object.freeze([
+  "https://t.alcy.cc/ycy",
+  "https://t.alcy.cc/fj",
+  "https://t.alcy.cc/pc"
+]);
+
+function shuffledBackgroundApis() {
+  const items = [...GUESTBOOK_BACKGROUND_APIS];
+  for (let index = items.length - 1; index > 0; index -= 1) {
+    const target = Math.floor(Math.random() * (index + 1));
+    [items[index], items[target]] = [items[target], items[index]];
+  }
+  return items;
+}
+
+function preloadBackground(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.decoding = "async";
+    image.referrerPolicy = "no-referrer";
+    image.onload = () => resolve(url);
+    image.onerror = reject;
+    image.src = url;
+  });
+}
+
+async function initGuestbookBackground() {
+  document.body.classList.remove("background-loaded");
+  const cacheKey = Date.now().toString(36);
+  for (const api of shuffledBackgroundApis()) {
+    const separator = api.includes("?") ? "&" : "?";
+    const imageUrl = `${api}${separator}guestbook=${cacheKey}`;
+    try {
+      await preloadBackground(imageUrl);
+      document.documentElement.style.setProperty(
+        "--guestbook-background-image",
+        `url("${imageUrl.replaceAll('"', '%22')}")`
+      );
+      requestAnimationFrame(() => document.body.classList.add("background-loaded"));
+      return;
+    } catch (error) {
+      console.warn("背景图接口加载失败，正在尝试下一个：", api);
+    }
+  }
+  console.warn("三个背景图接口均不可用，已保留原有纯色背景。");
+}
+
+initGuestbookBackground();
+

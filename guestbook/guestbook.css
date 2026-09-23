@@ -70,3 +70,136 @@ html:not(.light) .search:focus-within{
   border-color:#ff4f70;
   box-shadow:0 0 0 4px rgba(255,79,112,.10);
 }
+
+/* 2026-09-23 三组随机背景图 API */
+:root{
+  --guestbook-background-image:none;
+  --guestbook-background-overlay:rgba(245,245,247,.70);
+}
+html:not(.light){
+  --guestbook-background-overlay:rgba(9,9,11,.74);
+}
+body{
+  position:relative;
+  isolation:isolate;
+  background:var(--bg);
+}
+body::before{
+  content:"";
+  position:fixed;
+  z-index:-2;
+  inset:0;
+  background-color:var(--bg);
+  background-image:var(--guestbook-background-image);
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  opacity:0;
+  transform:scale(1.018);
+  transition:opacity .5s ease,filter .25s ease;
+  pointer-events:none;
+}
+body::after{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  inset:0;
+  background:var(--guestbook-background-overlay);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  pointer-events:none;
+}
+body.background-loaded::before{opacity:1}
+.page-shell{position:relative;z-index:0}
+.topbar,.composer,.messages-section{
+  background:color-mix(in srgb,var(--surface) 86%,transparent);
+  backdrop-filter:blur(24px) saturate(1.2);
+  -webkit-backdrop-filter:blur(24px) saturate(1.2);
+}
+@media(max-width:760px){
+  body::before{position:fixed;transform:scale(1.01)}
+  body::after{backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px)}
+}
+@media(prefers-reduced-motion:reduce){body::before{transition:none}}
+
+
+/* 2026-09-23 全部卡片统一雾透效果 */
+:root{
+  --glass-surface:rgba(255,255,255,.58);
+  --glass-surface-strong:rgba(255,255,255,.68);
+  --glass-surface-soft:rgba(255,255,255,.42);
+  --glass-border:rgba(255,255,255,.54);
+  --glass-shadow:0 16px 44px rgba(31,38,52,.13),inset 0 1px 0 rgba(255,255,255,.55);
+  --glass-blur:22px;
+}
+html:not(.light){
+  --glass-surface:rgba(23,23,26,.56);
+  --glass-surface-strong:rgba(23,23,26,.68);
+  --glass-surface-soft:rgba(32,32,36,.46);
+  --glass-border:rgba(255,255,255,.13);
+  --glass-shadow:0 18px 48px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.topbar,
+.composer,
+.messages-section,
+.message-card,
+.reply-item,
+.reply-form,
+.confirm-modal__panel{
+  border:1px solid var(--glass-border);
+  background:var(--glass-surface);
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(var(--glass-blur)) saturate(1.38);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.38);
+}
+.topbar,.composer,.messages-section,.confirm-modal__panel{
+  background:var(--glass-surface-strong);
+}
+.message-card{
+  background:var(--glass-surface-soft);
+  box-shadow:0 10px 30px rgba(31,38,52,.10),inset 0 1px 0 rgba(255,255,255,.42);
+}
+html:not(.light) .message-card{
+  box-shadow:0 12px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.reply-item,.reply-form{
+  background:color-mix(in srgb,var(--glass-surface) 82%,transparent);
+  box-shadow:0 8px 24px rgba(31,38,52,.08),inset 0 1px 0 rgba(255,255,255,.34);
+}
+.field input,
+.field textarea,
+.search,
+.tools select,
+.refresh-button,
+.theme-toggle,
+.connection-status,
+.mood-option,
+.pagination__button,
+.pagination__number,
+.reply-form input,
+.reply-form textarea,
+.empty-state__icon{
+  border:1px solid color-mix(in srgb,var(--glass-border) 76%,transparent);
+  background:color-mix(in srgb,var(--glass-surface) 72%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 34%,transparent);
+  backdrop-filter:blur(14px) saturate(1.25);
+  -webkit-backdrop-filter:blur(14px) saturate(1.25);
+}
+.message-card.is-pinned{
+  background:color-mix(in srgb,var(--accent-soft) 58%,var(--glass-surface));
+}
+.message-card.is-featured,
+html:not(.light) .message-card.is-featured{
+  background:linear-gradient(135deg,rgba(255,179,64,.14),var(--glass-surface-soft) 48%);
+  backdrop-filter:blur(var(--glass-blur)) saturate(1.4);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .topbar,.composer,.messages-section,.message-card,.reply-item,.reply-form,.confirm-modal__panel{
+    background:var(--surface);
+  }
+}
+@media(max-width:760px){
+  :root{--glass-blur:17px}
+  .message-card{background:color-mix(in srgb,var(--glass-surface) 88%,transparent)}
+}

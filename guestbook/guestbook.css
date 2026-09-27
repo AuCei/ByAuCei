@@ -208,3 +208,14 @@ html:not(.light) .message-card.is-featured{
 .mood-field--full{margin-top:14px}
 .field-hint{display:block;margin-top:8px;color:var(--muted);font-size:10px;font-weight:500;line-height:1.55}
 @media(max-width:760px){.mood-field--full{margin-top:14px}}
+/* 2026-09-27 兼容旧版 iOS Safari：隐藏搜索框原生放大镜，保留自定义 SVG 图标 */
+.search input[type="search"]{
+  -webkit-appearance:none;
+  appearance:none;
+}
+.search input[type="search"]::-webkit-search-decoration,
+.search input[type="search"]::-webkit-search-results-button,
+.search input[type="search"]::-webkit-search-results-decoration{
+  display:none;
+  -webkit-appearance:none;
+}
